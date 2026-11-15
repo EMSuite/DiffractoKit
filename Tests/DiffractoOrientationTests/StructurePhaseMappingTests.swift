@@ -157,6 +157,82 @@ import DiffractoOrientation
         let unknown = StructurePhase(name: "X", crystal: CrystalPresets.structure(a: 4, b: 4, c: 4, sites: [AtomSite(z: 119, fractional: [0, 0, 0])]))
         #expect(throws: ACOMError.self) { _ = try run(width: Self.side, candidates: [unknown]) }
     }
+
+    /// DiffractoKit#130: which disk each phase claimed, from the orientations the run found (a map from the structures records no
+    /// library entry to replay). A replay of the run: the matrix claims exactly what the removal took (`removedCounts`), the
+    /// phase exactly what the classification matched (`matchedCount`), every usable vector has one claim. At a plain matrix
+    /// position that is every vector; at the beta'' positions none is unexplained (at the rich ones the matrix takes 10, two
+    /// beta'' spots beside its 8, because the matrix sits one template step off there: DiffractoKit#100, measured 2026-11-15);
+    /// where the map called no phase nothing is claimed for one; outside the scan, nothing.
+    /// Mutations: the phase tested before the removal (beta'' spots the matrix took are claimed by beta'': matrix claims fall
+    /// below `removedCounts`); a removed peak not taken as the matrix's (matrix claims 0).
+    @Test func theDisksEachPhaseClaimedFollowTheFoundOrientations() throws {
+        let p = try Self.planted()
+        var settings = StructurePhaseMappingSettings(reachInvAngstrom: Self.reach)
+        settings.minimumPositions = 10
+        let al = CrystalPresets.aluminum, beta = CrystalPresets.betaDoublePrime
+        let run = try #require(try PhaseVectorMatcher.mapFromStructures(
+            scan: p.scan, scanWidth: Self.side, scanHeight: Self.side,
+            matrix: StructurePhase(name: "Al", crystal: al), candidates: [StructurePhase(name: "beta''", crystal: beta)],
+            settings: settings, originX: Self.origin, originY: Self.origin, invAngstromPerPixel: Self.q))
+        let plainCount = p.scan[p.kind.firstIndex(of: "matrix")!].count - 1   // the direct beam is not usable
+        var richChecked = 0
+        for (i, kind) in p.kind.enumerated() {
+            let verdict = run.classification.verdicts[i]
+            let claims = run.claims(at: i, peaks: p.scan[i])
+            #expect(claims.count == p.scan[i].count)
+            let matrix = claims.filter { $0 == .matrix }.count, own = claims.filter { $0 == .phase(1) }.count
+            let unexplained = claims.filter { $0 == .unexplained }.count
+            // A replay of the run: the matrix claims what the removal took, the phase what the classification matched.
+            #expect(matrix == run.residual.removedCounts[i], "\(kind) \(i): matrix claimed \(matrix), removed \(run.residual.removedCounts[i])")
+            #expect(matrix + own + unexplained == p.scan[i].count - 1, "\(kind) \(i): every usable vector has one claim")
+            switch kind {
+            case "matrix":
+                #expect(matrix == plainCount && own == 0 && unexplained == 0, "matrix \(i): \(matrix) matrix, \(own) beta'', \(unexplained) unexplained")
+            case "rich", "weak":
+                #expect(run.map.results[i].verdict == .indexed, "\(kind) \(i) is no phase")
+                #expect(own == verdict.matchedCount && own > 0, "\(kind) \(i): \(own) claimed by beta'', matched \(verdict.matchedCount)")
+                #expect(unexplained == 0, "\(kind) \(i): \(unexplained) unexplained")
+                if kind == "rich" { richChecked += 1 }
+            default:
+                break
+            }
+            if run.map.results[i].verdict != .indexed { #expect(!claims.contains(.phase(1)), "\(kind) \(i): a phase claim where the map called none") }
+        }
+        #expect(richChecked == 24)
+        #expect(run.claims(at: -1, peaks: p.scan[0]).isEmpty && run.claims(at: p.scan.count, peaks: p.scan[0]).isEmpty)
+    }
+
+    /// Two grains overlapping along the beam (the inclined boundary of `MatrixGrainRegularizationTests`): the removal also takes
+    /// the neighbouring grain's spots there, and the claims call them the matrix's too, so a disk of the other grain is never
+    /// drawn as unexplained or as a phase's. Mutation: only the position's own matrix spots claimed (the [011] grain's spots
+    /// at the overlap come out unexplained).
+    @Test func aNeighbouringGrainsSpotsAreClaimedByTheMatrix() throws {
+        typealias Base = MatrixOrientationFieldTests
+        let reflections = try Base.reflections()
+        let a = Base.pattern(Base.Planted(zone: SIMD3(0, 0, 1), inPlaneDeg: 12), reflections)
+        let b = Base.pattern(Base.Planted(zone: SIMD3(0, 1, 1), inPlaneDeg: 40), reflections)
+        let both = a.peaks + b.peaks.dropFirst()
+        let width = 7, height = 3
+        let scan: [[SIMD2<Double>]] = (0..<width * height).map { i in
+            let column = i % width
+            return column < 3 ? a.peaks : (column > 3 ? b.peaks : both)
+        }
+        var settings = StructurePhaseMappingSettings(reachInvAngstrom: Base.reach)
+        settings.minimumPositions = 10
+        let run = try #require(try PhaseVectorMatcher.mapFromStructures(
+            scan: scan, scanWidth: width, scanHeight: height,
+            matrix: StructurePhase(name: "Al", crystal: CrystalPresets.aluminum),
+            candidates: [StructurePhase(name: "beta''", crystal: CrystalPresets.betaDoublePrime)],
+            settings: settings, originX: Base.origin, originY: Base.origin, invAngstromPerPixel: Base.q))
+        for row in 0..<height {
+            let i = row * width + 3
+            let claims = run.claims(at: i, peaks: scan[i])
+            #expect(run.residual.removedCounts[i] == a.matrixSpots + b.matrixSpots, "row \(row): removed \(run.residual.removedCounts[i])")
+            #expect(claims.filter { $0 == .matrix }.count == a.matrixSpots + b.matrixSpots, "row \(row): \(claims)")
+            #expect(!claims.contains(.unexplained) && !claims.contains(.phase(1)), "row \(row): \(claims)")
+        }
+    }
 }
 
 /// Progress values collected across threads.
