@@ -12,6 +12,8 @@
 //    3. every position classified against the variants, scored on the WHOLE pattern when it is given (the phase's spots
 //       together with the matrix's): the removal serves the free search, the learning and the in-plane fit, not the verdict.
 //       A precipitate that shares spots with the matrix loses them to the removal;
+//       The whole pattern is the position's own: what the removal took for a neighbouring grain is left out of it
+//       (`patternWithoutNeighbouringGrainSpots`, DiffractoKit#103);
 //    4. a phase is called where at least two vectors lie on no matrix spot (the "firm" rule). Optionally a position with one
 //       such vector is called too when one of its eight neighbours is firm with the same phase at the same orientation
 //       (precipitates are connected; applied once, so it cannot creep).
@@ -46,7 +48,7 @@ extension MatrixOrientationField {
     }
 }
 
-/// A phase for ``PhaseVectorMatcher/classifyInTwoPasses(residual:matrixOrientations:phases:matrixSymmetry:settings:originX:originY:invAngstromPerPixel:matrixReflections:scan:scanWidth:usesNeighbourSupport:minimumPositions:maximumWorkers:isCancelled:)``.
+/// A phase for ``PhaseVectorMatcher/classifyInTwoPasses(residual:matrixOrientations:phases:matrixSymmetry:settings:originX:originY:invAngstromPerPixel:matrixReflections:scan:scanWidth:usesNeighbourSupport:minimumPositions:matrixToleranceInvAngstrom:maximumWorkers:isCancelled:progress:)``.
 public struct TwoPassPhase: Sendable {
     public let candidate: PhaseOrientationCandidate
     /// The phase's symmetry, by which its relationships are clustered and its variants counted.
@@ -110,6 +112,38 @@ extension PhaseVectorMatcher {
         return merged
     }
 
+    /// The pattern of one position as a phase may be scored on it: the vectors the removal left, and those it took that lie
+    /// on a spot of the position's OWN matrix orientation (a precipitate shares spots with its matrix, and loses them to
+    /// the removal). What the removal took and the own orientation does not predict was taken for a neighbouring grain
+    /// (``removingMatrixSpots(scan:field:reflections:originX:originY:invAngstromPerPixel:toleranceInvAngstrom:excitationSlabInvAngstrom:directBeamRadiusInvAngstrom:maximumVectorInvAngstrom:neighbouringGrains:)``):
+    /// it is another matrix crystal's spot and no phase's vector (DiffractoKit#103: at a grain boundary of the simulated
+    /// three-grain demo a phase was called on two of the neighbouring grain's six spots).
+    ///
+    /// - Parameters:
+    ///   - all: every peak of the position, in detector pixels.
+    ///   - left: the peaks the removal left (a subset of `all`, the same values).
+    ///   - matrixOrientation: the position's matrix orientation, with the removal's in-plane correction applied.
+    /// - Returns: `all` when nothing was removed or there is no orientation.
+    public static func patternWithoutNeighbouringGrainSpots(all: [SIMD2<Double>], left: [SIMD2<Double>],
+                                                            matrixOrientation: simd_double3x3?, matrixReflections: [ACOMReflection],
+                                                            originX: Float, originY: Float, invAngstromPerPixel: Double,
+                                                            matrixToleranceInvAngstrom: Double = 0.02,
+                                                            matrixExcitationSlabInvAngstrom: Double = matrixRemovalSlabInvAngstrom,
+                                                            directBeamRadiusInvAngstrom: Double = 0.15) -> [SIMD2<Double>] {
+        guard let matrixOrientation, left.count < all.count else { return all }
+        let spots = matrixSpots(reflections: matrixReflections, orientation: matrixOrientation,
+                                excitationSlabInvAngstrom: matrixExcitationSlabInvAngstrom)
+        let kept = Set(left)
+        return all.filter { peak in
+            if kept.contains(peak) { return true }
+            let vector = PeakCoordinates.detectorPixels(originX: originX, originY: originY, invAngstromPerPixel: invAngstromPerPixel)
+                .vector(of: peak)
+            // The direct beam is nobody's spot; it is dropped where the vectors are made.
+            if simd_length(vector) < directBeamRadiusInvAngstrom { return true }
+            return spots.contains { simd_length($0 - vector) <= matrixToleranceInvAngstrom }
+        }
+    }
+
     /// A scan classified from the structures alone, in two passes (see the file header for the steps).
     ///
     /// - Parameters:
@@ -128,6 +162,9 @@ extension PhaseVectorMatcher {
     ///     default: it finds more of a precipitate's edge and calls more matrix positions a phase, and a false precipitate
     ///     is the worse error.
     ///   - minimumPositions: the fewest strong positions a relationship is learned from.
+    ///   - matrixToleranceInvAngstrom: how near a vector must lie to a predicted matrix spot to be the matrix's, Å⁻¹: the
+    ///     tolerance the removal was run with (DiffractoKit#106). It decides which removed vectors are the position's own
+    ///     matrix spots and which vectors of the whole pattern are a phase's own.
     /// - Returns: nil when the lengths disagree or the run was cancelled.
     public static func classifyInTwoPasses(residual: MatrixResidualScan, matrixOrientations: [simd_double3x3?],
                                            phases: [TwoPassPhase], matrixSymmetry: CrystalOrientationSymmetry,
@@ -137,15 +174,20 @@ extension PhaseVectorMatcher {
                                            scan: [[SIMD2<Double>]]? = nil, scanWidth: Int = 0,
                                            usesNeighbourSupport: Bool = false,
                                            minimumPositions: Int = 20,
+                                           matrixToleranceInvAngstrom: Double = 0.02,
                                            maximumWorkers: Int? = nil,
-                                           isCancelled: (@Sendable () -> Bool)? = nil) -> TwoPassClassification? {
+                                           isCancelled: (@Sendable () -> Bool)? = nil,
+                                           progress: (@Sendable (Double) -> Void)? = nil) -> TwoPassClassification? {
         let total = residual.scan.count
         guard matrixOrientations.count == total, residual.removedCounts.count == total else { return nil }
         if let scan, scan.count != total { return nil }
         let candidates = phases.map(\.candidate)
+        var searchProgress: (@Sendable (Double) -> Void)?
+        if let progress { searchProgress = { @Sendable fraction in progress(0.8 * fraction) } }
         guard var free = searchOrientations(residual: residual, candidates: candidates, settings: settings,
                                             originX: originX, originY: originY, invAngstromPerPixel: invAngstromPerPixel,
-                                            maximumWorkers: maximumWorkers, isCancelled: isCancelled) else { return nil }
+                                            maximumWorkers: maximumWorkers, isCancelled: isCancelled,
+                                            progress: searchProgress) else { return nil }
         // A displaced matrix pattern: the removal took none of the position's vectors, yet at least half of the matrix's
         // predicted spots (and at least two) have a vector within three pair radii. The residual there is the matrix pattern
         // itself, a little off (a shifted origin, a wrong calibration), and a phase indexed on it is the matrix's spots read as
@@ -186,17 +228,30 @@ extension PhaseVectorMatcher {
             relationships.append(merged.count == first.count ? first : merged.map(refined))
         }
         if isCancelled?() == true { return nil }
+        progress?(0.85)
 
         // 3 and 4. every position against the variants.
         let sets = zip(candidates, relationships).map { PhaseVariantSet(candidate: $0, relationships: $1) }
         let onAllSpots = scan != nil && matrixReflections != nil
         var verdicts = [PhaseOrientationVerdict](repeating: PhaseOrientationVerdict(), count: total)
         var single = [PhaseOrientationVerdict?](repeating: nil, count: total)   // indexed on one own vector: for the neighbour rule
+        let step = max(1, total / 100)
         for i in 0..<total {
+            if let progress, i % step == 0 { progress(0.85 + 0.15 * Double(i) / Double(total)) }
+            // The whole pattern, without what the removal took for a neighbouring grain (DiffractoKit#103).
+            var whole: [SIMD2<Double>]? = scan?[i]
+            if let all = whole, let reflections = matrixReflections {
+                whole = patternWithoutNeighbouringGrainSpots(all: all, left: residual.scan[i], matrixOrientation: matrixOrientations[i],
+                                                             matrixReflections: reflections, originX: originX, originY: originY,
+                                                             invAngstromPerPixel: invAngstromPerPixel,
+                                                             matrixToleranceInvAngstrom: matrixToleranceInvAngstrom,
+                                                             directBeamRadiusInvAngstrom: passTwo.directBeamRadiusInvAngstrom)
+            }
             var v = classifyAgainstVariants(peaks: residual.scan[i], removedCount: residual.removedCounts[i],
                                             matrixOrientation: matrixOrientations[i], phases: sets, settings: passTwo,
                                             originX: originX, originY: originY, invAngstromPerPixel: invAngstromPerPixel,
-                                            matrixReflections: matrixReflections, allPeaks: scan?[i], countsSingleOwnVector: true)
+                                            matrixReflections: matrixReflections, matrixToleranceInvAngstrom: matrixToleranceInvAngstrom,
+                                            allPeaks: whole, countsSingleOwnVector: true)
             if onAllSpots, matrixOrientations[i] != nil, v.verdict == .indexed, v.survivingCount <= passTwo.directMatrixMaximumVectors {
                 single[i] = v
                 v.verdict = .matrix

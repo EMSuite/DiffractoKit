@@ -52,14 +52,20 @@ public struct PhaseOrientationCandidate: Sendable {
     public init(name: String, crystal: CrystalStructure, kMax: Double,
                 templateSettings: ACOMTemplateSettings = ACOMTemplateSettings(),
                 excitationSlabInvAngstrom: Double = 0.05) throws(ACOMError) {
+        let reflections = try Self.reflections(of: crystal, kMax: kMax)
+        let library = try ACOMTemplateLibrary.generate(crystal: crystal, kMax: kMax, settings: templateSettings)
+        guard let matcher = ACOMMatcher(library: library) else { throw .invalidSettings("no FFT plan for the library's azimuthal length") }
+        self.init(name: name, matcher: matcher, reflections: reflections, excitationSlabInvAngstrom: excitationSlabInvAngstrom)
+    }
+
+    /// The reflections a candidate of `crystal` holds: its kinematic reflections up to `kMax`, each with its intensity. For a
+    /// caller that predicts spots and needs no template library
+    /// (``PhaseVectorMatcher/indistinguishableVariants(_:matrixOrientation:reflections:excitationSlabInvAngstrom:reachInvAngstrom:toleranceInvAngstrom:directBeamRadiusInvAngstrom:)``).
+    public static func reflections(of crystal: CrystalStructure, kMax: Double) throws(ACOMError) -> [ACOMReflection] {
         let list: KinematicReflectionList
         do { list = try crystal.kinematicReflections(kMax: kMax, retainingAll: false) }
         catch { throw .kinematics(error.description) }
-        let library = try ACOMTemplateLibrary.generate(crystal: crystal, kMax: kMax, settings: templateSettings)
-        guard let matcher = ACOMMatcher(library: library) else { throw .invalidSettings("no FFT plan for the library's azimuthal length") }
-        self.init(name: name, matcher: matcher,
-                  reflections: list.kept.map { ACOMReflection(g: $0.reflection.g, intensity: $0.structureFactor.intensity) },
-                  excitationSlabInvAngstrom: excitationSlabInvAngstrom)
+        return list.kept.map { ACOMReflection(g: $0.reflection.g, intensity: $0.structureFactor.intensity) }
     }
 }
 
@@ -282,7 +288,8 @@ extension PhaseVectorMatcher {
                                           settings: PhaseOrientationSearchSettings,
                                           originX: Float, originY: Float, invAngstromPerPixel: Double,
                                           maximumWorkers: Int? = nil,
-                                          isCancelled: (@Sendable () -> Bool)? = nil) -> [PhaseOrientationVerdict]? {
+                                          isCancelled: (@Sendable () -> Bool)? = nil,
+                                          progress: (@Sendable (Double) -> Void)? = nil) -> [PhaseOrientationVerdict]? {
         let total = residual.scan.count
         guard residual.removedCounts.count == total else { return nil }
         guard total > 0 else { return [] }
@@ -290,13 +297,20 @@ extension PhaseVectorMatcher {
         results.withUnsafeMutableBufferPointer { buffer in
             let box = VerdictBox(buffer.baseAddress!)
             let workers = max(1, min(maximumWorkers ?? ProcessInfo.processInfo.activeProcessorCount, total))
+            // The positions done so far, reported about every 1 % of the scan (mac4DSTEM#333: this step ran for minutes unreported).
+            let counter = PhaseVectorMatcher.ProgressCounter()
+            let batch = max(1, total / (workers * 100))
             DispatchQueue.concurrentPerform(iterations: workers) { worker in
+                var pending = 0
                 for position in Swift.stride(from: worker, to: total, by: workers) {
                     if isCancelled?() == true { break }
                     box.value[position] = searchOrientations(
                         peaks: residual.scan[position], removedCount: residual.removedCounts[position], candidates: candidates,
                         settings: settings, originX: originX, originY: originY, invAngstromPerPixel: invAngstromPerPixel)
+                    pending += 1
+                    if let progress, pending >= batch { counter.add(pending, of: total, reporting: progress); pending = 0 }
                 }
+                if let progress, pending > 0 { counter.add(pending, of: total, reporting: progress) }
             }
         }
         guard isCancelled?() != true else { return nil }

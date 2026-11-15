@@ -4,6 +4,70 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.17.0](https://github.com/macEMSuite/DiffractoKit/compare/0.16.0...0.17.0) (2026-11-14)
+
+
+### Features
+
+* phase mapping from structures reports progress through its two passes ([#127](https://github.com/macEMSuite/DiffractoKit/issues/127)) ([775356a](https://github.com/macEMSuite/DiffractoKit/commit/775356af661f5ab80c70053a8d231451eb529a91))
+
+## [0.16.0](https://github.com/macEMSuite/DiffractoKit/compare/0.15.1...0.16.0) (2026-11-14)
+
+
+### Features
+
+* LinearScale.assign takes double-diffraction shells that match later rings only ([#126](https://github.com/macEMSuite/DiffractoKit/issues/126)) ([8b4213d](https://github.com/macEMSuite/DiffractoKit/commit/8b4213d770f1dce70c76ec078f9716405f13bf5a))
+
+
+### Bug Fixes
+
+* ACOM samples and reduces a -3m1 phase in its own -3m setting ([#122](https://github.com/macEMSuite/DiffractoKit/issues/122)) ([b4156ec](https://github.com/macEMSuite/DiffractoKit/commit/b4156ecb1bf53c0380e8cc0775775a9648ad3e52)), closes [#118](https://github.com/macEMSuite/DiffractoKit/issues/118)
+
+## [0.15.1](https://github.com/mac4DSTEM/DiffractoKit/compare/0.15.0...0.15.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* a structure from a CIF is named by the file's own chemical name ([#111](https://github.com/mac4DSTEM/DiffractoKit/issues/111)) ([3e47866](https://github.com/mac4DSTEM/DiffractoKit/commit/3e47866a54766536f4a6a56e2572eaac3f4a037b)), closes [#110](https://github.com/mac4DSTEM/DiffractoKit/issues/110)
+
+## [0.15.0](https://github.com/mac4DSTEM/DiffractoKit/compare/0.14.0...0.15.0) (2026-11-12)
+
+
+### Features
+
+* say which variants a spot pattern cannot tell apart ([#109](https://github.com/mac4DSTEM/DiffractoKit/issues/109)) ([38c5bc9](https://github.com/mac4DSTEM/DiffractoKit/commit/38c5bc923291eb248769fd5eb6057bbd9494d173))
+
+
+### Bug Fixes
+
+* a neighbouring grain's spots are not a phase's own vectors ([a51c5c3](https://github.com/mac4DSTEM/DiffractoKit/commit/a51c5c342980c73ed3bdd6ea21612a0319dfb072)), closes [#103](https://github.com/mac4DSTEM/DiffractoKit/issues/103)
+* a neighbouring grain's spots are not a phase's own vectors (a grain boundary is not called a precipitate) ([#104](https://github.com/mac4DSTEM/DiffractoKit/issues/104)) ([a51c5c3](https://github.com/mac4DSTEM/DiffractoKit/commit/a51c5c342980c73ed3bdd6ea21612a0319dfb072))
+* one matrix tolerance through the second pass of mapFromStructures ([#108](https://github.com/mac4DSTEM/DiffractoKit/issues/108)) ([556b446](https://github.com/mac4DSTEM/DiffractoKit/commit/556b4468db50f28687fe6cf6b61d6aeba01b662e)), closes [#106](https://github.com/mac4DSTEM/DiffractoKit/issues/106)
+
+## [0.14.0](https://github.com/mac4DSTEM/DiffractoKit/compare/0.13.0...0.14.0) (2026-11-12)
+
+
+### Features
+
+* one call that maps a scan's phases from the structures alone ([#101](https://github.com/mac4DSTEM/DiffractoKit/issues/101)) ([19211e3](https://github.com/mac4DSTEM/DiffractoKit/commit/19211e3702ba881fc41127534acb701a8e867884)), closes [#99](https://github.com/mac4DSTEM/DiffractoKit/issues/99)
+
+## [0.13.0](https://github.com/mac4DSTEM/DiffractoKit/compare/0.12.1...0.13.0) (2026-11-12)
+
+
+### Features
+
+* list the rational orientation relationships near a measured one, without choosing ([#88](https://github.com/mac4DSTEM/DiffractoKit/issues/88)) ([b9255ec](https://github.com/mac4DSTEM/DiffractoKit/commit/b9255eca5b47790d02210ef5cbc0d45ced75cf53))
+* orientation relationships learned from the scan, and positions classified against their variants ([#85](https://github.com/mac4DSTEM/DiffractoKit/issues/85)) ([73dadb0](https://github.com/mac4DSTEM/DiffractoKit/commit/73dadb06764251fb429bed161a09613c0d2b9531))
+* the detector's distortion measured on the matrix's spots ([#97](https://github.com/mac4DSTEM/DiffractoKit/issues/97)) ([8a5d85d](https://github.com/mac4DSTEM/DiffractoKit/commit/8a5d85dee03fffab4ee03acfd84421d849d2dd3c))
+* the matrix orientation held to the grain, and a phase search from the structures alone on the residual spots ([#84](https://github.com/mac4DSTEM/DiffractoKit/issues/84)) ([83b679d](https://github.com/mac4DSTEM/DiffractoKit/commit/83b679d0deb631e8f0662f9a25b46d0177e6d09e))
+* the matrix orientation per scan position, and the removal of the spots it explains ([#82](https://github.com/mac4DSTEM/DiffractoKit/issues/82)) ([210998f](https://github.com/mac4DSTEM/DiffractoKit/commit/210998f9213f76a4f95805736089344cbf9379ed))
+* the two passes as one call, scored on the whole pattern, with planted tests on other material pairs ([#86](https://github.com/mac4DSTEM/DiffractoKit/issues/86)) ([d09aa34](https://github.com/mac4DSTEM/DiffractoKit/commit/d09aa345ba8b80649080b761d51d07e417d472c8))
+
+
+### Bug Fixes
+
+* a displaced matrix pattern is never classified as a precipitate ([#95](https://github.com/mac4DSTEM/DiffractoKit/issues/95)) ([3c568fb](https://github.com/mac4DSTEM/DiffractoKit/commit/3c568fb66461571a28b20f817a9ba2fe1f8c2d9d))
+
 ## [0.12.1](https://github.com/mac4DSTEM/DiffractoKit/compare/0.12.0...0.12.1) (2026-11-10)
 
 
