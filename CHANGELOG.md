@@ -4,6 +4,14 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.18.0](https://github.com/macEMSuite/DiffractoKit/compare/0.17.0...0.18.0) (2026-11-15)
+
+
+### Features
+
+* the best phase per position across several structures, with ASTAR's phase reliability ([#129](https://github.com/macEMSuite/DiffractoKit/issues/129)) ([b251f72](https://github.com/macEMSuite/DiffractoKit/commit/b251f72e7474bb291c1a7e9db2502b0dc0e96b69))
+* which disk each phase claimed, for a map made from the structures ([#131](https://github.com/macEMSuite/DiffractoKit/issues/131)) ([6385c53](https://github.com/macEMSuite/DiffractoKit/commit/6385c53e75e7d7e9510ba47c16ca0820fb7c5a33))
+
 ## [0.17.0](https://github.com/macEMSuite/DiffractoKit/compare/0.16.0...0.17.0) (2026-11-14)
 
 
