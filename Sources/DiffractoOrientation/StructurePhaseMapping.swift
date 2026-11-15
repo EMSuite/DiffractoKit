@@ -95,6 +95,61 @@ public struct StructurePhaseMapping: Sendable {
     /// The symmetries the relationships were clustered by.
     public let matrixSymmetry: CrystalOrientationSymmetry
     public let candidateSymmetries: [CrystalOrientationSymmetry]
+
+    /// What the run matched with, kept for ``claims(at:peaks:)``: the settings, the frame of the peaks, the matrix's and each
+    /// candidate's reflections and each candidate's excitation slab, as the run used them.
+    let settings: StructurePhaseMappingSettings
+    let coordinates: PeakCoordinates
+    let matrixReflections: [ACOMReflection]
+    let candidateReflections: [[ACOMReflection]]
+    let candidateSlabsInvAngstrom: [Double]
+
+    /// Which disk the matrix and the called phase claimed at one position (DiffractoKit#130): a map from the structures records
+    /// no library entry, so the replay of ``PhaseVectorMatcher/claims(peaks:originX:originY:invAngstromPerPixel:settings:matrixEntry:result:library:)``
+    /// has nothing to read; this replays the run from what it kept.
+    ///
+    /// - A peak the run could not use (inside the direct beam, past the cut) is `.notMatched`.
+    /// - A peak the removal took is `.matrix`: the position's own matrix spots and, where two grains overlap along the beam, a
+    ///   neighbouring grain's (`residual`), so the count is `removedCounts`.
+    /// - Otherwise a peak within the pair radius of a spot the called phase predicts at the orientation the classification
+    ///   found (`classification.verdicts`, its variant's in-plane fit applied, the phase's own slab) is `.phase(k)`, k the
+    ///   map's phase index (0 the matrix, k + 1 the k-th candidate).
+    /// - Every other peak is `.unexplained`.
+    ///
+    /// LIMIT: where a phase taught no relationship the run keeps the free search's verdict, whose matched count is taken on
+    /// the residual by the search's own rule; the phase claims there are the spots of its orientation all the same.
+    ///
+    /// - Parameter peaks: the position's peaks exactly as the run was handed them (detector pixels).
+    /// - Returns: one claim per peak, in `peaks` order; empty when `position` is outside the scan.
+    public func claims(at position: Int, peaks: [SIMD2<Double>]) -> [PhaseDiskClaim] {
+        guard map.results.indices.contains(position), residual.scan.indices.contains(position),
+              classification.verdicts.indices.contains(position) else { return [] }
+        // What the removal left, as a multiset of the same pixel positions.
+        var left: [SIMD2<Double>: Int] = [:]
+        for p in residual.scan[position] { left[p, default: 0] += 1 }
+        let result = map.results[position], verdict = classification.verdicts[position]
+        var own: [SIMD2<Double>] = []
+        if result.verdict == .indexed, let orientation = verdict.orientation {
+            let k = Int(result.phaseIndex) - 1
+            if candidateReflections.indices.contains(k), candidateSlabsInvAngstrom.indices.contains(k) {
+                own = PhaseVectorMatcher.matrixSpots(reflections: candidateReflections[k], orientation: orientation,
+                                                     excitationSlabInvAngstrom: candidateSlabsInvAngstrom[k])
+            }
+        }
+        return peaks.map { peak in
+            let kept = (left[peak] ?? 0) > 0
+            if kept { left[peak]! -= 1 }
+            guard let u = PhaseVectorMatcher.experimentalVector(
+                peak: peak, coordinates: coordinates, directBeamRadiusInvAngstrom: settings.directBeamRadiusInvAngstrom,
+                maximumVectorInvAngstrom: settings.maximumVectorInvAngstrom)
+            else { return .notMatched }
+            if !kept { return .matrix }
+            if own.contains(where: { simd_length($0 - u) <= settings.pairRadiusInvAngstrom }) {
+                return .phase(Int(result.phaseIndex))
+            }
+            return .unexplained
+        }
+    }
 }
 
 extension PhaseVectorMatcher {
@@ -199,6 +254,12 @@ extension PhaseVectorMatcher {
         progress?(1)
         return StructurePhaseMapping(map: map, matrixField: regular.field, regularizedPositionCount: regular.changedPositions.count,
                                      matrixOrientations: corrected, residual: residual, classification: two,
-                                     matrixSymmetry: matrixSymmetry, candidateSymmetries: phases.map(\.symmetry))
+                                     matrixSymmetry: matrixSymmetry, candidateSymmetries: phases.map(\.symmetry),
+                                     settings: settings,
+                                     coordinates: .detectorPixels(originX: originX, originY: originY,
+                                                                  invAngstromPerPixel: invAngstromPerPixel),
+                                     matrixReflections: matrixCandidate.reflections,
+                                     candidateReflections: phases.map(\.candidate.reflections),
+                                     candidateSlabsInvAngstrom: phases.map(\.candidate.excitationSlabInvAngstrom))
     }
 }
