@@ -13,6 +13,7 @@ Live:
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
+- The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - Orientation symmetry and IPF keys, misorientation between two groups, `Orientation` from Euler angles with `dot`,
   `dotOuter` and `distanceMatrix`, orientation-relationship variants (beta'' in Al: 12), orientation-map planes.
 
