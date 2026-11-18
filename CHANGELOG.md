@@ -4,6 +4,13 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.18.1](https://github.com/EMSuite/DiffractoKit/compare/0.18.0...0.18.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* a ring ellipse fit keeps the 1D ring fit when the amorphous-ring profile departs from it, as on crystalline rings ([#135](https://github.com/EMSuite/DiffractoKit/issues/135)) ([88dde22](https://github.com/EMSuite/DiffractoKit/commit/88dde22534aa9c43083a02bf782976058cdfb773))
+
 ## [0.18.0](https://github.com/macEMSuite/DiffractoKit/compare/0.17.0...0.18.0) (2026-11-15)
 
 
