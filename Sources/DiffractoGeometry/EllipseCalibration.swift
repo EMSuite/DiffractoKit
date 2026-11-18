@@ -615,10 +615,13 @@ public enum EllipseCalibration {
             // The profile model is an amorphous halo. On sharp crystalline rings it can settle on a shape the ring does not
             // have (4DSTEM-Studio#460: a polycrystalline Au mean pattern, b/a 0.68 from the profile where py4DSTEM's
             // `fit_ellipse_1D` gives 0.995). A detector distortion is a few percent, so a profile whose axis ratio or size
-            // departs from its conic seed by more than `oneRingRatio` is not kept: the conic (the 1D ring fit) stands.
+            // departs from its conic seed by more than `oneRingRatio` is not kept when the conic (the 1D ring fit) is itself
+            // acceptable: the conic stands. A conic past its residual cap leaves the profile as before (the ring evidence
+            // judges it; RingFitRobustnessTests' noisy gapped rings).
             let profileRatio = profile.b / profile.a, conicRatio = conic.b / conic.a
             let profileSize = profile.a + profile.b, conicSize = conic.a + conic.b
-            if max(profileRatio, conicRatio) / min(profileRatio, conicRatio) > policy.oneRingRatio
+            if conic.conicResidual <= maximumConicResidual,
+               max(profileRatio, conicRatio) / min(profileRatio, conicRatio) > policy.oneRingRatio
                 || max(profileSize, conicSize) / min(profileSize, conicSize) > policy.oneRingRatio {
                 throw ProfileDepartsFromConic(profileRatio: profileRatio, conicRatio: conicRatio)
             }
