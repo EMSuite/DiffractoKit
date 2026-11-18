@@ -604,7 +604,7 @@ public enum EllipseCalibration {
             span: span.sub(0, 0.1), isCancelled: isCancelled, policy: policy
         )
         do {
-            return try fitAmorphousRing(
+            let profile = try fitAmorphousRing(
                 pattern: pattern, initial: conic,
                 centerQX: centerQX, centerQY: centerQY,
                 innerRadius: innerRadius, outerRadius: outerRadius,
@@ -612,6 +612,20 @@ public enum EllipseCalibration {
                 requireRingEvidence: requireRingEvidence, span: span.sub(0.1, 1), isCancelled: isCancelled,
                 policy: policy
             )
+            // The profile model is an amorphous halo. On sharp crystalline rings it can settle on a shape the ring does not
+            // have (4DSTEM-Studio#460: a polycrystalline Au mean pattern, b/a 0.68 from the profile where py4DSTEM's
+            // `fit_ellipse_1D` gives 0.995). A detector distortion is a few percent, so a profile whose axis ratio or size
+            // departs from its conic seed by more than `oneRingRatio` is not kept when the conic (the 1D ring fit) is itself
+            // acceptable: the conic stands. A conic past its residual cap leaves the profile as before (the ring evidence
+            // judges it; RingFitRobustnessTests' noisy gapped rings).
+            let profileRatio = profile.b / profile.a, conicRatio = conic.b / conic.a
+            let profileSize = profile.a + profile.b, conicSize = conic.a + conic.b
+            if conic.conicResidual <= maximumConicResidual,
+               max(profileRatio, conicRatio) / min(profileRatio, conicRatio) > policy.oneRingRatio
+                || max(profileSize, conicSize) / min(profileSize, conicSize) > policy.oneRingRatio {
+                throw ProfileDepartsFromConic(profileRatio: profileRatio, conicRatio: conicRatio)
+            }
+            return profile
         } catch {
             if error is CancellationError { throw error }
             guard conic.conicResidual <= maximumConicResidual else { throw error }
@@ -626,6 +640,15 @@ public enum EllipseCalibration {
                 profileFallbackReason: error.localizedDescription,
                 sparseCoverage: conic.sparseCoverage
             )
+        }
+    }
+
+    /// Why `fitBestAvailable` kept the conic over a profile fit whose shape departs from it (its `profileFallbackReason`).
+    struct ProfileDepartsFromConic: LocalizedError {
+        let profileRatio: Double, conicRatio: Double
+        var errorDescription: String? {
+            String(format: "the amorphous-ring profile (b/a %.3f) departs from the 1D ring fit (b/a %.3f), as on crystalline "
+                + "rings", profileRatio, conicRatio)
         }
     }
 
