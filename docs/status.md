@@ -16,6 +16,8 @@ Live:
   out and each spot refined.
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
+- One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
+  tilts and turns in the lab frame, the nearest zone axis and the angle to it, orix quaternions in and out.
 - Orientation symmetry and IPF keys, misorientation between two groups, `Orientation` from Euler angles with `dot`,
   `dotOuter` and `distanceMatrix`, orientation-relationship variants (beta'' in Al: 12), orientation-map planes.
 
