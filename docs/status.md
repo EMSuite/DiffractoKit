@@ -6,8 +6,8 @@ It builds on ImagoKit `"0.2.0"..<"1.0.0"`.
 Live:
 
 - Cells in the seven systems, Niggli reduction, the conventional cell.
-- CIF import with symmetry detection and a completeness check by IT number, by symbol or by Hall symbol (a Hall-only CIF
-  is expanded with its group; an operation list that is not its space group is refused, and one that disagrees with the
+- CIF import with symmetry detection and a completeness check by IT number, by symbol or by Hall symbol (a CIF with no
+  operation loop is expanded from its Hall symbol, Hermann–Mauguin symbol or IT number, in pymatgen's setting, with a warning; an operation list that is not its space group is refused, and one that disagrees with the
   Hall symbol warns); space-group-free symmetry from the atoms; reflections and rings.
 - The CIFs people have: `?` and `.` values, deuterium and tritium, dummy atoms (left out with a warning), U and B iso,
   Latin-1 and a byte-order mark, DDLm names, a publication block before the structure; mmCIF and mCIF refused by name,

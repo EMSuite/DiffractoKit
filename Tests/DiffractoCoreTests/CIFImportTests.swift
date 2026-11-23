@@ -274,7 +274,8 @@ struct CIFImportTests {
         #expect(refusal(Self.goldP1.replacingOccurrences(of: "Au1 Au 0 0 0", with: "Zz1 Zz 0 0 0")) == .unknownElementSymbol("Zz", atomSiteLabel: "Zz1"))
         let badOp = Self.goldP1 + "loop_\n_symmetry_equiv_pos_as_xyz\n'x,y,z'\n'banana'\n"
         #expect(refusal(badOp) == .unsupportedSymmetryOperation("banana"))
-        #expect(refusal("data_gold\n_symmetry_space_group_name_H-M 'F m -3 m'\n" + Self.goldP1.dropFirst("data_gold\n".count)) == .missingSymmetryOperations(spaceGroup: "F m -3 m"))
+        // A symbol the kit holds no setting for (pymatgen's "C 1" is a change of basis); 'F m -3 m' is read since K6.
+        #expect(refusal("data_gold\n_symmetry_space_group_name_H-M 'C 1'\n" + Self.goldP1.dropFirst("data_gold\n".count)) == .missingSymmetryOperations(spaceGroup: "C 1"))
         #expect(refusal("data_gold\n_symmetry_Int_Tables_number 225\n" + Self.goldP1.dropFirst("data_gold\n".count)
                                + "loop_\n_symmetry_equiv_pos_as_xyz\n'x,y,z'\n'x+1,y,z'\n") == .missingSymmetryOperations(spaceGroup: "No. 225"))
         #expect(refusal(Self.goldP1 + "Au5 Au 0.25 0.25\n") == .truncatedLoop(firstTag: "_atom_site_label", columns: 5, values: 24))
