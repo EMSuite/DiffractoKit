@@ -57,6 +57,7 @@ public enum StereographicProjection {
         for i in 0...samples {
             let t = 2 * Double.pi * Double(i) / Double(samples)
             let v = sin(off) * n + cos(off) * (cos(t) * e1 + sin(t) * e2)
+            // drawn only where z ≥ 0 (stricter than project's −1e-9 cut), so a run ends on the primitive circle
             if let p = project(v), v.z >= 0 {
                 current.append(p)
             } else if !current.isEmpty {

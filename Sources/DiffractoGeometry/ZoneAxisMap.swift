@@ -65,7 +65,7 @@ public enum ZoneAxisMap {
             if x.key != y.key { return x.key < y.key }
             return (x.pole.uvw.x, x.pole.uvw.y, x.pole.uvw.z) > (y.pole.uvw.x, y.pole.uvw.y, y.pole.uvw.z)
         }
-        return out.map(\.pole)
+        return out.map { $0.pole }
     }
 
     /// The traces of the `families` plane families of largest d among the reflections the structure scatters into (the

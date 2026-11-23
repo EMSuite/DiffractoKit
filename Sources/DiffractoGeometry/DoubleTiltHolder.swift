@@ -96,7 +96,7 @@ public struct DoubleTiltHolder: Sendable, Codable, Equatable {
         /// The angle of the α axis in the pattern, in [0, 360) degrees.
         public let axisAngleDeg: Double
         /// The rotation the stage reports between the two tilts (degrees): the larger, the better the axis is fixed
-        /// (planted, 0.2° orientation error per pattern: median 0.45°, 95th percentile 1.3° for 10 to 20°).
+        /// (planted, 0.2° orientation error per pattern: median 0.48°, 95th percentile 1.4° for 10 to 20°).
         public let tiltChangeDeg: Double
         /// The angle between the measured rotation and the stage's rotation at the found axis (degrees): how well the pair
         /// fits a holder of this model.
