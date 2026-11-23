@@ -19,10 +19,10 @@ import DiffractoGeometry
         CrystalStructure(cell: cell, sites: sites.map { AtomSite(z: z, fractional: $0) }, operations: [.identity])
     }
     private static let fcc = [SIMD3(0.0, 0, 0), SIMD3(0, 0.5, 0.5), SIMD3(0.5, 0, 0.5), SIMD3(0.5, 0.5, 0)]
-    private let silicon = structure(.cubic(a: 5.4309), 14, fcc + fcc.map { $0 + SIMD3(0.25, 0.25, 0.25) })
-    private let aluminium = structure(.cubic(a: 4.0495), 13, fcc)
-    private let iron = structure(.cubic(a: 2.8665), 26, [SIMD3(0, 0, 0), SIMD3(0.5, 0.5, 0.5)])
-    private let magnesium = structure(.hexagonal(a: 3.2094, c: 5.2108), 12, [SIMD3(1.0 / 3, 2.0 / 3, 0.25), SIMD3(2.0 / 3, 1.0 / 3, 0.75)])
+    private let silicon = Self.structure(.cubic(a: 5.4309), 14, Self.fcc + Self.fcc.map { $0 + SIMD3(0.25, 0.25, 0.25) })
+    private let aluminium = Self.structure(.cubic(a: 4.0495), 13, Self.fcc)
+    private let iron = Self.structure(.cubic(a: 2.8665), 26, [SIMD3(0, 0, 0), SIMD3(0.5, 0.5, 0.5)])
+    private let magnesium = Self.structure(.hexagonal(a: 3.2094, c: 5.2108), 12, [SIMD3(1.0 / 3, 2.0 / 3, 0.25), SIMD3(2.0 / 3, 1.0 / 3, 0.75)])
     private let volts = 200_000.0
 
     /// The reflections of zone `uvw` within k_max that `forbidden` names and the window (|s| ≤ 0.06) excites.
@@ -108,6 +108,8 @@ import DiffractoGeometry
                                                               1: Dictionary(uniqueKeysWithValues: r.patterns[1].spots.map { ($0.hkl, $0.position) })]
         for spot in between {
             #expect(spot.hkl == nil)
+            // Both orders are routes.
+            #expect(spot.routes.contains { $0.first.crystal == 1 } && spot.routes.contains { $0.first.crystal == 0 })
             #expect(kinematic.allSatisfy { simd_distance($0, spot.position) > 1e-7 })
             #expect(abs(spot.excitationError) <= 0.06)
             for route in spot.routes {

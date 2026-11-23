@@ -5,11 +5,13 @@
 //        e.g. 002 in silicon down [110]) or a point on no lattice at all (g₁ of a matrix plus g₂ of a precipitate), a spot
 //        appears that the kinematic pattern does not have. Each added spot names its routes (g₁ of which crystal, g₂ of which).
 //
-//  Rule (Williams & Carter, Transmission Electron Microscopy, 2nd ed. (2009), section 17.5): both g₁ and g₂ are spots of
+//  Rule (kinematically forbidden reflections by double diffraction: Gjønnes & Moodie, Acta Cryst. 19 (1965) 65; Williams &
+//  Carter, Transmission Electron Microscopy, 2nd ed. (2009)): both g₁ and g₂ are spots of
 //  their kinematic patterns (`SpotPatternSimulator.pattern`, the same settings), and the sum is excited by the same window,
 //  |s(g₁ + g₂)| ≤ σ · multiple, with s from the lab vector of the sum (py4DSTEM's form, `SimulatedSpot.excitationError`).
 //  Within one crystal the sum is added only when its hkl is not a kinematic reflection (|F| at or below the cut) and lies
-//  within k_max; across crystals, only when it falls on none of the patterns' own spots and within the larger k_max of the two. No intensity is computed (kinematic
+//  within k_max; across crystals, within the larger k_max of the two. Either way a sum on a kinematic spot of any of the
+//  patterns is not added. Between two crystals both orders (g₁ of A then g₂ of B, and g₂ of B then g₁ of A) are routes. No intensity is computed (kinematic
 //  theory gives none): each route carries I(g₁)·I(g₂) to rank the routes.
 //
 
@@ -97,13 +99,26 @@ public enum DoubleDiffraction {
             })
         }
         let allowed = crystals.map { Set($0.simulator.reflections.map(\.structureFactor.hkl)) }
-        let kinematic = labs.flatMap { $0 }.map(\.p)
+        // Points closer than `coincidence` are one point: a grid of that cell, each lookup over the 27 cells about it.
+        func cell(_ p: SIMD3<Double>) -> SIMD3<Int> {
+            SIMD3(Int((p.x / coincidence).rounded(.down)), Int((p.y / coincidence).rounded(.down)), Int((p.z / coincidence).rounded(.down)))
+        }
+        func near<T>(_ grid: [SIMD3<Int>: [T]], _ p: SIMD3<Double>, _ position: (T) -> SIMD3<Double>) -> T? {
+            let c = cell(p)
+            for dx in -1...1 { for dy in -1...1 { for dz in -1...1 {
+                if let hit = grid[c &+ SIMD3(dx, dy, dz)]?.first(where: { simd_distance(position($0), p) <= coincidence }) { return hit }
+            } } }
+            return nil
+        }
+        var kinematic: [SIMD3<Int>: [SIMD3<Double>]] = [:]
+        for l in labs.joined() { kinematic[cell(l.p), default: []].append(l.p) }
 
         func excitation(_ p: SIMD3<Double>) -> Double {
             (2 * p.z - lambda * simd_length_squared(p)) / (2 - 2 * lambda * p.z)
         }
         struct Candidate { var p: SIMD3<Double>; var s: Double; var crystal: Int?; var hkl: MillerIndex?; var routes: [DoubleDiffractionRoute] }
         var candidates: [Candidate] = []
+        var candidateGrid: [SIMD3<Int>: [Int]] = [:]
         func offer(_ a: Lab, _ b: Lab) {
             let route = DoubleDiffractionRoute(first: .init(crystal: a.crystal, hkl: a.hkl), second: .init(crystal: b.crystal, hkl: b.hkl),
                                                weight: a.intensity * b.intensity)
@@ -121,15 +136,20 @@ public enum DoubleDiffraction {
                 p = a.p + b.p
                 let reach = max(crystals[a.crystal].simulator.kMax, crystals[b.crystal].simulator.kMax)
                 guard simd_length(p) > coincidence, simd_length(p) <= reach else { return }
-                guard !kinematic.contains(where: { simd_distance($0, p) <= coincidence }) else { return }
             }
             let s = excitation(p)
             guard s.isFinite, abs(s) <= sgMax else { return }
-            if let k = candidates.firstIndex(where: { simd_distance($0.p, p) <= coincidence }) {
-                candidates[k].routes.append(route)
+            guard near(kinematic, p, { $0 }) == nil else { return }
+            var routes = [route]
+            if a.crystal != b.crystal {
+                routes.append(DoubleDiffractionRoute(first: route.second, second: route.first, weight: route.weight))
+            }
+            if let k = near(candidateGrid, p, { candidates[$0].p }) {
+                candidates[k].routes += routes
                 if candidates[k].crystal != crystal || candidates[k].hkl != hkl { candidates[k].crystal = nil; candidates[k].hkl = nil }
             } else {
-                candidates.append(Candidate(p: p, s: s, crystal: crystal, hkl: hkl, routes: [route]))
+                candidateGrid[cell(p), default: []].append(candidates.count)
+                candidates.append(Candidate(p: p, s: s, crystal: crystal, hkl: hkl, routes: routes))
             }
         }
         for i in labs.indices {
