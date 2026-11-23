@@ -45,10 +45,11 @@ let package = Package(
                 dependencies: ["DiffractoCore", "DiffractoScattering", .product(name: "ImagoCore", package: "ImagoKit")],
                 swiftSettings: settings),
         // The reference library and the vector matcher of phase mapping, the value types of an orientation result (Euler
-        // angles, the zone-axis frame) and the ACOM template matcher. Later: py4DSTEM's SO(3) correlogram and pyxem / orix
-        // template matching.
+        // angles, the zone-axis frame), the ACOM template matcher and the full orientation of one pattern (which takes the
+        // zone-axis solver and the tilt refinement of DiffractoGeometry). Later: py4DSTEM's SO(3) correlogram and pyxem /
+        // orix template matching.
         .target(name: "DiffractoOrientation",
-                dependencies: ["DiffractoCore", "DiffractoScattering",
+                dependencies: ["DiffractoCore", "DiffractoScattering", "DiffractoGeometry",
                                .product(name: "ImagoFFT", package: "ImagoKit")],
                 swiftSettings: settings),
         // The README's first ten minutes as a program (no product: `swift run diffracto-example`, or `swift build --product
@@ -69,7 +70,8 @@ let package = Package(
                     dependencies: ["DiffractoGeometry", "DiffractoScattering", "DiffractoCore", "DiffractoKitTestSupport"],
                     exclude: ["Fixtures"], swiftSettings: settings),
         .testTarget(name: "DiffractoOrientationTests",
-                    dependencies: ["DiffractoOrientation", "DiffractoScattering", "DiffractoCore", "DiffractoKitTestSupport"],
+                    dependencies: ["DiffractoOrientation", "DiffractoGeometry", "DiffractoScattering", "DiffractoCore",
+                                   "DiffractoKitTestSupport"],
                     exclude: ["Fixtures"], swiftSettings: settings),
         // The pinned comparisons against the Python references (pymatgen, spglib, py4DSTEM, orix, pyxem): the slow half,
         // skipped by the per-session gate with `--skip DiffractoKitParityTests`, run by the plain `swift test`. Their

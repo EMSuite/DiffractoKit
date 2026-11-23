@@ -68,7 +68,8 @@ extension ZoneAxisSolver {
             self.ambiguityMargin = ambiguityMargin
         }
 
-        var isValid: Bool {
+        /// Every value finite and in range (reach ≥ 0, step > 0 with at most 1000 steps, power > 0, margin ≥ 0).
+        public var isValid: Bool {
             reach.isFinite && step.isFinite && reach >= 0 && step > 0 && reach / step <= 1000 && intensityPower.isFinite
                 && intensityPower > 0 && ambiguityMargin.isFinite && ambiguityMargin >= 0
         }
@@ -115,6 +116,29 @@ extension ZoneAxisSolver {
         }
         guard let o = try? CrystalOrientation(matrix: Self.tilting(m0, by: best.tilt)) else { return nil }
         return RefinedOrientation(orientation: o, tilt: best.tilt, agreement: best.value, startAgreement: c(.zero), scale: scale)
+    }
+
+    /// How far (radians) from `orientation` the agreement stays within `settings.ambiguityMargin` of its own, over the coarse
+    /// tilt grid about it (`reach`, `step`): 0 when every other tilt agrees worse, up to `reach` when the intensities barely
+    /// fix the tilt (few spots).
+    public func tiltSpread(of orientation: CrystalOrientation, scale: Double, spots: [SIMD2<Double>], intensities: [Double],
+                           settings: TiltSettings = .init()) -> Double {
+        guard settings.isValid, spots.count == intensities.count, !spots.isEmpty, scale.isFinite, scale > 0 else { return .nan }
+        let a = intensities.map { pow(max($0, 0), settings.intensityPower) }
+        let qn = spots.map { simd_length($0) }
+        let m0 = orientation.matrix
+        let c0 = agreement(m0, scale: scale, spots: spots, qn: qn, a: a, power: settings.intensityPower)
+        let n = Int((settings.reach / settings.step).rounded())
+        var spread = 0.0
+        for i in -n...n {
+            for k in -n...n where (Double(i * i + k * k)).squareRoot() <= Double(n) {
+                let t = SIMD2(Double(i), Double(k)) * settings.step
+                guard simd_length(t) > spread else { continue }
+                if agreement(Self.tilting(m0, by: t), scale: scale, spots: spots, qn: qn, a: a, power: settings.intensityPower)
+                    >= c0 - settings.ambiguityMargin { spread = simd_length(t) }
+            }
+        }
+        return spread
     }
 
     /// The candidates of `solution` (each and its half turn about the beam) refined on the intensities; nil when there is
