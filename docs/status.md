@@ -11,6 +11,8 @@ Live:
 - The CIFs people have: `?` and `.` values, deuterium and tritium, dummy atoms (left out with a warning), U and B iso,
   Latin-1 and a byte-order mark, DDLm names, a publication block before the structure; mmCIF and mCIF refused by name,
   a number that is not finite refused with a typed error, and a seeded fuzz of the committed CIFs that never crashes (#117).
+- A cell that is singular, or whose volume, occupancy or metric is not a number, is refused by `UnitCell`,
+  `StructureFactors.compute` and the symmetry's metric test instead of computing on an identity inverse or NaN (#147).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`

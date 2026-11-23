@@ -10,7 +10,7 @@ F(hkl) = (1/V) sum over sites of f(Z, |g|^2) * occupancy * exp(2 pi i (h x + k y
 
 with f the electron scattering factor in angstroms and V the cell volume in cubic angstroms, so F is in A^-2 and
 ``StructureFactor/intensity`` = |F|^2 is in A^-4. The default form factor is `ElectronScatteringFactors.f`; any
-``FormFactor`` can be passed in its place. The function returns nil when a site's element has no scattering factor.
+``FormFactor`` can be passed in its place. The function returns nil when a site's element has no scattering factor, and when the cell's volume, g, a coordinate or an occupancy is not a finite number (never a NaN or infinite F).
 
 ## The cut
 
