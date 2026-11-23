@@ -1,4 +1,4 @@
-# Status
+# Status: DiffractoKit 0.18.1 <!-- x-release-please-version -->
 
 DiffractoKit 0.18.1, on ImagoKit `"0.2.0"..<"1.0.0"`.
 
@@ -17,6 +17,12 @@ Live:
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.
+- The spots of one pattern (`PatternSpots`): py4DSTEM's `get_maxima_2D` exactly, then a radial background, the beam left
+  out and each spot refined.
+- The spot pattern of a structure at any orientation and voltage (`SpotPattern`): py4DSTEM's kinematic pattern, every spot
+  with hkl, position, d, excitation error and intensity, and its distance R = L tan 2θ at a camera length.
+- The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
+  its routes (`DoubleDiffraction`).
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
