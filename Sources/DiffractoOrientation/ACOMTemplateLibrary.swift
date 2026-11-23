@@ -338,7 +338,8 @@ public struct ACOMTemplateLibrary: Sendable {
             case .appCurvature(let l): sg = gz + (l / 2) * g2
             case .py4DSTEM(let l): sg = (2 * gz - l * g2) / (2 - 2 * l * gz)
             }
-            if abs(sg) > settings.sgMax { continue }
+            // `!(… <= …)` also drops a NaN s (py4DSTEM's 0/0 at g·n = 1/λ, |g|² = 2/λ²), as py4DSTEM's `np.abs(sg) < kernel` does
+            if !(abs(sg) <= settings.sgMax) { continue }
             let excited = refl.intensity * exp(-(sg / settings.sgWidth) * (sg / settings.sgWidth))
             var w = settings.intensityPower == 1 ? excited : pow(excited, settings.intensityPower)
             let x = simd_dot(refl.g, e1), y = simd_dot(refl.g, e2)

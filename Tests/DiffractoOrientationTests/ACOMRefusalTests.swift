@@ -40,31 +40,15 @@ import DiffractoCore
         #expect(abs((spots.first?.r ?? 0) - 0.2) <= 1e-15)
     }
 
-    /// A NaN intensity made every template's score the same floor, so `match` returned template 0 at score 0: a plausible
-    /// orientation for a pattern it never matched. Infinity normalises to NaN the same way.
-    @Test(arguments: [Float.nan, .infinity, -.infinity])
-    func aNonFiniteIntensityIsRefused(_ value: Float) throws {
+    /// A NaN origin or pixel size gave every peak a NaN radius. A non-finite peak alone is left out (NonFinitePeakTests).
+    @Test func aNonFiniteOriginOrScaleIsRefused() throws {
         let matcher = try #require(ACOMMatcher(library: try Self.library()))
-        var peaks = Self.peaks
-        peaks[2].intensity = value
-        #expect(matcher.match(peaks: peaks, originX: 100, originY: 100, invAngstromPerPixel: 0.025) == .empty)
-        #expect(matcher.matches(peaks: peaks, originX: 100, originY: 100, invAngstromPerPixel: 0.025, count: 3).isEmpty)
-        #expect(matcher.templateScores(peaks: peaks, originX: 100, originY: 100, invAngstromPerPixel: 0.025).isEmpty)
-        // The same pattern with a finite intensity is matched.
-        #expect(matcher.match(peaks: Self.peaks, originX: 100, originY: 100, invAngstromPerPixel: 0.025).templateIndex >= 0)
-    }
-
-    /// A NaN position, origin or pixel size gave a NaN radius, and `Int(NaN.rounded())` trapped in the polar image.
-    @Test func aNonFinitePositionOriginOrScaleIsRefused() throws {
-        let matcher = try #require(ACOMMatcher(library: try Self.library()))
-        var peaks = Self.peaks
-        peaks[0].x = .nan
-        #expect(matcher.match(peaks: peaks, originX: 100, originY: 100, invAngstromPerPixel: 0.025) == .empty)
         #expect(matcher.match(peaks: Self.peaks, originX: .nan, originY: 100, invAngstromPerPixel: 0.025) == .empty)
         #expect(matcher.match(peaks: Self.peaks, originX: 100, originY: .infinity, invAngstromPerPixel: 0.025) == .empty)
         #expect(matcher.match(peaks: Self.peaks, originX: 100, originY: 100, invAngstromPerPixel: .nan) == .empty)
         #expect(matcher.match(peaks: Self.peaks, originX: 100, originY: 100, invAngstromPerPixel: 0) == .empty)
-        #expect(matcher.experimentalPolarImage(peaks: peaks, originX: 100, originY: 100, invAngstromPerPixel: 0.025) == nil)
+        #expect(matcher.experimentalPolarImage(peaks: Self.peaks, originX: 100, originY: 100, invAngstromPerPixel: -1) == nil)
+        #expect(matcher.templateScores(peaks: Self.peaks, originX: .nan, originY: 100, invAngstromPerPixel: 0.025).isEmpty)
     }
 
     /// A finite peak far off the detector gave a radius past Int.max, and `Int(_:)` trapped in the polar image. It lies
