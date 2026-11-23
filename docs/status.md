@@ -17,6 +17,8 @@ Live:
   finds the centre of a pattern with one), radial profile and spot refinement.
 - The spot pattern of a structure at any orientation and voltage (`SpotPattern`): py4DSTEM's kinematic pattern, every spot
   with hkl, position, d, excitation error and intensity, and its distance R = L tan 2θ at a camera length.
+- The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
+  its routes (`DoubleDiffraction`).
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
