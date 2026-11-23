@@ -131,7 +131,7 @@ extension ACOMMatcher {
                          selection: ACOMScanSelection = .full, maxWorkers: Int? = nil, backend: ACOMBackend = .cpu,
                          isCancelled: (@Sendable () -> Bool)? = nil,
                          progress: (@Sendable (Double) -> Void)? = nil) -> ACOMScanResults? {
-        guard peaks.count == width * height else { return nil }
+        guard gridHolds(peaks.count, width: width, height: height) else { return nil }
         return matchAll(width: width, height: height, originX: originX, originY: originY,
                         invAngstromPerPixel: invAngstromPerPixel, selection: selection, maxWorkers: maxWorkers,
                         backend: backend, isCancelled: isCancelled, progress: progress) { peaks[$0] }

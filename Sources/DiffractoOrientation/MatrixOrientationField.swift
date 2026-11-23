@@ -228,7 +228,8 @@ extension PhaseVectorMatcher {
                                            directBeamRadiusInvAngstrom: Double = 0.15,
                                            maximumVectorInvAngstrom: Double = 0,
                                            neighbouringGrains: MatrixNeighbourhood? = nil) -> MatrixResidualScan? {
-        guard scan.count == field.orientations.count, scan.count == field.width * field.height else { return nil }
+        guard scan.count == field.orientations.count, gridHolds(scan.count, width: field.width, height: field.height)
+        else { return nil }
         // Each position's orientation reduced by the matrix symmetry, to tell the grains of a neighbourhood apart.
         let reduced: [simd_double3x3?] = neighbouringGrains.map { n in
             field.orientations.map { m in m.flatMap { (try? n.symmetry.reduce($0))?.matrix } }

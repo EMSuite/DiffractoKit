@@ -10,11 +10,18 @@
 import Foundation
 import simd
 
+/// Whether `count` positions fill a `width` × `height` grid exactly; false when the product overflows `Int` (an unchecked
+/// `width * height` traps).
+func gridHolds(_ count: Int, width: Int, height: Int) -> Bool {
+    let (cells, overflow) = width.multipliedReportingOverflow(by: height)
+    return !overflow && count == cells
+}
+
 public enum OrientationMapAnalysis {
 
     /// The Euler angles at (x, y) as "φ1°, Φ°, φ2°" (one decimal), or nil outside the map or at an unmatched position.
     public static func eulerText(results: [OrientationResult], width: Int, height: Int, x: Int, y: Int) -> String? {
-        guard width > 0, height > 0, results.count == width * height,
+        guard width > 0, height > 0, gridHolds(results.count, width: width, height: height),
               x >= 0, x < width, y >= 0, y < height else { return nil }
         let result = results[y * width + x]
         guard result.templateIndex >= 0 else { return nil }
