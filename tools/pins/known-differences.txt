@@ -1,0 +1,9 @@
+# References that do not reproduce on Linux yet, each with its reason; all are tracked in EMSuite/DiffractoKit#141.
+# tools/pins/compare.py reports a listed file as known instead of failing; tools/pins/regenerate.sh lets a listed generator
+# fail. Take a line out in the PR that fixes it.
+Tests/DiffractoGeometryTests/Fixtures/numpy-ring-indexing-pins.json        # stale source_of_lists text (#141)
+Tests/DiffractoOrientationTests/Fixtures/py4dstem-family-pins.json         # written with NumPy 2.5.0, pin is 2.5.4 (#141)
+Tests/DiffractoGeometryTests/Fixtures/scipy-ellipse-sweep-pins.json        # least_squares optima and spreads move (#141)
+Tests/DiffractoOrientationTests/Fixtures/py4dstem-family-real-pins.json    # sector-boundary ties pick another operator (#141)
+Tests/DiffractoOrientationTests/Fixtures/py4dstem-phase-vector-pins.json   # tied entries come in another order on 10 axes; values agree to 1.2e-15 (#141)
+tools/pins/phase-vectors/pins.py                                           # exits 3 on the Mac too: three registered predictions fail, as the fixture records (#141)

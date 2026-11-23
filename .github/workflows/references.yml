@@ -1,0 +1,48 @@
+# The Linux reference job: rebuild every committed Python reference from the pinned environments (tools/pins/requirements:
+# pymatgen-core 2026.10.16 with spglib 2.8.0, orix 0.15.0, py4DSTEM f050d207) and fail when one differs beyond float noise.
+# tools/pins/compare.py states what float noise is: the committed files were written on a Mac, this runs on Linux, and the
+# two differ in the last bits of a float64. tools/pins/known-differences.txt lists what does not reproduce yet (#141).
+# Two generators stay Mac-only; tools/pins/regenerate.sh names them and why. It takes no macOS runner.
+name: References
+
+on:
+  schedule:
+    - cron: "37 3 * * 1"   # weekly, Monday
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/references.yml"
+      - "tools/pins/**"
+      - "tools/crystal-structures/**"
+      - "Tests/*/Fixtures/**"
+      - "Sources/DiffractoOrientation/OrixIPFSectors.swift"
+      - "Sources/DiffractoOrientation/PymatgenOperatorTable.swift"
+      - "Sources/DiffractoOrientation/Py4DSTEMIPFKey.swift"
+
+concurrency:
+  group: references-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    name: Regenerate the Python references
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      REFS: ${{ github.workspace }}/../References
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/pins/requirements/*.txt
+      - name: Test the comparison
+        run: python -I -B tools/pins/test_compare.py
+      - name: Pinned environments, source clones, scattering table, beta'' CIF
+        run: tools/pins/regenerate.sh --setup
+      - name: Regenerate and compare
+        run: tools/pins/regenerate.sh
