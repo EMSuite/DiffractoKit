@@ -15,6 +15,8 @@ Live:
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.
+- The spots of one pattern (`PatternSpots`): py4DSTEM's `get_maxima_2D` exactly, then a radial background, the beam left
+  out and each spot refined.
 - The spot pattern of a structure at any orientation and voltage (`SpotPattern`): py4DSTEM's kinematic pattern, every spot
   with hkl, position, d, excitation error and intensity, and its distance R = L tan 2θ at a camera length.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
