@@ -242,4 +242,5 @@ runRingDisplayChecks(&report)
 runPhaseOrientationChecks(&report)
 
 report.section("0.10.0: misorientation, variants, assignment, pattern measurements") { try runOrientationAndScaleChecks(&$0) }
+report.section("CrystalOrientation") { try runCrystalOrientationChecks(&$0) }
 exit(report.finish())
