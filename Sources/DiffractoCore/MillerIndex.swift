@@ -32,12 +32,13 @@ public struct MillerIndex: Sendable, Hashable, Comparable, CustomStringConvertib
     }
 
     /// The row vector (h k l) times `rotation`: where a symmetry operation with that rotation part sends this
-    /// reflection.
+    /// reflection. Wrapping arithmetic, like `IntegerMatrix.determinant`: it never traps, and it is exact whenever the
+    /// result fits in an `Int`.
     public func applying(_ rotation: IntegerMatrix) -> MillerIndex {
         MillerIndex(
-            h * rotation.rows[0].x + k * rotation.rows[1].x + l * rotation.rows[2].x,
-            h * rotation.rows[0].y + k * rotation.rows[1].y + l * rotation.rows[2].y,
-            h * rotation.rows[0].z + k * rotation.rows[1].z + l * rotation.rows[2].z)
+            h &* rotation.rows[0].x &+ k &* rotation.rows[1].x &+ l &* rotation.rows[2].x,
+            h &* rotation.rows[0].y &+ k &* rotation.rows[1].y &+ l &* rotation.rows[2].y,
+            h &* rotation.rows[0].z &+ k &* rotation.rows[1].z &+ l &* rotation.rows[2].z)
     }
 
     /// The fourth Miller–Bravais index i = −(h + k), for the hexagonal-axes Laue classes.
@@ -78,17 +79,21 @@ public struct IntegerMatrix: Sendable, Hashable, CustomStringConvertible {
         rows[row][column]
     }
 
-    /// Matrix product (self · other), the composition that applies `other` first to a column vector.
+    /// Matrix product (self · other), the composition that applies `other` first to a column vector. Wrapping
+    /// arithmetic, like `determinant`: it never traps (the powers of a matrix that is not unimodular grow past `Int` in
+    /// about 63 steps), and it is exact whenever the product fits in an `Int`, as it does for every pair of symmetry
+    /// rotations.
     public func multiplied(by other: IntegerMatrix) -> IntegerMatrix {
         func row(_ r: SIMD3<Int>) -> SIMD3<Int> {
-            SIMD3(r.x * other.rows[0].x + r.y * other.rows[1].x + r.z * other.rows[2].x,
-                  r.x * other.rows[0].y + r.y * other.rows[1].y + r.z * other.rows[2].y,
-                  r.x * other.rows[0].z + r.y * other.rows[1].z + r.z * other.rows[2].z)
+            SIMD3(r.x &* other.rows[0].x &+ r.y &* other.rows[1].x &+ r.z &* other.rows[2].x,
+                  r.x &* other.rows[0].y &+ r.y &* other.rows[1].y &+ r.z &* other.rows[2].y,
+                  r.x &* other.rows[0].z &+ r.y &* other.rows[1].z &+ r.z &* other.rows[2].z)
         }
         return IntegerMatrix(rows: rows.map(row))
     }
 
-    public var negated: IntegerMatrix { IntegerMatrix(rows: rows.map { SIMD3(-$0.x, -$0.y, -$0.z) }) }
+    /// −self, wrapping (−Int.min is Int.min) like `multiplied(by:)`.
+    public var negated: IntegerMatrix { IntegerMatrix(rows: rows.map { SIMD3(0 &- $0.x, 0 &- $0.y, 0 &- $0.z) }) }
 
     public var transposed: IntegerMatrix {
         IntegerMatrix(SIMD3(rows[0].x, rows[1].x, rows[2].x),
@@ -106,7 +111,7 @@ public struct IntegerMatrix: Sendable, Hashable, CustomStringConvertible {
         return m[0].x &* a &- m[0].y &* b &+ m[0].z &* c
     }
 
-    public var trace: Int { rows[0].x + rows[1].y + rows[2].z }
+    public var trace: Int { rows[0].x &+ rows[1].y &+ rows[2].z }
 
     public var isIdentity: Bool { self == .identity }
 

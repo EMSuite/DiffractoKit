@@ -61,13 +61,19 @@ public struct SymmetryOperation: Sendable, Hashable, CustomStringConvertible {
             for i in 0..<3 {
                 let rounded = coefficients[i].rounded()
                 guard abs(coefficients[i] - rounded) <= 1e-9 else { throw .nonIntegerRotation(raw) }
+                // A raised `maximumMagnitude` can let a coefficient past Int's range (Int(_:) traps), and no rotation of
+                // a lattice has an entry near it: beyond 2³¹ the text is unparsable.
+                guard rounded.isFinite, abs(rounded) < 2_147_483_648 else { throw .unparsable(raw) }
                 row[i] = Int(rounded)
             }
             rows.append(row)
+            guard constant.isFinite else { throw .unparsable(raw) }
             translation[axis] = constant
         }
         let rotation = IntegerMatrix(rows: rows)
-        guard abs(rotation.determinant) == 1 else { throw .notInvertible(raw) }
+        // Not abs(_:): the wrapping determinant of large coefficients can be Int.min, whose magnitude traps.
+        let determinant = rotation.determinant
+        guard determinant == 1 || determinant == -1 else { throw .notInvertible(raw) }
         self.rotation = rotation
         self.translation = translation
     }

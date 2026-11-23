@@ -239,6 +239,8 @@ extension EllipseCalibration {
             let dx = Double(pixel.qx) - fit.centerQX, dy = Double(pixel.qy) - fit.centerQY
             let rho2 = max(0, coefficientA * dx * dx + coefficientB * dx * dy + coefficientC * dy * dy)
             let offset = rho2.squareRoot() - radius
+            // An extreme but finite fit (axes of 1e-200 and 1e200) overflows the coefficients: such a pixel has no bin.
+            guard offset.isFinite, abs(offset) < 1e12 else { continue }
             let wholeBin = Int((offset / 0.5).rounded(.down))
             wholeBins[wholeBin, default: (0, 0)].sum += pixel.value
             wholeBins[wholeBin, default: (0, 0)].count += 1

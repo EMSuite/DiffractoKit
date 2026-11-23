@@ -166,6 +166,16 @@ public enum SymmetryDetection {
         }
     }
 
+    /// Why `sites` cannot be searched for symmetry: a fractional coordinate that is not finite (it has no cell bin and no
+    /// image); nil when every coordinate is finite. Such a structure has the identity alone and fails `validationIssues`
+    /// (`invalid_fractional_coordinate`).
+    static func siteRefusal(_ sites: [AtomSite]) -> String? {
+        guard let i = sites.firstIndex(where: { !($0.fractional.x.isFinite && $0.fractional.y.isFinite && $0.fractional.z.isFinite) })
+        else { return nil }
+        return "Site \(i + 1)\(sites[i].label.map { " (\($0))" } ?? "") has a fractional coordinate that is not finite, so no "
+            + "symmetry is searched."
+    }
+
     /// The operations of `sites` in `cell`. `coarsestHalfStep` is the coarsest written rounding half-step of the
     /// coordinates when known (0 when exact). `extraCandidates` are rotations to test beyond the metric's holohedry;
     /// `preferredOperations` (a file's loop) supply exact translations for the operations they name.
@@ -176,7 +186,7 @@ public enum SymmetryDetection {
         metricAngleToleranceDeg: Double = defaultMetricAngleToleranceDeg,
         tolerance: Tolerance = .default, search: Search = .cellList, policy: Policy = .default
     ) -> Result {
-        if let reason = tolerance.refusal(for: cell) {
+        if let reason = tolerance.refusal(for: cell) ?? siteRefusal(sites) {
             return Result(candidates: PointSymmetry(rotations: [.identity]), operations: [.identity], unresolvedRotations: [],
                           translationUncertainty: 1e-9, refusal: reason)
         }

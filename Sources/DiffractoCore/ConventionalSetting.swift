@@ -95,7 +95,7 @@ extension CrystalStructure {
     ) -> CrystalStructure {
         // An unusable position tolerance is refused before anything is built from it (the file's cell is checked here, the
         // conventional cell's by `detect`): the identity alone, with the reason.
-        if let reason = tolerance.refusal(for: cell) {
+        if let reason = tolerance.refusal(for: cell) ?? SymmetryDetection.siteRefusal(sites) {
             return refusedStructure(cell: cell, sites: sites, fileOperations: fileOperations, spaceGroupNumber: spaceGroupNumber,
                                     name: name, reason: reason)
         }
