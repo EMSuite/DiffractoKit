@@ -9,6 +9,9 @@ Live:
 - CIF import with symmetry detection and a completeness check by IT number, by symbol or by Hall symbol (a CIF with no
   operation loop is expanded from its Hall symbol, Hermann–Mauguin symbol or IT number, in pymatgen's setting, with a warning; an operation list that is not its space group is refused, and one that disagrees with the
   Hall symbol warns); space-group-free symmetry from the atoms; reflections and rings.
+- The space-group type the atoms show (`CrystalStructure.spaceGroupType`: IT number, spglib's short symbol and standard
+  Hall number, the setting written in), equal to spglib on all 530 settings; the number a source states is kept beside it.
+  A cell whose metric is more symmetric than its atoms (Amm2 written on a cube) is not named yet.
 - The CIFs people have: `?` and `.` values, deuterium and tritium, dummy atoms (left out with a warning), U and B iso,
   Latin-1 and a byte-order mark, DDLm names, a publication block before the structure; mmCIF and mCIF refused by name,
   a number that is not finite refused with a typed error, and a seeded fuzz of the committed CIFs that never crashes (#117).

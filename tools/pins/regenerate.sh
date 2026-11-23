@@ -48,6 +48,7 @@ generators=(
   pymatgen:cif-symmetry/hall-pins.py
   pymatgen:cif-symmetry/space-group-table.py
   pymatgen:cif-symmetry/space-group-pins.py
+  pymatgen:cif-symmetry/space-group-type-pins.py
   pymatgen:presets/pins.py
   pymatgen:mp-import/pins.py
   pymatgen:mp-optimade/pins.py
