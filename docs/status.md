@@ -24,6 +24,7 @@ Live:
   tetragonal and hexagonal a, c; trigonal a, c in hexagonal axes and a, α in rhombohedral axes; orthorhombic a, b, c;
   monoclinic a, b, c, β; triclinic all six), keeps the fractional sites and refuses an edit that changes the Laue class
   (#149).
+- A CIF of several structures: `CIFImport.blocks(in:)` lists its `data_` blocks and `read(_:block:)` reads one by name (#157).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering

@@ -36,6 +36,8 @@ public enum CIFImportError: Error, Equatable, Sendable, CustomStringConvertible 
     case invalidStructure([String])
     /// More than one `data_` block defines a structure (a cell or an atom-site loop).
     case multipleStructures(blockNames: [String])
+    /// `read(_:block:)` was asked for a `data_` block the file does not hold; `available` lists the structure blocks.
+    case blockNotFound(String, available: [String])
     /// The file names its space group by IT number but lists fewer distinct symmetry operations than that group has
     /// in the conventional setting; expanding with a partial list builds a smaller cell content.
     case incompleteSymmetryOperations(spaceGroupNumber: Int, declaredName: String?, listed: Int, required: Int)
@@ -86,9 +88,11 @@ public enum CIFImportError: Error, Equatable, Sendable, CustomStringConvertible 
         case .invalidStructure(let issues):
             return "Imported crystal structure failed validation: \(issues.joined(separator: "; "))."
         case .multipleStructures(let names):
-            return "This CIF holds \(names.count) structures (\(names.joined(separator: ", "))); import one at a time. "
-                + "Split the file so each data_ block is its own CIF — reading them together would merge their cells "
-                + "and atoms into one crystal that is none of them."
+            return "This CIF holds \(names.count) structures (\(names.joined(separator: ", "))); choose one to import. "
+                + "Reading them together would merge their cells and atoms into one crystal that is none of them."
+        case .blockNotFound(let name, let available):
+            return "This CIF has no data_ block named \"\(name)\"; its structures are "
+                + (available.isEmpty ? "none." : available.joined(separator: ", ") + ".")
         case .incompleteSymmetryOperations(let number, let name, let listed, let required):
             let group = name.map { "No. \(number) (\($0))" } ?? "No. \(number)"
             return "The CIF lists \(listed) distinct symmetry operations but space group \(group) has \(required) in its "
@@ -236,11 +240,47 @@ public enum CIFImport {
         func nonNegative(_ value: Double) -> Double { value.isFinite && value >= 0 ? value : 0 }
     }
 
+    /// One `data_` block of a CIF, as `blocks(in:)` lists it.
+    public struct Block: Sendable, Equatable {
+        /// The block's name after `data_`; nil for values before any `data_` line.
+        public let name: String?
+        /// Whether the block holds a structure (a cell length or an atom-site loop): only these can be read.
+        public let definesStructure: Bool
+        /// `chemicalName(in:)` of the block: its mineral or common name, else its formula sum; nil when none.
+        public let chemicalName: String?
+        /// The rows of its atom-site loop (the asymmetric unit as written).
+        public let siteCount: Int
+    }
+
+    /// The `data_` blocks of `cifText` in file order, read without building any structure. A file refused by name
+    /// (mmCIF, magnetic CIF) or cut mid-loop throws as `read` does.
+    public static func blocks(in cifText: String) throws(CIFImportError) -> [Block] {
+        try readBlocks(cifText).map { block in
+            Block(name: block.name == unnamedBlock ? nil : block.name, definesStructure: block.definesStructure,
+                  chemicalName: chemicalName(in: block.values), siteCount: block.atomSiteRows.count)
+        }
+    }
+
+    /// Reads the structure of the `data_` block named `block` (compared without regard to case, as CIF names are);
+    /// the file's other blocks are not read into it. A name the file does not hold throws `blockNotFound` with the
+    /// structure blocks it does hold; naming a block that holds no structure (a `data_global` of a journal file)
+    /// throws `noAtomSites`.
+    public static func read(_ cifText: String, block: String, fileBaseName: String = "",
+                            policy: Policy = .default) throws(CIFImportError) -> CIFDocument {
+        try read(cifText, fileBaseName: fileBaseName, policy: policy, blockName: block)
+    }
+
     /// Reads `cifText` into a validated structure. `fileBaseName` (the file name without its extension) is the
-    /// display-name fallback when the `data_` block says nothing.
+    /// display-name fallback when the `data_` block says nothing. A file with more than one structure throws
+    /// `multipleStructures` with their names; read one of them with `read(_:block:)`.
     public static func read(_ cifText: String, fileBaseName: String = "",
                             policy: Policy = .default) throws(CIFImportError) -> CIFDocument {
-        let parsed = try parse(cifText, policy: policy)
+        try read(cifText, fileBaseName: fileBaseName, policy: policy, blockName: nil)
+    }
+
+    private static func read(_ cifText: String, fileBaseName: String, policy: Policy,
+                             blockName: String?) throws(CIFImportError) -> CIFDocument {
+        let parsed = try parse(cifText, policy: policy, blockName: blockName)
         let cell = UnitCell(a: parsed.a, b: parsed.b, c: parsed.c,
                             alphaDeg: parsed.alpha, betaDeg: parsed.beta, gammaDeg: parsed.gamma)
         let name = displayName(chemicalName: parsed.chemicalName, dataBlockName: parsed.dataBlockName, fileBaseName: fileBaseName)
@@ -317,7 +357,7 @@ public enum CIFImport {
     }
 
     /// One `data_` block as read: its single-valued tags (lower case), its atom-site rows and its operation loop.
-    private struct Block {
+    private struct ParsedBlock {
         var name: String
         var values: [String: String] = [:]
         var atomSiteRows: [[String: String]] = []
@@ -342,7 +382,10 @@ public enum CIFImport {
         return t
     }
 
-    private static func parse(_ text: String, policy: Policy) throws(CIFImportError) -> ParsedStructure {
+    /// The placeholder name of values written before any `data_` line.
+    private static let unnamedBlock = "(unnamed)"
+
+    private static func readBlocks(_ text: String) throws(CIFImportError) -> [ParsedBlock] {
         let tokens = tokenize(text)
 
         // Refused by name before anything is read: mmCIF writes Cartesian atoms in categories of its own, mCIF adds time
@@ -355,9 +398,9 @@ public enum CIFImport {
         }
 
         // Values before the first data_ block (a malformed file) belong to an unnamed block of their own.
-        var blocks: [Block] = []
+        var blocks: [ParsedBlock] = []
         func current() -> Int {
-            if blocks.isEmpty { blocks.append(Block(name: "(unnamed)")) }
+            if blocks.isEmpty { blocks.append(ParsedBlock(name: unnamedBlock)) }
             return blocks.count - 1
         }
 
@@ -367,7 +410,7 @@ public enum CIFImport {
 
             if token.isDataBlock {
                 let name = String(token.text.dropFirst("data_".count))
-                blocks.append(Block(name: name.isEmpty ? "(unnamed)" : name))
+                blocks.append(ParsedBlock(name: name.isEmpty ? unnamedBlock : name))
                 index += 1
                 continue
             }
@@ -434,8 +477,21 @@ public enum CIFImport {
             // A stray value with no owning tag or loop: skip it and keep scanning.
             index += 1
         }
+        return blocks
+    }
 
-        let structureBlocks = blocks.filter(\.definesStructure)
+    private static func parse(_ text: String, policy: Policy, blockName: String?) throws(CIFImportError) -> ParsedStructure {
+        let blocks = try readBlocks(text)
+        var structureBlocks = blocks.filter(\.definesStructure)
+        if let blockName {
+            let wanted = blockName.trimmingCharacters(in: .whitespaces)
+            guard let chosen = blocks.first(where: { $0.name != unnamedBlock && $0.name.caseInsensitiveCompare(wanted) == .orderedSame })
+            else {
+                throw .blockNotFound(wanted, available: structureBlocks.map(\.name).filter { $0 != unnamedBlock })
+            }
+            structureBlocks = chosen.definesStructure ? [chosen] : []
+            if !chosen.definesStructure { throw .noAtomSites }
+        }
         if structureBlocks.count > 1 {
             throw .multipleStructures(blockNames: structureBlocks.map(\.name))
         }
@@ -446,8 +502,8 @@ public enum CIFImport {
             }
         }
         // The structure's own block, and only its values: another block's tags never leak into it.
-        let block = structureBlocks.first ?? blocks.first ?? Block(name: "(unnamed)")
-        let dataBlockName: String? = block.name == "(unnamed)" ? nil : block.name
+        let block = structureBlocks.first ?? blocks.first ?? ParsedBlock(name: unnamedBlock)
+        let dataBlockName: String? = block.name == unnamedBlock ? nil : block.name
         let cellValues = block.values
         let atomSiteRows = block.atomSiteRows
         let symmetryOps = block.symmetryOps

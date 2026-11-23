@@ -80,7 +80,7 @@ struct CIFCorpusFuzzTests {
 
     @Test func theCorpusIsReadOrRefusedNeverCrashes() throws {
         let corpus = try Self.corpus()
-        // 26 structure fixtures and 9 edge cases on 0.19: the walk must find them, or the test proves nothing.
+        // 26 structure fixtures and 10 edge cases since the block chooser: the walk must find them, or the test proves nothing.
         #expect(corpus.count >= 35, "\(corpus.map(\.name))")
         for file in corpus {
             if let loaded = try? CrystalLoading.load(bytes: file.bytes, fileName: file.name) {

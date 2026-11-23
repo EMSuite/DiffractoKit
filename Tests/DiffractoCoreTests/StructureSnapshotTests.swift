@@ -31,8 +31,9 @@ struct StructureSnapshotTests {
                 refused.append(url.lastPathComponent)
             }
         }
-        // The edge cases refused by design; any other CIF that stops reading fails here.
-        #expect(refused == ["macromolecular.cif", "magnetic.cif", "nan_coordinate.cif"], "\(refused)")
+        // The edge cases refused by design (three_structures.cif names no block of its three); any other CIF that stops
+        // reading fails here.
+        #expect(refused == ["macromolecular.cif", "magnetic.cif", "nan_coordinate.cif", "three_structures.cif"], "\(refused)")
         return loaded
     }
 
@@ -83,7 +84,8 @@ struct StructureSnapshotTests {
 
     @Test func everyCommittedStructureSurvivesEncodeAndDecodeBitForBit() throws {
         let committed = try Self.committedStructures()
-        // 35 committed CIFs; the three edge cases refused by design (mmCIF, magnetic, a NaN coordinate) do not read.
+        // 36 committed CIFs; the four edge cases refused by design (mmCIF, magnetic, a NaN coordinate, three structures
+        // with no block named) do not read.
         #expect(committed.count == 32, "\(committed.count) committed structures read")
         for (name, structure) in committed + Self.presets {
             try Self.expectRoundTrip(structure, name)
