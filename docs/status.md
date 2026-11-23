@@ -1,4 +1,4 @@
-# Status
+# Status: DiffractoKit 0.18.1 <!-- x-release-please-version -->
 
 DiffractoKit 0.12.0 (2026-11-06), on ImagoKit `"0.2.0"..<"1.0.0"`.
 
