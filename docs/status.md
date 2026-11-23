@@ -24,6 +24,8 @@ Live:
   or refused for one row of spots or a poor fit); the half turn about the beam is flagged where the crystal lacks it.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
   its routes (`DoubleDiffraction`).
+- The tilt of an indexed pattern off its zone axis, refined on the spot intensities (`ZoneAxisSolver.refineTilts`), with
+  the look-alike tilts that agree as well returned beside the best.
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
