@@ -24,7 +24,8 @@
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         "CITATION.cff",
-        "README.md"
+        "README.md",
+        "docs/status.md"
       ]
     }
   }

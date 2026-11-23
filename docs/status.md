@@ -1,4 +1,4 @@
-# Status
+# Status: DiffractoKit 0.18.1 <!-- x-release-please-version -->
 
 DiffractoKit 0.18.1, on ImagoKit `"0.2.0"..<"1.0.0"`.
 
@@ -20,6 +20,8 @@ Live:
 - The zone axis and full orientation of one measured spot pattern (`ZoneAxisSolver`): lattice-vector pairs scored on every
   spot against the kinematic pattern, the scale and in-plane turn fitted, every spot's hkl, and a verdict (solved, a tie,
   or refused for one row of spots or a poor fit); the half turn about the beam is flagged where the crystal lacks it.
+- The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
+  its routes (`DoubleDiffraction`).
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
