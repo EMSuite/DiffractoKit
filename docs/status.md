@@ -26,6 +26,9 @@ Live:
   its routes (`DoubleDiffraction`).
 - The tilt of an indexed pattern off its zone axis, refined on the spot intensities (`ZoneAxisSolver.refineTilts`), with
   the look-alike tilts that agree as well returned beside the best.
+- The full orientation of one spot pattern (`PatternOrientation.index`): template matches and zone-axis solutions each
+  refined on positions and intensities, the best agreement with the look-alikes that agree as well, and a flag when the
+  pattern cannot decide (an alternative, or a tilt the intensities fix poorly).
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
