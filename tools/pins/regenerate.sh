@@ -60,6 +60,8 @@ generators=(
   pymatgen:orientation-symmetry/color-table.py
   pymatgen:phase-vectors/pins.py
   pymatgen:lattice-edit/pins.py
+  pymatgen:vesta-bonds/generate_cutoffs.py
+  pymatgen:vesta-bonds/pins.py
   orix:orix/ipf-pins.py
   orix:orix/direction-pins.py
   orix:orix/disorientation-pins.py

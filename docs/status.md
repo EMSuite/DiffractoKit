@@ -35,6 +35,8 @@ Live:
 - Electron powder rings (`PowderPattern.electron`) from the held ring list with relative intensities, a drawn profile
   of any powder pattern (`profile(width:range:step:)`), and the overlapped and diagnostic peaks of several shown phases
   (`PowderPattern.marks`).
+- Bonds for a crystal view by VESTA's cut-offs, as pymatgen's `CutOffDictNN.from_preset("vesta_2019")` gives them
+  (`CrystalStructure.bonds`): metals show none; the table is generated from pymatgen's file.
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.
