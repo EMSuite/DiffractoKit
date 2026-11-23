@@ -182,7 +182,7 @@ extension ZoneAxisSolver {
             }
             if nearest <= radius { numerator += a[i] * b[jBest] }
         }
-        let denominator = (a.reduce(0) { $0 + $1 * $1 } * b.reduce(0) { $0 + $1 * $1 }).squareRoot()
+        let denominator = (a.reduce(0.0) { $0 + $1 * $1 } * b.reduce(0.0) { $0 + $1 * $1 }).squareRoot()
         return denominator > 0 ? numerator / denominator : -1
     }
 }
