@@ -1,0 +1,45 @@
+# Records the keyless Materials Project (OPTIMADE) responses the tests decode, on GitHub's Linux runner, which reaches the
+# service; the cloud sessions and the Mac's sandbox do not (DiffractoKit #150). No key is used. The recordings and their
+# manifest (URL, date, SHA-256) are committed to the branch the run is for: by hand (Run workflow, choose the branch), or
+# on a pull request that changes the recorder. A commit made here starts no CI run; the next push to the branch does.
+name: Record Materials Project responses
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - tools/materials-project/record.py
+      - .github/workflows/record-materials-project.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: record-mp-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  record:
+    # Same-repository pull requests only: a fork's token cannot push.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Oracle packages
+        run: python -m pip install --quiet numpy==2.5.4 spglib==2.8.0
+      - name: Record
+        run: python -I -B tools/materials-project/record.py
+      - name: Commit the recordings
+        run: |
+          git add Tests/DiffractoCoreTests/Fixtures/mp-optimade
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "test: record the keyless Materials Project responses (#150)"
+          git push
