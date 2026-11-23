@@ -1,0 +1,24 @@
+# Written for DiffractoKit (#117, plan row K4): an edge case of the CIF reader, read by CIFRobustnessTests.
+data_global
+_journal_name_full 'Some Journal'
+_symmetry_space_group_name_H-M 'F m -3 m'
+_publ_contact_author_email
+data_gold
+_chemical_name_common '_gold_'
+_cell.length_a 4.0782
+_cell.length_b 4.0782
+_cell.length_c 4.0782
+_cell.angle_alpha 90
+_cell.angle_beta 90
+_cell.angle_gamma 90
+_exptl_crystal_colour
+loop_
+_atom_site.label
+_atom_site.type_symbol
+_atom_site.fract_x
+_atom_site.fract_y
+_atom_site.fract_z
+Au1 Au 0 0 0
+Au2 Au 0.5 0.5 0
+Au3 Au 0.5 0 0.5
+Au4 Au 0 0.5 0.5

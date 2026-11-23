@@ -363,6 +363,10 @@ public struct ACOMTemplateLibrary: Sendable {
         let reach = sigmaBins > 0 ? max(1, Int((3 * sigmaBins).rounded())) : 0
         for s in spots {
             let exact = s.r / geo.radialScale
+            // A radius, angle or weight that is not finite, or a radius so far outside the image that Int(_:) would trap,
+            // deposits nothing.
+            guard exact.isFinite, s.azimuth.isFinite, s.weight.isFinite,
+                  abs(exact) < Double(geo.nRadial + reach + 1) else { continue }
             let rb = Int(exact.rounded())
             if rb + reach < 0 || rb - reach >= geo.nRadial { continue }
             var a = s.azimuth.truncatingRemainder(dividingBy: twoPi)

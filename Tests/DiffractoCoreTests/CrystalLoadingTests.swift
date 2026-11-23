@@ -62,12 +62,14 @@ struct CrystalLoadingTests {
         #expect(throws: CrystalLoading.Refusal.tooLarge(bytes: big.count)) { try CrystalLoading.load(bytes: big, fileName: "a.cif") }
     }
 
-    @Test func invalidUTF8IsRefused() {
-        let bad = Self.goldBytes + Data([0xFF, 0xFE])
-        #expect(throws: CrystalLoading.Refusal.notUTF8) { try CrystalLoading.load(bytes: bad, fileName: "a.cif") }
-        // Overlong encoding of "/" and a lone continuation byte are not UTF-8 either.
-        #expect(throws: CrystalLoading.Refusal.notUTF8) { try CrystalLoading.load(bytes: Data([0xC0, 0xAF]), fileName: "a.cif") }
-        #expect(throws: CrystalLoading.Refusal.notUTF8) { try CrystalLoading.load(bytes: Data([0x80]), fileName: "a.cif") }
+    /// Bytes that are not UTF-8 are read as Windows-1252 / Latin-1 (since 0.19): the gold file with two stray high bytes
+    /// in a trailing comment reads, and an overlong "/" is two Latin-1 characters the importer then refuses as no CIF.
+    /// A NUL byte is no text at all.
+    @Test func bytesThatAreNotUTF8AreReadAsLatin1() throws {
+        let latin1 = Self.goldBytes + Data("# ".utf8) + Data([0xFF, 0xFE]) + Data("\n".utf8)
+        #expect(try CrystalLoading.load(bytes: latin1, fileName: "a.cif").structure.sites.count == 4)
+        #expect(throws: CIFImportError.missingTag("_cell_length_a")) { try CrystalLoading.load(bytes: Data([0xC0, 0xAF]), fileName: "a.cif") }
+        #expect(throws: CrystalLoading.Refusal.notUTF8) { try CrystalLoading.load(bytes: Self.goldBytes + Data([0x00]), fileName: "a.cif") }
     }
 
     @Test func importerErrorsPropagateUnchanged() {
@@ -79,6 +81,6 @@ struct CrystalLoadingTests {
         #expect(tooLarge.name == "tooLarge")
         #expect(tooLarge.errorDescription == "This file is 6000000 bytes; a structure file larger than 5242880 bytes (5 MiB) is not read.")
         #expect(CrystalLoading.Refusal.notUTF8.name == "notUTF8")
-        #expect(CrystalLoading.Refusal.notUTF8.errorDescription == "This file is not valid UTF-8 text, so it cannot be a CIF.")
+        #expect(CrystalLoading.Refusal.notUTF8.errorDescription == "This file is not text (it holds a NUL byte), so it cannot be a CIF.")
     }
 }

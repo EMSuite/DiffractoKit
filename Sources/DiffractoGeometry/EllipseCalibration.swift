@@ -1058,8 +1058,10 @@ public enum EllipseCalibration {
         seed: EllipseCalibrationFit, innerRadius: Double, outerRadius: Double
     ) -> Double? {
         let a = seed.a, b = seed.b
-        let binCount = Int((outerRadius - innerRadius).rounded(.up))
-        guard a > 0, b > 0, binCount >= 5,
+        let span = (outerRadius - innerRadius).rounded(.up)
+        guard span.isFinite, span >= 5, span <= Double(PatternRadialProfile.maximumBins) else { return nil }
+        let binCount = Int(span)
+        guard a > 0, b > 0,
               values.count == xs.count, values.count == ys.count else { return nil }
         let sinTheta = sin(seed.theta), cosTheta = cos(seed.theta)
         let a2 = a * a, b2 = b * b
@@ -1072,8 +1074,10 @@ public enum EllipseCalibration {
         for index in values.indices {
             let dx = xs[index] - seed.centerQX, dy = ys[index] - seed.centerQY
             let radius = max(0, A * dx * dx + B * dx * dy + C * dy * dy).squareRoot()
-            let bin = Int((radius - innerRadius).rounded(.down))
-            guard bin >= 0, bin < binCount else { continue }
+            // Checked before Int(_:): extreme axes overflow the coefficients to infinity (or NaN).
+            let position = (radius - innerRadius).rounded(.down)
+            guard position >= 0, position < Double(binCount) else { continue }
+            let bin = Int(position)
             sums[bin] += values[index]
             counts[bin] += 1
         }

@@ -376,9 +376,13 @@ enum LatticeConstruction {
         case 8:
             if d == 1 { bravais = .oP } else if d == 4 { bravais = .oF } else if classes.contains(SIMD3(1, 1, 1)) { bravais = .oI } else {
                 bravais = .oC
-                // bring the centred face to (a, b): cyclic permutation of the axes
-                let nonzero = classes.first { $0 != SIMD3(0, 0, 0) }!
-                let z = [nonzero.x, nonzero.y, nonzero.z].firstIndex(of: 0)!
+                // bring the centred face to (a, b): cyclic permutation of the axes. One centred face is two classes, one
+                // of them a face (one zero component); anything else (a loose tolerance can give more) is not a C cell.
+                // Sorted, so the choice never depends on the set's order.
+                let faces = classes.filter { c in c != SIMD3(0, 0, 0) && [c.x, c.y, c.z].filter { $0 == 0 }.count == 1 }
+                    .sorted { ($0.x, $0.y, $0.z) < ($1.x, $1.y, $1.z) }
+                guard classes.count == 2, let nonzero = faces.first,
+                      let z = [nonzero.x, nonzero.y, nonzero.z].firstIndex(of: 0) else { return fallback(input) }
                 let order = z == 0 ? [1, 2, 0] : (z == 1 ? [2, 0, 1] : [0, 1, 2])
                 cols = order.map { cols[$0] }
                 if q(cols[0]) > q(cols[1]) { cols.swapAt(0, 1) }
