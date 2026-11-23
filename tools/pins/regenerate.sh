@@ -61,6 +61,8 @@ generators=(
   orix:orix/disorientation-pins.py
   orix:orix/misorientation-pins.py
   orix:orix/orientation-api-pins.py
+  orix:orix/stereographic-pins.py
+  pymatgen:tilt-planner/planted.py
   py4dstem:orientation-symmetry/family-pins.py
   py4dstem:orientation-symmetry/family-real-pins.py
   py4dstem:beam-centre/friedel-pins.py
