@@ -22,7 +22,9 @@ private struct SpotPins: Decodable {
     struct Image: Decodable {
         let label: String
         let centre: [Double]
-        let countsU16leB64: String
+        /// The counts, uint16 little-endian, row-major, base64. (Named without digits: `convertFromSnakeCase` does not map
+        /// "u16le_b64" onto a Swift name the same way on every Foundation.)
+        let countsBase64: String
         /// row, column, height over the background, h, k, l
         let truth: [[Double]]
         /// per settings name: row, column, intensity
@@ -42,7 +44,7 @@ private struct SpotPins: Decodable {
 }
 
 private func pattern(_ image: SpotPins.Image, size: Int) throws -> DiffractionPattern {
-    let data = try #require(Data(base64Encoded: image.countsU16leB64))
+    let data = try #require(Data(base64Encoded: image.countsBase64))
     #expect(data.count == size * size * 2)
     var pixels = [Float](repeating: 0, count: size * size)
     data.withUnsafeBytes { raw in

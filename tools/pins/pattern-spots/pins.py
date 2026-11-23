@@ -112,7 +112,7 @@ def main():
             m = get_maxima_2D(ar, subpixel='poly', **s)
             maxima[name] = [[float(a), float(b), float(c)] for a, b, c in zip(m['x'], m['y'], m['intensity'])]
         out['images'].append({'label': f'{phase} {uvw} gamma {gamma:.3f} tilt {tilt}', 'centre': centre.tolist(),
-                              'counts_u16le_b64': base64.b64encode(counts.tobytes()).decode(), 'truth': truth,
+                              'counts_base64': base64.b64encode(counts.tobytes()).decode(), 'truth': truth,
                               'maxima': maxima})
     OUT.write_text(json.dumps(out, allow_nan=False, separators=(',', ':')) + '\n')
     print(OUT, OUT.stat().st_size, [len(i['truth']) for i in out['images']],
