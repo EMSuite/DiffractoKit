@@ -71,10 +71,15 @@ struct PowderPatternTests {
         })
     }
 
-    /// A range with no reflection gives an empty pattern; a lower bound drops the peaks below it.
+    /// A range with no reflection gives an empty pattern; a lower bound drops the peaks below it. A range that holds only
+    /// absent reflections gives them scaled to 100, as pymatgen does (Al at 0 to 30°: the forbidden 100 at 21.95°, its
+    /// absolute intensity rounding residue): the scale is relative to what the range holds.
     @Test func rangeBounds() throws {
         let al = Self.fcc(a: 4.0495, z: 13)
-        #expect(try PowderPattern.xray(structure: al, twoThetaRange: 0...30).peaks.isEmpty)
+        #expect(try PowderPattern.xray(structure: al, twoThetaRange: 0...20).peaks.isEmpty)
+        let absent = try PowderPattern.xray(structure: al, twoThetaRange: 0...30)
+        #expect(absent.peaks.count == 1 && abs((absent.peaks.first?.position ?? 0) - 21.949) < 1e-3)
+        #expect((absent.peaks.first?.absoluteIntensity ?? 1) < 1e-20)
         let upper = try PowderPattern.xray(structure: al, twoThetaRange: 40...90)
         #expect(upper.peaks.count == 4 && upper.peaks.allSatisfy { $0.position >= 40 })
         #expect(abs((upper.strongest?.intensity ?? 0) - 100) <= 1e-12)

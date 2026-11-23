@@ -20,7 +20,8 @@
 //        A line pattern for planning and comparison: no instrument profile, no texture, no absorption, no anomalous
 //        dispersion; thermal motion only as typed Debye-Waller factors.
 //        DEPARTURE from pymatgen: a range that holds no reflection gives an empty pattern, where pymatgen raises
-//        (max() of an empty sequence).
+//        (max() of an empty sequence). As in pymatgen, the scale is relative to the range: a range that holds only
+//        reflections the structure forbids shows their rounding residue scaled to 100 (`absoluteIntensity` tells).
 //
 
 import Foundation
