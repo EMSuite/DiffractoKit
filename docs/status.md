@@ -19,6 +19,9 @@ Live:
   out and each spot refined.
 - The spot pattern of a structure at any orientation and voltage (`SpotPattern`): py4DSTEM's kinematic pattern, every spot
   with hkl, position, d, excitation error and intensity, and its distance R = L tan 2θ at a camera length.
+- The zone axis and full orientation of one measured spot pattern (`ZoneAxisSolver`): lattice-vector pairs scored on every
+  spot against the kinematic pattern, the scale and in-plane turn fitted, every spot's hkl, and a verdict (solved, a tie,
+  or refused for one row of spots or a poor fit); the half turn about the beam is flagged where the crystal lacks it.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
   its routes (`DoubleDiffraction`).
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
