@@ -51,7 +51,9 @@ public struct ACOMMatcher: Sendable {
     ///   - originX: the pattern centre, pixels (the unscattered beam).
     ///   - originY: likewise.
     ///   - invAngstromPerPixel: the Q pixel size; the peak radii are converted with it to the library's Å⁻¹.
-    /// - Returns: `OrientationResult.empty` for fewer than two peaks or an empty library. Otherwise `score` is the best
+    /// - Returns: `OrientationResult.empty` for fewer than two peaks or an empty library; for an origin or a pixel size that
+    ///   is not finite, or a pixel size that is not positive; and when the symmetry reduction refuses the orientation
+    ///   (DiffractoKit#123). A peak that is not finite is left out. Otherwise `score` is the best
     ///   normalised correlation (clamped at 0), `secondScore` the best score among templates farther than the library's
     ///   distinct angle from the winner (0 when there is none), `euler` the symmetry-reduced orientation, `inPlaneAngle` the
     ///   rotation before reduction and `mirrored` whether the conjugated pass won.
@@ -140,7 +142,7 @@ public struct ACOMMatcher: Sendable {
     }
 
     /// Every template's best score for one pattern, in library order: the larger of the forward and the mirrored pass.
-    /// Empty when `match` would return `.empty` for lack of peaks.
+    /// Empty when `match` would return `.empty` for lack of peaks or for an origin or pixel size that is not finite.
     public func templateScores<Peaks: Collection>(peaks: Peaks, originX: Float, originY: Float, invAngstromPerPixel: Double = 1)
         -> [Float] where Peaks.Element == ACOMPeak {
         guard let experimental = experimentalFFT(peaks: peaks, originX: originX, originY: originY,
@@ -150,11 +152,14 @@ public struct ACOMMatcher: Sendable {
 
     /// The measured pattern's polar image after the deposition, blur, per-ring mean subtraction and unit normalisation of the
     /// templates (the same exponent, kernel and grid): the image whose ring FFTs are correlated. nil for no peak; one peak is
-    /// enough to draw it (a diagnostic), although `match` needs ``minimumPeakCount``.
+    /// enough to draw it (a diagnostic), although `match` needs ``minimumPeakCount``. nil as well, so that `match` returns
+    /// `.empty`, when the origin or the pixel size is not finite or the pixel size is not positive: every radius would be NaN
+    /// (DiffractoKit#123). A peak whose own position or intensity is not finite is left out (below).
     public func experimentalPolarImage<Peaks: Collection>(peaks: Peaks, originX: Float, originY: Float,
                                                           invAngstromPerPixel: Double = 1) -> [Float]?
     where Peaks.Element == ACOMPeak {
-        guard !peaks.isEmpty else { return nil }
+        guard !peaks.isEmpty, originX.isFinite, originY.isFinite, invAngstromPerPixel.isFinite, invAngstromPerPixel > 0
+        else { return nil }
         let power = library.settings.intensityPower
         var spots: [ACOMTemplateLibrary.Spot] = []
         spots.reserveCapacity(peaks.count)
@@ -290,8 +295,9 @@ public struct ACOMMatcher: Sendable {
         var angle = Float((bin < 0 ? bin + Double(na) : bin) / Double(na) * 2 * Double.pi)
         if mirrored { angle = (angle + .pi).truncatingRemainder(dividingBy: 2 * .pi) }
         let matrix = library.orientationMatrix(templateIndex: bestTemplate, inPlaneAngle: angle, mirrored: mirrored)
-        // The matrix is a proper rotation by construction; the fallback keeps `match` total.
-        let reduced = (try? symmetry.reduce(matrix)) ?? (matrix: matrix, disorientationRad: Float(0))
+        // The matrix is a proper rotation by construction. If the reduction refuses it anyway (a non-finite angle), the match is
+        // refused: an unreduced matrix with disorientation 0 would read as a plausible answer (DiffractoKit#123).
+        guard let reduced = try? symmetry.reduce(matrix) else { return .empty }
         return OrientationResult(templateIndex: bestTemplate,
                                  euler: EulerAngles(py4DSTEMOrientationMatrix: reduced.matrix),
                                  inPlaneAngle: angle, score: max(bestScore, 0), secondScore: max(secondScore, 0), phaseID: 0,
