@@ -56,7 +56,8 @@ public struct PowderPattern: Sendable, Equatable {
 
     /// One peak: reflections at one position.
     public struct Peak: Sendable, Equatable {
-        /// The groups of reflections at this position, in the order pymatgen lists them.
+        /// The groups of reflections at this position, in the order their members first appear (pymatgen's order up to
+        /// round-off ties in |g|).
         public let families: [Family]
         /// d of the peak's first reflection (Å).
         public let d: Double
