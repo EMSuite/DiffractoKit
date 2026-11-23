@@ -39,7 +39,8 @@ public enum Element {
     }
 
     /// Strips trailing oxidation-state and isotope markers and normalises case: `Si1` → `Si`, `Fe3+` → `Fe`,
-    /// `O2-` → `O`, `SI` → `Si`.
+    /// `O2-` → `O`, `SI` → `Si`. The hydrogen isotopes deuterium and tritium are hydrogen: `D1` → `H`, `T` → `H` (as
+    /// pymatgen-core 2026.10.16 `CifParser` reads them).
     public static func normalizedSymbol(fromCIF raw: String) -> String {
         var chars = Array(raw)
         while let last = chars.last, last.isNumber || last == "+" || last == "-" {
@@ -48,6 +49,14 @@ public enum Element {
         let stripped = String(chars)
         guard let first = stripped.first else { return stripped }
         let rest = stripped.dropFirst().lowercased()
-        return String(first).uppercased() + rest
+        let symbol = String(first).uppercased() + rest
+        return symbol == "D" || symbol == "T" ? "H" : symbol
     }
+
+    /// The symbols CIF writers give a site that is no atom (a lone pair `Lp`, a centroid or placeholder `X`, `Xx`, `Q`,
+    /// `Du`, `Dum`), after `normalizedSymbol(fromCIF:)`. Such a site scatters nothing.
+    public static let dummySymbols: Set<String> = ["X", "Xx", "Q", "Du", "Dum", "Lp"]
+
+    /// Whether `symbol` (normalised) names a dummy atom (`dummySymbols`).
+    public static func isDummySymbol(_ symbol: String) -> Bool { dummySymbols.contains(symbol) }
 }

@@ -42,9 +42,9 @@ public enum FriedelCentre {
     /// tiny negative value).
     public static func find(pattern: DiffractionPattern, mask: [Bool]? = nil) -> FriedelCentreFit? {
         let rows = pattern.height, columns = pattern.width
-        guard rows >= 2, columns >= 2, pattern.pixels.count == rows * columns, pattern.pixels.allSatisfy(\.isFinite) else { return nil }
+        guard rows >= 2, columns >= 2, EllipseCalibration.patternSizeIsConsistent(pattern), pattern.pixels.allSatisfy(\.isFinite) else { return nil }
         if let mask {
-            guard mask.count == rows * columns, mask.contains(true) else { return nil }
+            guard mask.count == pattern.pixels.count, mask.contains(true) else { return nil }
         }
         let ny = 2 * rows, nx = 2 * columns, total = ny * nx
         guard let fft = FFT2DDouble(nx: nx, ny: ny) else { return nil }

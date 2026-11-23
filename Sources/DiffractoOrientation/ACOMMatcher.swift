@@ -158,7 +158,9 @@ public struct ACOMMatcher: Sendable {
         let power = library.settings.intensityPower
         var spots: [ACOMTemplateLibrary.Spot] = []
         spots.reserveCapacity(peaks.count)
-        for p in peaks {
+        // A peak that is not finite has no place in the polar image (as in `PhaseVectorMatcher`): it is left out, never
+        // binned (Int(NaN) traps in the worker pool). The pattern of its finite peaks is matched.
+        for p in peaks where p.x.isFinite && p.y.isFinite && p.intensity.isFinite {
             let dx = Double(p.x - originX), dy = Double(p.y - originY)
             let r = (dx * dx + dy * dy).squareRoot() * invAngstromPerPixel
             let intensity = Double(max(p.intensity, 0))

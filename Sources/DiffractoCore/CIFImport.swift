@@ -49,6 +49,17 @@ public enum CIFImportError: Error, Equatable, Sendable, CustomStringConvertible 
     /// The operations are enough in number but cannot be the file's space group: one does not map the cell onto itself,
     /// the list is not closed, or its crystal class is not the IT number's (``SymmetryListProblem``).
     case inconsistentSymmetryOperations(SymmetryListProblem)
+    /// A number the structure needs is written as `nan`, `inf` or a value beyond the range of a double (`1e999`).
+    case nonFiniteNumber(tag: String, value: String)
+    /// A value the structure needs is written as CIF's unknown (`?`) or inapplicable (`.`) mark: a cell parameter or an
+    /// atom-site coordinate.
+    case unknownValue(tag: String)
+    /// The file is a macromolecular CIF (mmCIF, PDBx): Cartesian atoms of a protein or nucleic acid, not a crystal
+    /// structure in fractional coordinates.
+    case macromolecularCIF
+    /// The file is a magnetic CIF (mCIF): its operations carry time reversal and its sites magnetic moments, which a
+    /// structure of atoms without spins would read wrongly.
+    case magneticCIF
 
     public var description: String {
         switch self {
@@ -98,6 +109,16 @@ public enum CIFImportError: Error, Equatable, Sendable, CustomStringConvertible 
             return "The CIF's symmetry operations cannot be its space group: \(problem). Expanding the atom sites with "
                 + "them would build a wrong structure, so the file is refused. Re-export the CIF with the operation "
                 + "loop of its own cell and setting, or supply a P1 file that lists every atom in the cell."
+        case .nonFiniteNumber(let tag, let value):
+            return "\(tag) = \"\(value)\" is not a finite number, so the structure cannot be built from it."
+        case .unknownValue(let tag):
+            return "The CIF gives \(tag) as unknown (? or .); the structure needs its value."
+        case .macromolecularCIF:
+            return "This is a macromolecular CIF (mmCIF or PDBx: a protein or nucleic acid in Cartesian coordinates), not "
+                + "a crystal structure. Open a small-molecule or inorganic CIF of the phase instead."
+        case .magneticCIF:
+            return "This is a magnetic CIF (mCIF): its symmetry carries time reversal and its atoms magnetic moments. "
+                + "Open the plain CIF of the same structure (without the magnetic setting) instead."
         }
     }
 }
@@ -113,12 +134,17 @@ public enum CIFImportWarning: Sendable, Equatable, CustomStringConvertible {
     /// The file lists an operation loop (one that passes the completeness checks) and states a Hall symbol whose group
     /// is another one (compared modulo lattice translations). The loop was used, as pymatgen-core 2026.10.16 `CifParser` uses it; the Hall symbol was not.
     case operationLoopIsNotTheHallGroup(hallSymbol: String, loopOrder: Int, hallOrder: Int)
+    /// Sites of a dummy atom (`X`, `Q`, `Du`, `Lp`: a lone pair, a centroid, a placeholder) were left out: they scatter
+    /// nothing. `labels` are their `_atom_site_label`s in file order.
+    case dummyAtomsSkipped(labels: [String])
 
     public var description: String {
         switch self {
         case let .operationLoopIsNotTheHallGroup(hallSymbol, loopOrder, hallOrder):
             return "The operation loop (\(loopOrder) operations) is not the group of the Hall symbol \(hallSymbol) "
                 + "(\(hallOrder) operations); the loop was used."
+        case let .dummyAtomsSkipped(labels):
+            return "\(labels.count) dummy atom site(s) (\(labels.joined(separator: ", "))) scatter nothing and were left out."
         }
     }
 }
@@ -126,7 +152,8 @@ public enum CIFImportWarning: Sendable, Equatable, CustomStringConvertible {
 /// What a CIF read yields: the structure and what the file said about itself.
 public struct CIFDocument: Sendable, Equatable {
     public let structure: CrystalStructure
-    /// The first `data_` block's name; nil when it is empty.
+    /// The name of the `data_` block that holds the structure (a publication's `data_global` before it is not); nil when
+    /// it is empty.
     public let dataBlockName: String?
     /// `CIFImport.displayName`: the block name unless it is empty or a structure editor's placeholder.
     public let displayName: String
@@ -284,51 +311,79 @@ public enum CIFImport {
         let z: Int
         let label: String
         let occupancy: Double
+        let displacement: Double?
         let position: SIMD3<Double>
         let halfStep: SIMD3<Double>
+    }
+
+    /// One `data_` block as read: its single-valued tags (lower case), its atom-site rows and its operation loop.
+    private struct Block {
+        var name: String
+        var values: [String: String] = [:]
+        var atomSiteRows: [[String: String]] = []
+        var symmetryOps: [String] = []
+        var hasSymmetryLoop = false
+        var definesStructure: Bool { values["_cell_length_a"] != nil || !atomSiteRows.isEmpty }
+    }
+
+    /// The tags of a magnetic CIF (after the DDLm dot is folded), any one of which refuses the file.
+    private static let magneticTagPrefixes = ["_space_group_magn", "_atom_site_moment", "_parent_space_group",
+                                              "_space_group_symop_magn", "_magnetic_"]
+    /// The categories only a macromolecular CIF writes.
+    private static let macromolecularTagPrefixes = ["_entity.", "_entity_poly", "_pdbx_", "_struct_asym.", "_atom_site.label_",
+                                                    "_atom_site.auth_", "_atom_site.cartn_", "_atom_site.group_pdb"]
+
+    /// A DDLm (CIF 2) name, `_cell.length_a`, as its DDL1 alias `_cell_length_a`: the first dot after the category is the
+    /// underscore of the older dictionaries (the core aliases are formed so).
+    private static func foldedTag(_ lowerCased: String) -> String {
+        guard let dot = lowerCased.firstIndex(of: ".") else { return lowerCased }
+        var t = lowerCased
+        t.replaceSubrange(dot...dot, with: "_")
+        return t
     }
 
     private static func parse(_ text: String, policy: Policy) throws(CIFImportError) -> ParsedStructure {
         let tokens = tokenize(text)
 
-        var dataBlockName: String?
-        var blocks: [(name: String, definesStructure: Bool, hasSymmetryLoop: Bool)] = []
-        var cellValues: [String: String] = [:]
-        var atomSiteRows: [[String: String]] = []
-        var symmetryOps: [String] = []
-        var haveSymmetryLoop = false
+        // Refused by name before anything is read: mmCIF writes Cartesian atoms in categories of its own, mCIF adds time
+        // reversal and moments to an otherwise ordinary file.
+        for token in tokens where token.isTag {
+            let tag = token.text.lowercased()
+            if macromolecularTagPrefixes.contains(where: { tag.hasPrefix($0) }) { throw .macromolecularCIF }
+            let folded = foldedTag(tag)
+            if magneticTagPrefixes.contains(where: { folded.hasPrefix($0) }) { throw .magneticCIF }
+        }
 
-        func isTag(_ token: String) -> Bool { token.hasPrefix("_") }
-        func isLoop(_ token: String) -> Bool { token.lowercased() == "loop_" }
-        func isDataBlock(_ token: String) -> Bool { token.lowercased().hasPrefix("data_") }
+        // Values before the first data_ block (a malformed file) belong to an unnamed block of their own.
+        var blocks: [Block] = []
+        func current() -> Int {
+            if blocks.isEmpty { blocks.append(Block(name: "(unnamed)")) }
+            return blocks.count - 1
+        }
 
         var index = 0
         while index < tokens.count {
             let token = tokens[index]
 
-            if isDataBlock(token) {
-                let name = String(token.dropFirst("data_".count))
-                blocks.append((name: name.isEmpty ? "(unnamed)" : name, definesStructure: false, hasSymmetryLoop: false))
-                if dataBlockName == nil {
-                    dataBlockName = name.isEmpty ? nil : name
-                }
+            if token.isDataBlock {
+                let name = String(token.text.dropFirst("data_".count))
+                blocks.append(Block(name: name.isEmpty ? "(unnamed)" : name))
                 index += 1
                 continue
             }
 
-            if isLoop(token) {
+            if token.isLoop {
                 index += 1
                 var loopTags: [String] = []
-                while index < tokens.count, isTag(tokens[index]) {
-                    loopTags.append(tokens[index].lowercased())
+                while index < tokens.count, tokens[index].isTag {
+                    loopTags.append(foldedTag(tokens[index].text.lowercased()))
                     index += 1
                 }
                 guard !loopTags.isEmpty else { continue }
 
                 var values: [String] = []
-                while index < tokens.count,
-                      !isTag(tokens[index]), !isLoop(tokens[index]), !isDataBlock(tokens[index]) {
-                    values.append(tokens[index])
+                while index < tokens.count, !tokens[index].isReserved {
+                    values.append(tokens[index].isNull ? "?" : tokens[index].text)
                     index += 1
                 }
                 // A well-formed loop is always a whole number of rows; a remainder means the file was cut mid-row.
@@ -346,29 +401,32 @@ public enum CIFImport {
                     rows.append(fields)
                 }
 
+                let b = current()
                 if loopTags.contains("_atom_site_fract_x") {
-                    if !blocks.isEmpty { blocks[blocks.count - 1].definesStructure = true }
-                    atomSiteRows.append(contentsOf: rows)
+                    blocks[b].atomSiteRows.append(contentsOf: rows)
                 } else if loopTags.contains("_symmetry_equiv_pos_as_xyz")
                     || loopTags.contains("_space_group_symop_operation_xyz") {
-                    haveSymmetryLoop = true
-                    if !blocks.isEmpty { blocks[blocks.count - 1].hasSymmetryLoop = true }
+                    blocks[b].hasSymmetryLoop = true
                     let key = loopTags.contains("_symmetry_equiv_pos_as_xyz")
                         ? "_symmetry_equiv_pos_as_xyz" : "_space_group_symop_operation_xyz"
                     for row in rows {
-                        if let op = row[key] { symmetryOps.append(op) }
+                        if let op = row[key], op != "?" { blocks[b].symmetryOps.append(op) }
                     }
                 }
                 continue
             }
 
-            if isTag(token) {
-                let tag = token.lowercased()
-                guard index + 1 < tokens.count else { break }
-                if tag == "_cell_length_a", !blocks.isEmpty {
-                    blocks[blocks.count - 1].definesStructure = true
+            if token.isTag {
+                let tag = foldedTag(token.text.lowercased())
+                // A tag whose value is missing (the next token is another tag, loop_ or data_, or the file ends) has no
+                // value: it never takes the next keyword as its value, which would swallow a loop.
+                guard index + 1 < tokens.count, !tokens[index + 1].isReserved else {
+                    index += 1
+                    continue
                 }
-                cellValues[tag] = tokens[index + 1]
+                let value = tokens[index + 1]
+                let b = current()
+                blocks[b].values[tag] = value.isNull ? "?" : value.text
                 index += 2
                 continue
             }
@@ -387,9 +445,17 @@ public enum CIFImport {
                 throw .symmetryOperationsOutsideStructure(blockNames: symmetryOnly.map(\.name))
             }
         }
+        // The structure's own block, and only its values: another block's tags never leak into it.
+        let block = structureBlocks.first ?? blocks.first ?? Block(name: "(unnamed)")
+        let dataBlockName: String? = block.name == "(unnamed)" ? nil : block.name
+        let cellValues = block.values
+        let atomSiteRows = block.atomSiteRows
+        let symmetryOps = block.symmetryOps
+        let haveSymmetryLoop = block.hasSymmetryLoop
 
         func requiredNumber(_ tag: String) throws(CIFImportError) -> Double {
             guard let raw = cellValues[tag] else { throw .missingTag(tag) }
+            guard raw != "?" else { throw .unknownValue(tag: tag) }
             return try parseNumber(raw, tag: tag)
         }
 
@@ -413,33 +479,48 @@ public enum CIFImport {
         guard !atomSiteRows.isEmpty else { throw .noAtomSites }
 
         var baseSites: [BaseSite] = []
+        var dummyLabels: [String] = []
         baseSites.reserveCapacity(atomSiteRows.count)
         for row in atomSiteRows {
-            let label = row["_atom_site_label"] ?? "?"
-            guard let xRaw = row["_atom_site_fract_x"] else { throw .missingTag("_atom_site_fract_x") }
-            guard let yRaw = row["_atom_site_fract_y"] else { throw .missingTag("_atom_site_fract_y") }
-            guard let zRaw = row["_atom_site_fract_z"] else { throw .missingTag("_atom_site_fract_z") }
-            let x = try parseNumber(xRaw, tag: "_atom_site_fract_x (\(label))")
-            let y = try parseNumber(yRaw, tag: "_atom_site_fract_y (\(label))")
-            let zCoord = try parseNumber(zRaw, tag: "_atom_site_fract_z (\(label))")
+            let label = row["_atom_site_label"].flatMap { $0 == "?" ? nil : $0 } ?? "?"
+            func coordinate(_ tag: String) throws(CIFImportError) -> (value: Double, raw: String) {
+                guard let raw = row[tag] else { throw .missingTag(tag) }
+                guard raw != "?" else { throw .unknownValue(tag: "\(tag) (\(label))") }
+                return (try parseNumber(raw, tag: "\(tag) (\(label))"), raw)
+            }
+            let x = try coordinate("_atom_site_fract_x")
+            let y = try coordinate("_atom_site_fract_y")
+            let zCoord = try coordinate("_atom_site_fract_z")
+            // An unknown or inapplicable occupancy is CIF's default, 1 (as pymatgen reads `?`).
             let occupancy: Double
-            if let occRaw = row["_atom_site_occupancy"] {
+            if let occRaw = row["_atom_site_occupancy"], occRaw != "?" {
                 occupancy = try parseNumber(occRaw, tag: "_atom_site_occupancy (\(label))")
             } else {
                 occupancy = 1.0
             }
-            let symbolSource = row["_atom_site_type_symbol"] ?? label
+            // U_iso in Å²; B_iso is 8π² U_iso. U wins when both are written. `?`, `.` and a value that is no finite number
+            // leave it unknown: nothing in the structure depends on it, so it never refuses the file.
+            var displacement: Double?
+            if let uRaw = row["_atom_site_u_iso_or_equiv"], let u = try? parseNumber(uRaw, tag: "") {
+                displacement = u
+            } else if let bRaw = row["_atom_site_b_iso_or_equiv"], let b = try? parseNumber(bRaw, tag: "") {
+                displacement = b / (8 * Double.pi * Double.pi)
+            }
+            let typeSymbol = row["_atom_site_type_symbol"].flatMap { $0 == "?" ? nil : $0 }
+            let symbolSource = typeSymbol ?? label
             let symbol = Element.normalizedSymbol(fromCIF: symbolSource)
             guard let atomicNumber = Element.atomicNumber(forSymbol: symbol) else {
+                if Element.isDummySymbol(symbol) { dummyLabels.append(label); continue }
                 throw .unknownElementSymbol(symbolSource, atomSiteLabel: label)
             }
             baseSites.append(BaseSite(
-                z: atomicNumber, label: label, occupancy: occupancy,
-                position: SIMD3(x, y, zCoord),
-                halfStep: SIMD3(coordinateHalfStep(xRaw, cap: policy.maximumCoordinateHalfStep),
-                                coordinateHalfStep(yRaw, cap: policy.maximumCoordinateHalfStep),
-                                coordinateHalfStep(zRaw, cap: policy.maximumCoordinateHalfStep))))
+                z: atomicNumber, label: label, occupancy: occupancy, displacement: displacement,
+                position: SIMD3(x.value, y.value, zCoord.value),
+                halfStep: SIMD3(coordinateHalfStep(x.raw, cap: policy.maximumCoordinateHalfStep),
+                                coordinateHalfStep(y.raw, cap: policy.maximumCoordinateHalfStep),
+                                coordinateHalfStep(zCoord.raw, cap: policy.maximumCoordinateHalfStep))))
         }
+        guard !baseSites.isEmpty else { throw .noAtomSites }
 
         var ops: [SymmetryOperation] = []
         for raw in symmetryOps {
@@ -460,6 +541,7 @@ public enum CIFImport {
         // uses the loop), but the reader is told. Equal groups: the same order and every listed operation in the Hall
         // group, translations mod 1 to 1e-3 (the finest genuine translation is 1/12; a written 0.3333 is 1/3).
         var warnings: [CIFImportWarning] = []
+        if !dummyLabels.isEmpty { warnings.append(.dummyAtomsSkipped(labels: dummyLabels)) }
         if fileListsOperations, let hallSymbol, let hallOperations {
             let loopOrder = SymmetryOperation.distinctCount(ops)
             let hallOrder = SymmetryOperation.distinctCount(hallOperations)
@@ -531,7 +613,8 @@ public enum CIFImport {
                 throw .missingSymmetryOperations(spaceGroup: declared)
             }
             sites = baseSites.map {
-                AtomSite(z: $0.z, fractional: wrapFractional($0.position), occupancy: $0.occupancy, label: $0.label)
+                AtomSite(z: $0.z, fractional: wrapFractional($0.position), occupancy: $0.occupancy, label: $0.label,
+                         isotropicDisplacement: $0.displacement)
             }
             operations = nil
         }
@@ -549,11 +632,35 @@ public enum CIFImport {
 
     // MARK: - Tokenizer
 
+    /// One token of a CIF: its text and whether it was quoted (or a semicolon text field). A quoted token is always a
+    /// value: `'_x'` is not a tag. (A quoted `'?'` is stored as the text `?`, which the reader then treats as unknown,
+    /// like the mark itself: no number is written so.)
+    private struct Token {
+        let text: String
+        let quoted: Bool
+
+        var isTag: Bool { !quoted && text.hasPrefix("_") }
+        var isLoop: Bool { !quoted && text.lowercased() == "loop_" }
+        var isDataBlock: Bool { !quoted && text.lowercased().hasPrefix("data_") }
+        /// A keyword or a tag: what can never be a value (`global_`, `save_`, `stop_` included).
+        var isReserved: Bool {
+            guard !quoted else { return false }
+            let lower = text.lowercased()
+            return isTag || lower == "loop_" || lower.hasPrefix("data_") || lower == "global_" || lower.hasPrefix("save_")
+                || lower == "stop_"
+        }
+        /// CIF's unknown (`?`) or inapplicable (`.`) mark.
+        var isNull: Bool { !quoted && (text == "?" || text == ".") }
+    }
+
     /// Turns CIF text into a flat token stream: `data_...` block markers, `loop_`, `_tag` names, and (possibly quoted
-    /// or semicolon-delimited) values, with `#` comments stripped outside of quotes and text fields.
-    private static func tokenize(_ text: String) -> [String] {
-        let lines = text.components(separatedBy: .newlines)
-        var tokens: [String] = []
+    /// or semicolon-delimited) values, with `#` comments stripped outside of quotes and text fields. A byte-order mark at
+    /// the start is dropped.
+    private static func tokenize(_ text: String) -> [Token] {
+        var body = Substring(text)
+        if body.first == "\u{FEFF}" { body = body.dropFirst() }
+        let lines = body.components(separatedBy: .newlines)
+        var tokens: [Token] = []
         var index = 0
         while index < lines.count {
             let line = lines[index]
@@ -566,7 +673,7 @@ public enum CIFImport {
                 }
                 if index < lines.count { index += 1 }
                 let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !trimmed.isEmpty { tokens.append(trimmed) }
+                if !trimmed.isEmpty { tokens.append(Token(text: trimmed, quoted: true)) }
                 continue
             }
             tokens.append(contentsOf: tokenizeLine(line))
@@ -575,13 +682,14 @@ public enum CIFImport {
         return tokens
     }
 
-    private static func tokenizeLine(_ line: String) -> [String] {
-        var result: [String] = []
+    private static func tokenizeLine(_ line: String) -> [Token] {
+        var result: [Token] = []
         let chars = Array(line)
         var i = 0
         while i < chars.count {
             let c = chars[i]
-            if c == " " || c == "\t" { i += 1; continue }
+            // Any whitespace separates tokens: a no-break space (Latin-1 0xA0) left the token loop below without advancing.
+            if c.isWhitespace { i += 1; continue }
             if c == "#" { break }
             if c == "'" || c == "\"" {
                 let quote = c
@@ -590,12 +698,12 @@ public enum CIFImport {
                 while j < chars.count {
                     if chars[j] == quote {
                         let next = j + 1 < chars.count ? chars[j + 1] : " "
-                        if next == " " || next == "\t" { break }
+                        if next.isWhitespace { break }
                     }
                     value.append(chars[j])
                     j += 1
                 }
-                result.append(value)
+                result.append(Token(text: value, quoted: true))
                 i = min(j + 1, chars.count)
                 continue
             }
@@ -604,7 +712,7 @@ public enum CIFImport {
                 value.append(chars[i])
                 i += 1
             }
-            result.append(value)
+            result.append(Token(text: value, quoted: false))
         }
         return result
     }
@@ -619,6 +727,8 @@ public enum CIFImport {
         }
         text = text.trimmingCharacters(in: .whitespaces)
         guard let value = Double(text) else { throw .unparsableNumber(tag: tag, value: raw) }
+        // Double(_:) reads "nan", "inf", "infinity" and rounds 1e999 to infinity: none is a number a structure holds.
+        guard value.isFinite else { throw .nonFiniteNumber(tag: tag, value: raw) }
         return value
     }
 
@@ -864,6 +974,7 @@ public enum CIFImport {
             let z: Int
             let label: String
             let occupancy: Double
+            let displacement: Double?
             let position: SIMD3<Double>
             let uncertainty: SIMD3<Double>
         }
@@ -892,11 +1003,14 @@ public enum CIFImport {
                 }
                 if !isDuplicate {
                     kept.append(Image(row: row, z: site.z, label: site.label, occupancy: site.occupancy,
-                                      position: mapped, uncertainty: uncertainty))
+                                      displacement: site.displacement, position: mapped, uncertainty: uncertainty))
                 }
             }
         }
-        return kept.map { AtomSite(z: $0.z, fractional: $0.position, occupancy: $0.occupancy, label: $0.label) }
+        return kept.map {
+            AtomSite(z: $0.z, fractional: $0.position, occupancy: $0.occupancy, label: $0.label,
+                     isotropicDisplacement: $0.displacement)
+        }
     }
 
     /// Rounding error of one output coordinate: `|c_x|·δx + |c_y|·δy + |c_z|·δz` for the operator row.

@@ -253,8 +253,8 @@ public enum MaterialsProjectImport {
     /// The structure of one fetched document, converted to the conventional cell when MP served a centred primitive
     /// cell (`CellStandardisation`), with the symmetry detected from the atoms. Structural absence, an unusable
     /// coordinate or an unknown element throws `Failure.malformed`; a conversion that fails a guard throws
-    /// `Failure.nonStandardCell`. Non-finite numbers, occupancy out of range and atoms too close are left to
-    /// `CrystalStructure.validationIssues`.
+    /// `Failure.nonStandardCell`. A number that is not finite (a coordinate, an occupancy, the lattice) throws
+    /// `Failure.malformed`; occupancy out of range and atoms too close are left to `CrystalStructure.validationIssues`.
     public static func structure(from doc: MaterialsProjectDocument) throws -> ImportedStructure {
         guard let served = doc.structure else { throw Failure.malformed("\(doc.materialID) has no structure block.") }
         guard let lattice = served.lattice else { throw Failure.malformed("\(doc.materialID)'s structure has no lattice.") }
@@ -269,6 +269,10 @@ public enum MaterialsProjectImport {
             }
             guard let species = site.species, !species.isEmpty else {
                 throw Failure.malformed("Site \(index) of \(doc.materialID) lists no species.")
+            }
+            // A number that is not finite is refused here: the cell standardisation below cannot place such a site.
+            guard abc.allSatisfy(\.isFinite), species.allSatisfy({ $0.occu.isFinite }) else {
+                throw Failure.malformed("Site \(index) of \(doc.materialID) has a coordinate or occupancy that is not finite.")
             }
             for sp in species {
                 let symbol = Element.normalizedSymbol(fromCIF: sp.element)
@@ -286,6 +290,10 @@ public enum MaterialsProjectImport {
         } else {
             rows = UnitCell(a: lattice.a, b: lattice.b, c: lattice.c,
                             alphaDeg: lattice.alpha, betaDeg: lattice.beta, gammaDeg: lattice.gamma).realLattice
+        }
+        guard rows.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }),
+              [lattice.a, lattice.b, lattice.c, lattice.alpha, lattice.beta, lattice.gamma].allSatisfy(\.isFinite) else {
+            throw Failure.malformed("\(doc.materialID)'s lattice holds a number that is not finite.")
         }
         let result: CellStandardisation.Result
         do {

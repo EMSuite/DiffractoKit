@@ -16,12 +16,17 @@ public struct AtomSite: Sendable, Equatable {
     public var occupancy: Double
     /// The `_atom_site_label` when the site came from a CIF.
     public var label: String?
+    /// The isotropic displacement U_iso, Å² (`_atom_site_U_iso_or_equiv`, or `_atom_site_B_iso_or_equiv` / 8π²); nil
+    /// when not given. Carried as written: no structure factor in the kit reads it yet.
+    public var isotropicDisplacement: Double?
 
-    public init(z: Int, fractional: SIMD3<Double>, occupancy: Double = 1, label: String? = nil) {
+    public init(z: Int, fractional: SIMD3<Double>, occupancy: Double = 1, label: String? = nil,
+                isotropicDisplacement: Double? = nil) {
         self.z = z
         self.fractional = fractional
         self.occupancy = occupancy
         self.label = label
+        self.isotropicDisplacement = isotropicDisplacement
     }
 }
 
@@ -179,7 +184,9 @@ public struct CrystalStructure: Sendable, Equatable {
         for site in sites { counts[site.z, default: 0] += site.occupancy }
         return counts.keys.sorted().map { z in
             let n = counts[z]!
-            let count = abs(n - n.rounded()) < 1e-9 ? String(Int(n.rounded())) : String(format: "%.3g", n)
+            // Int(_:) traps outside its range (an occupancy of 1e30, or NaN): only a whole count that fits is printed as one.
+            let whole = n.isFinite && abs(n) < 1e15 && abs(n - n.rounded()) < 1e-9
+            let count = whole ? String(Int(n.rounded())) : String(format: "%.3g", n)
             return "\(Element.symbol(forAtomicNumber: z) ?? "Z\(z)")\(count)"
         }.joined(separator: " ")
     }
@@ -228,7 +235,8 @@ public struct CrystalStructure: Sendable, Equatable {
             case .degenerateVolume: add("invalid_cell_volume", issue.description)
             }
         }
-        if let refusal = symmetryRefusal { add("invalid_symmetry_tolerance", refusal) }
+        // A site that is not finite refuses the detection too; it is reported once, as invalid_fractional_coordinate below.
+        if let refusal = symmetryRefusal, SymmetryDetection.siteRefusal(sites) == nil { add("invalid_symmetry_tolerance", refusal) }
         if sites.isEmpty {
             add("missing_atomic_basis", "At least one occupied atomic site is required.")
         }

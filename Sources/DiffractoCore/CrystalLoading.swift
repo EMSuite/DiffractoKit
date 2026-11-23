@@ -1,7 +1,8 @@
 //
 //  CrystalLoading.swift
-//  Role: a crystal from the bytes of a CIF a person chose: the size cap, strict UTF-8, `CIFImport`, and a SHA-256 of the
-//        bytes as the file's fingerprint. Pure: it reads no file; the caller hands over the bytes and the file's name.
+//  Role: a crystal from the bytes of a CIF a person chose: the size cap, the text encoding (UTF-8, else Latin-1 as
+//        older CIF writers save it; a byte-order mark dropped), `CIFImport`, and a SHA-256 of the bytes as the file's
+//        fingerprint. Pure: it reads no file; the caller hands over the bytes and the file's name.
 //
 //  Ported from macTEM `TEMCore/Diffraction/CrystalLoading.swift` (the app's source is the oracle; no Python reference
 //  exists). `CIFImportError` propagates unchanged; this adds only the two refusals that happen before the importer sees text.
@@ -24,7 +25,7 @@ public struct LoadedCrystal: Sendable, Equatable {
     public let byteCount: Int
 }
 
-/// Loads a CIF from bytes: size cap, strict UTF-8, import, fingerprint.
+/// Loads a CIF from bytes: size cap, text encoding, import, fingerprint.
 public enum CrystalLoading {
 
     /// The most bytes a CIF may have: 5 MiB. One byte more is refused.
@@ -34,7 +35,8 @@ public enum CrystalLoading {
     public enum Refusal: Error, Equatable, Sendable, LocalizedError {
         /// The file has more than `CrystalLoading.maximumBytes` bytes.
         case tooLarge(bytes: Int)
-        /// The bytes are not valid UTF-8.
+        /// The bytes are not text: they hold a NUL byte (a binary file, or UTF-16). The name is kept from the releases
+        /// that read UTF-8 only; since 0.19 a file that is not UTF-8 is read as Windows-1252 / Latin-1 instead.
         case notUTF8
 
         /// The case's name without its numbers.
@@ -51,7 +53,7 @@ public enum CrystalLoading {
             case .tooLarge(let bytes):
                 return "This file is \(bytes) bytes; a structure file larger than \(CrystalLoading.maximumBytes) bytes (5 MiB) is not read."
             case .notUTF8:
-                return "This file is not valid UTF-8 text, so it cannot be a CIF."
+                return "This file is not text (it holds a NUL byte), so it cannot be a CIF."
             }
         }
     }
@@ -60,10 +62,21 @@ public enum CrystalLoading {
     /// `fileName` supplies the fallback display name (its last component without extension).
     public static func load(bytes: Data, fileName: String) throws -> LoadedCrystal {
         guard bytes.count <= maximumBytes else { throw Refusal.tooLarge(bytes: bytes.count) }
-        guard let text = String(validating: bytes, as: UTF8.self) else { throw Refusal.notUTF8 }
+        guard let text = text(of: bytes) else { throw Refusal.notUTF8 }
         let base = URL(fileURLWithPath: fileName).deletingPathExtension().lastPathComponent
         let document = try CIFImport.read(text, fileBaseName: base)
         return LoadedCrystal(document: document, sha256: fingerprint(of: bytes), byteCount: bytes.count)
+    }
+
+    /// The text of a CIF's bytes: UTF-8 (a byte-order mark dropped), else Windows-1252, else ISO 8859-1 (Latin-1, which
+    /// decodes any byte), the encodings older CIF writers and ICSD exports use. nil for bytes holding a NUL, which no
+    /// CIF holds (a binary file, or UTF-16).
+    public static func text(of bytes: Data) -> String? {
+        guard !bytes.contains(0) else { return nil }
+        var body = bytes
+        if body.starts(with: [0xEF, 0xBB, 0xBF]) { body = body.dropFirst(3) }
+        if let utf8 = String(validating: body, as: UTF8.self) { return utf8 }
+        return String(data: body, encoding: .windowsCP1252) ?? String(data: body, encoding: .isoLatin1)
     }
 
     /// Lower-case hex SHA-256 of `bytes`.

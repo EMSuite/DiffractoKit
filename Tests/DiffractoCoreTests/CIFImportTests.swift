@@ -271,7 +271,7 @@ struct CIFImportTests {
         #expect(refusal(Self.goldP1.replacingOccurrences(of: "_cell_length_c 4.0782\n", with: "")) == .missingTag("_cell_length_c"))
         #expect(refusal(Self.goldP1.replacingOccurrences(of: "_cell_angle_beta 90", with: "_cell_angle_beta ninety")) == .unparsableNumber(tag: "_cell_angle_beta", value: "ninety"))
         #expect(refusal(Self.goldP1.components(separatedBy: "loop_")[0]) == .noAtomSites)
-        #expect(refusal(Self.goldP1.replacingOccurrences(of: "Au1 Au 0 0 0", with: "Xx1 Xx 0 0 0")) == .unknownElementSymbol("Xx", atomSiteLabel: "Xx1"))
+        #expect(refusal(Self.goldP1.replacingOccurrences(of: "Au1 Au 0 0 0", with: "Zz1 Zz 0 0 0")) == .unknownElementSymbol("Zz", atomSiteLabel: "Zz1"))
         let badOp = Self.goldP1 + "loop_\n_symmetry_equiv_pos_as_xyz\n'x,y,z'\n'banana'\n"
         #expect(refusal(badOp) == .unsupportedSymmetryOperation("banana"))
         #expect(refusal("data_gold\n_symmetry_space_group_name_H-M 'F m -3 m'\n" + Self.goldP1.dropFirst("data_gold\n".count)) == .missingSymmetryOperations(spaceGroup: "F m -3 m"))
@@ -316,7 +316,8 @@ struct CIFImportTests {
                                           + Self.goldP1.dropFirst("data_gold\n".count)).structure.sites.count == 4)
         let journal = try CIFImport.read("data_global\n_journal_name_full 'Some Journal'\n\n" + Self.goldP1)
         #expect(journal.structure.sites.count == 4)
-        #expect(journal.dataBlockName == "global")
+        // The structure's own block names it (since 0.19; a publication's data_global said nothing about the phase).
+        #expect(journal.dataBlockName == "gold")
     }
 
     @Test func testUncertaintySuffixAndDisplayName() throws {

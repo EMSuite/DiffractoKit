@@ -1,6 +1,6 @@
-# Status
+# Status: DiffractoKit 0.18.1 <!-- x-release-please-version -->
 
-DiffractoKit 0.12.0 (2026-11-06), on ImagoKit `"0.2.0"..<"1.0.0"`.
+DiffractoKit 0.18.1, on ImagoKit `"0.2.0"..<"1.0.0"`.
 
 Live:
 
@@ -8,12 +8,17 @@ Live:
 - CIF import with symmetry detection and a completeness check by IT number, by symbol or by Hall symbol (a Hall-only CIF
   is expanded with its group; an operation list that is not its space group is refused, and one that disagrees with the
   Hall symbol warns); space-group-free symmetry from the atoms; reflections and rings.
+- The CIFs people have: `?` and `.` values, deuterium and tritium, dummy atoms (left out with a warning), U and B iso,
+  Latin-1 and a byte-order mark, DDLm names, a publication block before the structure; mmCIF and mCIF refused by name,
+  a number that is not finite refused with a typed error, and a seeded fuzz of the committed CIFs that never crashes (#117).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.
 - The spots of one pattern (`PatternSpots`): py4DSTEM's `get_maxima_2D` exactly, then a radial background, the beam left
   out and each spot refined.
+- The spot pattern of a structure at any orientation and voltage (`SpotPattern`): py4DSTEM's kinematic pattern, every spot
+  with hkl, position, d, excitation error and intensity, and its distance R = L tan 2θ at a camera length.
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,

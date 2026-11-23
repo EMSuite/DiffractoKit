@@ -107,7 +107,7 @@ public enum BestPhaseMatching {
     ///   (``areComparable(_:)``), or the scans differ in size or do not fill their grid.
     public static func bestPhases(_ scans: [ACOMScanResults], libraries: [ACOMTemplateLibrary]) -> BestPhaseMap? {
         guard let first = scans.first, libraries.count == scans.count, areComparable(libraries),
-              first.results.count == first.width * first.height,
+              gridHolds(first.results.count, width: first.width, height: first.height),
               scans.allSatisfy({ $0.width == first.width && $0.height == first.height && $0.results.count == first.results.count })
         else { return nil }
         let results = first.results.indices.map { i in best(of: scans.map { $0.results[i] }) }

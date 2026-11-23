@@ -47,6 +47,15 @@ python3 tools/crystal-structures/make_beta_double_prime.py   # the beta'' CIF th
 
 The last two write into the checkout's own gitignored `References/`.
 
+`tools/pins/regenerate.sh --setup` does all of this (and the two pinned source clones some generators check against);
+`tools/pins/regenerate.sh` then runs every generator in order and `tools/pins/compare.py` judges what moved: equal, float
+noise, or DIFFERS. The Linux reference job (`.github/workflows/references.yml`, weekly and on every PR that touches the
+generators or the fixtures) runs exactly these on GitHub's Ubuntu runner and fails on any DIFFERS. The committed fixtures
+were written on a Mac, and Linux reproduces them to float noise (`|a - b| <= 1e-12 + 1e-9 max(|a|, |b|)`); what does not
+reproduce yet is listed, with its reason, in `tools/pins/known-differences.txt`. `orientation-symmetry/pins.py` and
+`acom-matcher/pins.py` read the 4DSTEM Studio source and stay Mac-only. Put the committed files back after a check with
+`git checkout -- Tests Sources`.
+
 Every fixture that records a pymatgen version records pymatgen-core 2026.10.16 (the `pymatgen` metapackage is 2026.9.24).
 A regenerated fixture that moves is its own commit with the reason and a CHANGELOG line.
 
