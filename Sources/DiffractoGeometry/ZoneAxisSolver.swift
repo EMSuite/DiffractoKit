@@ -199,14 +199,14 @@ public struct ZoneAxisSolver: Sendable {
     /// λ, Å.
     public let wavelength: Double
 
-    private let hkl: [MillerIndex]
-    private let g: [SIMD3<Double>]
-    private let gLength: [Double]
-    private let intensity: [Double]
+    let hkl: [MillerIndex]
+    let g: [SIMD3<Double>]
+    let gLength: [Double]
+    let intensity: [Double]
     /// One member of each orbit under the proper rotations (the lexicographically largest hkl).
     private let canonical: [Bool]
     /// The crystal's proper rotations in its Cartesian frame.
-    private let rotations: [simd_double3x3]
+    let rotations: [simd_double3x3]
 
     /// The solver for `structure` at `volts` (200 kV is 200_000), with the reflections up to `kMax` Å⁻¹ (they must reach
     /// past the longest measured spot).
