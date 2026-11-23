@@ -54,6 +54,7 @@ generators=(
   pymatgen:orientation-symmetry/trigonal-pins.py
   pymatgen:orientation-symmetry/color-table.py
   pymatgen:phase-vectors/pins.py
+  pymatgen:lattice-edit/pins.py
   orix:orix/ipf-pins.py
   orix:orix/direction-pins.py
   orix:orix/disorientation-pins.py
