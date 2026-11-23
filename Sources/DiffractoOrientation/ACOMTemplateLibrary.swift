@@ -317,7 +317,8 @@ public struct ACOMTemplateLibrary: Sendable {
 
     /// Projects reflections for the beam direction `n` (unit vector): the excited ones (|s| ≤ `sgMax`) map to (radius, azimuth)
     /// in the plane perpendicular to the beam, in the detector frame of ``ZoneAxisFrame/detectorBasis(zoneAxis:)``, with the
-    /// weight (|F|² exp(−(s/w)²))^`intensityPower` (times radius^`radialPower`).
+    /// weight (|F|² exp(−(s/w)²))^`intensityPower` (times radius^`radialPower`). A reflection whose s or weight is not finite is
+    /// not projected.
     ///
     /// The excitation model decides s. With `.flat`, s = g·n is odd under g → −g while the envelope is even, so every template
     /// is exactly π-periodic in azimuth and the in-plane angle is only defined modulo π; either curved model breaks the tie.
@@ -338,12 +339,16 @@ public struct ACOMTemplateLibrary: Sendable {
             case .appCurvature(let l): sg = gz + (l / 2) * g2
             case .py4DSTEM(let l): sg = (2 * gz - l * g2) / (2 - 2 * l * gz)
             }
-            if abs(sg) > settings.sgMax { continue }
+            // Kept only when |s| ≤ sgMax, written so that a non-finite s is never kept: py4DSTEM's `np.abs(sg) < kernel` drops a
+            // NaN the same way. The denominator 2 − 2λ g·n is 0 where g·n = 1/λ, and s is 0/0 = NaN where also |g|² = 2/λ²
+            // (DiffractoKit#123); `abs(sg) > sgMax` let that NaN through as a weight.
+            guard abs(sg) <= settings.sgMax else { continue }
             let excited = refl.intensity * exp(-(sg / settings.sgWidth) * (sg / settings.sgWidth))
             var w = settings.intensityPower == 1 ? excited : pow(excited, settings.intensityPower)
             let x = simd_dot(refl.g, e1), y = simd_dot(refl.g, e2)
             let radius = (x * x + y * y).squareRoot()
             if settings.radialPower != 0 { w *= pow(radius, settings.radialPower) }
+            guard w.isFinite else { continue }
             spots.append((r: radius, azimuth: atan2(y, x), weight: w))
         }
         return spots
@@ -363,8 +368,11 @@ public struct ACOMTemplateLibrary: Sendable {
         let reach = sigmaBins > 0 ? max(1, Int((3 * sigmaBins).rounded())) : 0
         for s in spots {
             let exact = s.r / geo.radialScale
-            let rb = Int(exact.rounded())
-            if rb + reach < 0 || rb - reach >= geo.nRadial { continue }
+            // The same bounds as `rb + reach < 0 || rb - reach >= nRadial`, tested before `Int(_:)`, which traps on a radius past
+            // Int.max or not finite (a peak far off the detector, DiffractoKit#123).
+            let rounded = exact.rounded()
+            guard rounded.isFinite, rounded >= Double(-reach), rounded < Double(geo.nRadial + reach) else { continue }
+            let rb = Int(rounded)
             var a = s.azimuth.truncatingRemainder(dividingBy: twoPi)
             if a < 0 { a += twoPi }
             let ab = Int((a / twoPi * Double(geo.nAzimuthal)).rounded()) % geo.nAzimuthal
