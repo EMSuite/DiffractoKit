@@ -4,7 +4,8 @@
 //  lattice, three Materials Project imports) is the text committed under Fixtures/cif-export/written/, byte for byte, and
 //  pymatgen-core 2026.10.16 `CifParser` reads that text (tools/pins/cif-export/pins.py -> pymatgen-read-pins.json) to the
 //  structure's cell, relative 1e-7, and its expanded sites as a multiset: element and occupancy equal, coordinates 1e-7
-//  modulo 1 (suite design "Files, figures and exports", pin C1). A text not committed, or committed differently, is printed
+//  modulo 1 against pymatgen's reading with `frac_tolerance=0`, and within 1e-4 (that tolerance's default) of its default
+//  reading, which rounds 0.333333 to 1/3 (suite design "Files, figures and exports", pin C1). A text not committed, or committed differently, is printed
 //  between `CIFExport C1 begin <name>` and `CIFExport C1 end` lines, so a recording can be taken from the CI log.
 //  Red before: `CIFExport` did not exist.
 //
@@ -17,7 +18,7 @@ import DiffractoCore
 
 struct CIFExportPymatgenTests {
     struct Pins: Decodable {
-        struct Site: Decodable { let z: Int; let frac: [Double]; let occupancy: Double }
+        struct Site: Decodable { let z: Int; let frac: [Double]; let fracAsWritten: [Double]; let occupancy: Double }
         struct Cell: Decodable { let a, b, c, alpha, beta, gamma: Double }
         struct Structure: Decodable { let name: String; let cifSha256: String; let cell: Cell; let sites: [Site] }
         let pymatgenCore: String
@@ -62,7 +63,8 @@ struct CIFExportPymatgenTests {
                 let found = unmatched.firstIndex { i in
                     let mine = structure.sites[i]
                     return mine.z == site.z && mine.occupancy == site.occupancy
-                        && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.frac[$0]) <= 1e-7 }
+                        && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.fracAsWritten[$0]) <= 1e-7 }
+                        && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.frac[$0]) <= 1e-4 }
                 }
                 if let found { unmatched.remove(at: found) } else { Issue.record("\(name): pymatgen's Z\(site.z) \(site.frac) is not a site") }
             }

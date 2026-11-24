@@ -1,0 +1,29 @@
+# Written in P1 with every site: the symmetric text did not read back to the structure (the expanded sites are not the structure's to the bit).
+data_ws2_2h
+_audit_creation_method DiffractoKit
+_chemical_name_common ws2_2h
+_chemical_formula_sum 'S4 W2'
+_cell_length_a 3.1532
+_cell_length_b 3.1532
+_cell_length_c 12.323
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 120.0
+_space_group_name_H-M_alt 'P 1'
+_space_group_IT_number 1
+loop_
+_space_group_symop_operation_xyz
+'x,y,z'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+W1 W 0.333333 0.666667 0.25 1.0
+W2 W 0.666667 0.333333 0.75 1.0
+S1 S 0.333333 0.666667 0.6225 1.0
+S2 S 0.333333 0.666667 0.8775 1.0
+S3 S 0.666667 0.333333 0.3775 1.0
+S4 S 0.666667 0.333333 0.1225 1.0

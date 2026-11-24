@@ -192,6 +192,10 @@ credited as Materials Project data, licensed CC BY 4.0
 (https://creativecommons.org/licenses/by/4.0/). Changes: none to the recorded
 response; the other two were written by hand in its format.
 
+Tests/DiffractoCoreTests/Fixtures/cif-export/written/input-*.json.cif are the
+same three structures written as CIF by the kit (CIFExport): Materials Project
+data, CC BY 4.0. Changes: converted to the conventional cell and to CIF.
+
 Tests/DiffractoCoreTests/Fixtures/mp-optimade/ holds answers of the Materials
 Project's keyless OPTIMADE service (https://optimade.materialsproject.org):
 info.json, search-*.json and entry-*.json, recorded byte for byte on
