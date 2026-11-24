@@ -280,8 +280,8 @@ public enum MaterialsProjectOptimade {
         // A cell that needed no transformation comes back as served (γ = 119.999989 for mp-1094122); idealise it to its
         // lattice too, or the next read, whose family test works at 1e-9, would call a hexagonal cell monoclinic.
         let cell = conventional.transformation == .identity
-            ? ConventionalCell.idealised(rows.map { r in SIMD3(dot(r, rows[0]), dot(r, rows[1]), dot(r, rows[2])) },
-                                         conventional.bravais)
+            ? LatticeConstruction.idealised(rows.map { r in SIMD3(dot(r, rows[0]), dot(r, rows[1]), dot(r, rows[2])) },
+                                            conventional.bravais)
             : conventional.cell
         let structure = CrystalStructure.detectingSymmetry(cell: cell, sites: conventional.sites, name: id,
                                                            metricLengthTolerance: metricLengthTolerance,
