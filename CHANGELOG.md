@@ -4,6 +4,24 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.21.0](https://github.com/EMSuite/DiffractoKit/compare/0.20.0...0.21.0) (2026-11-24)
+
+
+### Features
+
+* bonds of a structure, for the crystal view ([#207](https://github.com/EMSuite/DiffractoKit/issues/207)) ([393b542](https://github.com/EMSuite/DiffractoKit/commit/393b5422bf9de3e9d03331136441fb88f1307602))
+* choose a data block of a multi-structure CIF ([#196](https://github.com/EMSuite/DiffractoKit/issues/196)) ([869f110](https://github.com/EMSuite/DiffractoKit/commit/869f1100d39e81085963119549e7be815cfbc1ea))
+* double diffraction between two crystals ([#206](https://github.com/EMSuite/DiffractoKit/issues/206)) ([13c8001](https://github.com/EMSuite/DiffractoKit/commit/13c8001367c1dbb456bd19143fd2edeaddfacdd0))
+* edit lattice parameters within the crystal system ([#192](https://github.com/EMSuite/DiffractoKit/issues/192)) ([c4f7743](https://github.com/EMSuite/DiffractoKit/commit/c4f77432dae65520dd5e5b4aa890113c3a60c479))
+* electron powder rings with intensities, a profile, overlap and diagnostic peaks ([#201](https://github.com/EMSuite/DiffractoKit/issues/201)) ([c39a83f](https://github.com/EMSuite/DiffractoKit/commit/c39a83f03ffcdf4c64902155e69f1886b431cfb5))
+* electron powder rings, profile, overlap and diagnostic peaks ([c39a83f](https://github.com/EMSuite/DiffractoKit/commit/c39a83f03ffcdf4c64902155e69f1886b431cfb5))
+* name the space group from the detected operations ([#205](https://github.com/EMSuite/DiffractoKit/issues/205)) ([caf72ab](https://github.com/EMSuite/DiffractoKit/commit/caf72ab668ec5aa68f4685549ec2480282c3f3a3))
+* phase finder, candidate phases ranked on one pattern with ties ([8b5acaf](https://github.com/EMSuite/DiffractoKit/commit/8b5acaf51b1eab03b88a6a7d905e274c1655bac6))
+* rank candidate phases against rings or spots ([#200](https://github.com/EMSuite/DiffractoKit/issues/200)) ([8b5acaf](https://github.com/EMSuite/DiffractoKit/commit/8b5acaf51b1eab03b88a6a7d905e274c1655bac6))
+* read a CIF that names its space group without an operation list ([#202](https://github.com/EMSuite/DiffractoKit/issues/202)) ([1e1e3a6](https://github.com/EMSuite/DiffractoKit/commit/1e1e3a68de7b04b13e648bcdf2aa55f089f535a9))
+* stereographic projection, zone-axis map and double-tilt holder ([#194](https://github.com/EMSuite/DiffractoKit/issues/194)) ([37ed8f6](https://github.com/EMSuite/DiffractoKit/commit/37ed8f6cfe60d72302f0bb62f45ab8a5e8987be5))
+* variant orientations of a relationship, and which look alike in a view ([#198](https://github.com/EMSuite/DiffractoKit/issues/198)) ([7b983c5](https://github.com/EMSuite/DiffractoKit/commit/7b983c56691284e8201c328a670aba41ccf23f9f))
+
 ## [0.20.0](https://github.com/EMSuite/DiffractoKit/compare/0.19.0...0.20.0) (2026-11-24)
 
 
