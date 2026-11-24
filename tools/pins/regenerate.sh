@@ -61,6 +61,7 @@ generators=(
   orix:orix/direction-pins.py
   orix:orix/disorientation-pins.py
   orix:orix/misorientation-pins.py
+  orix:orix/variant-pins.py
   orix:orix/orientation-api-pins.py
   orix:orix/stereographic-pins.py
   pymatgen:tilt-planner/planted.py

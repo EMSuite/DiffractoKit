@@ -43,22 +43,6 @@ extension PhaseVectorMatcher {
                         excitationSlabInvAngstrom: excitationSlabInvAngstrom)
                 .filter { let r = simd_length($0); return r > directBeamRadiusInvAngstrom && r <= reachInvAngstrom }
         }
-        func covers(_ a: [SIMD2<Double>], _ b: [SIMD2<Double>]) -> Bool {
-            a.allSatisfy { s in b.contains { simd_length($0 - s) <= toleranceInvAngstrom } }
-        }
-        // Union-find over the pairs that predict the same spots.
-        var parent = Array(variants.indices)
-        func root(_ i: Int) -> Int { var r = i; while parent[r] != r { r = parent[r] }; return r }
-        for i in variants.indices {
-            for j in variants.indices where j > i {
-                if covers(spots[i], spots[j]) && covers(spots[j], spots[i]) {
-                    let a = root(i), b = root(j)
-                    if a != b { parent[max(a, b)] = min(a, b) }
-                }
-            }
-        }
-        var groups: [Int: [Int]] = [:]
-        for i in variants.indices { groups[root(i), default: []].append(i) }
-        return groups.keys.sorted().map { groups[$0]!.sorted() }
+        return VariantSpotGrouping.groups(spots, toleranceInvAngstrom: toleranceInvAngstrom)
     }
 }
