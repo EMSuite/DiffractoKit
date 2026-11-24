@@ -32,9 +32,9 @@ func runTwoBeamThicknessChecks(_ r: inout Report) throws {
     r.near("fringe line through exact minima", line.thickness, t, 1e-7 * t)
     let pixels = TwoBeamProfile(offsets: [10], discSeparation: 200, gLength: 0.5, wavelength: 0.025, intensities: [1])
     r.near("deviation from a disc line in pixels", pixels.deviations[0], 10.0 / 200 * 0.025 * 0.25, 1e-18)
-    let si = CrystalPresets.diamond(a: 5.431, z: 14)
+    let si = CrystalPresets.diamond(a: 5.43, z: 14)
     let xiSi = try TwoBeamThickness.extinctionDistance(of: MillerIndex(2, 2, 0), in: si, volts: 200e3)
-    r.near("Si 220 extinction distance at 200 kV", xiSi, 967.0, 0.5)
+    r.near("Si 220 extinction distance at 200 kV", xiSi, 966.7, 0.5)
     // 40 nm out to between its first and second minima: one minimum a side
     let s1 = try unwrap(TwoBeamThickness.minimumDeviation(order: 1, thickness: 400, extinctionDistance: 950))
     let s2 = try unwrap(TwoBeamThickness.minimumDeviation(order: 2, thickness: 400, extinctionDistance: 950))

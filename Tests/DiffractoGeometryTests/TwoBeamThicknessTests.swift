@@ -30,8 +30,8 @@ struct TwoBeamThicknessTests {
     }
     struct Pins: Decodable {
         let cases: [Case]
-        let si220200kVExtinctionDistance: Double
-        let si220PendelloesungPeriodAbtem: Double
+        let siExtinctionDistance: Double
+        let siPendelloesungPeriod: Double
     }
 
     static let pins: Pins = {
@@ -144,10 +144,10 @@ struct TwoBeamThicknessTests {
     /// Si 220 at 200 kV: the two-beam extinction distance from the kit's structure factor is the NumPy pin's (rtol 1e-7)
     /// and within 5 % of the Pendellösung period abTEM 1.0.10's multislice shows at the Bragg position (95.6 nm).
     @Test func theExtinctionDistanceOfSilicon220() throws {
-        let si = CrystalPresets.diamond(a: 5.431, z: 14)
+        let si = CrystalPresets.diamond(a: 5.43, z: 14)
         let xi = try TwoBeamThickness.extinctionDistance(of: MillerIndex(2, 2, 0), in: si, volts: 200e3)
-        #expect(Self.close(xi, Self.pins.si220200kVExtinctionDistance, rtol: 1e-7), "\(xi)")
-        #expect(abs(xi / Self.pins.si220PendelloesungPeriodAbtem - 1) < 0.05, "\(xi)")
+        #expect(Self.close(xi, Self.pins.siExtinctionDistance, rtol: 1e-7), "\(xi)")
+        #expect(abs(xi / Self.pins.siPendelloesungPeriod - 1) < 0.05, "\(xi)")
         // a forbidden reflection has no extinction distance
         #expect(throws: TwoBeamThicknessError.noStructureFactor(MillerIndex(2, 0, 0))) {
             try TwoBeamThickness.extinctionDistance(of: MillerIndex(2, 0, 0), in: si, volts: 200e3)

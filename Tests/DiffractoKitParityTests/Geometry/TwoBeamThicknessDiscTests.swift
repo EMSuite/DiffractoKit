@@ -40,14 +40,14 @@ struct TwoBeamThicknessDiscTests {
         return try! JSONDecoder().decode(DiscFixture.self, from: Data(contentsOf: url))
     }()
 
-    private static let silicon = CrystalPresets.diamond(a: 5.431, z: 14)
+    private static let silicon = CrystalPresets.diamond(a: 5.43, z: 14)
 
     @Test func theFixtureIsTheSimulation() {
         let f = Self.fixture
         #expect(f.cases.count == 7 && f.volts == 200e3)
         #expect(f.cases.allSatisfy({ $0.deviation.count == 261 && $0.intensity.count == 261 }))
         #expect(abs(f.wavelength / ElectronWavelength.angstroms(volts: 200e3) - 1) < 1e-7)
-        #expect(abs(f.g * 5.431 / 8.0.squareRoot() - 1) < 1e-12)
+        #expect(abs(f.g * 5.43 / 8.0.squareRoot() - 1) < 1e-12)
     }
 
     @Test func aCleanDiscGivesTheThicknessWithin3Percent() throws {

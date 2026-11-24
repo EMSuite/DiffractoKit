@@ -192,7 +192,7 @@ def fit(s, y, xi0, trange=(100.0, 5000.0)):
 def main():
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "Tests/DiffractoGeometryTests/Fixtures/two-beam-thickness-disc.json"
     doc = json.loads(path.read_text())
-    xi0 = float(sys.argv[2]) if len(sys.argv) > 2 else 967.0335034036704  # the kit's two-beam value for Si 220, 200 kV
+    xi0 = float(sys.argv[2]) if len(sys.argv) > 2 else 966.7171232386147  # the kit's two-beam value for Si 220 (a = 5.43 Å), 200 kV
     for case in doc["cases"]:
         q = fit(case["deviation"], case["intensity"], xi0)
         true = case["thickness"]

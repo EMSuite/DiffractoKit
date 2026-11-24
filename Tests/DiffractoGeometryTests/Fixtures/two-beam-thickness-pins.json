@@ -373,6 +373,6 @@
    "fringe_line_extinction_distance": 1499.999999999999
   }
  ],
- "si220_200kV_extinction_distance": 967.0128819741732,
- "si220_pendelloesung_period_abtem": 956.0
+ "si_extinction_distance": 966.7171232386147,
+ "si_pendelloesung_period": 956.0
 }

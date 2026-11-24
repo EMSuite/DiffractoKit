@@ -100,7 +100,7 @@ def main():
     doc = {
         "source": "tools/pins/two-beam-thickness/disc.py: abTEM 1.0.10 potential (Lobato, infinite projection), "
                   "plane-wave multislice per point of the 220 disc, float64",
-        "reflection": [2, 2, 0], "phase": "Si (Fd-3m, a = 5.431 Å, ASE bulk)", "volts": E0,
+        "reflection": [2, 2, 0], "phase": "Si (Fd-3m, a = 5.43 Å, ASE bulk)", "volts": E0,
         "wavelength": float(lam), "g": float(g), "slice_thickness": float(dz),
         "pendelloesung_period_at_bragg": 956.0,
         "cases": cases,

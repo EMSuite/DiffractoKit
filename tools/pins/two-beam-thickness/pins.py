@@ -28,7 +28,7 @@ OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "Tests/DiffractoGeometr
 # (thickness, extinction distance) in Å: 40 to 400 nm, 50 to 150 nm
 CASES = [(400.0, 500.0), (400.0, 1500.0), (1000.0, 956.0), (1500.0, 1200.0), (2500.0, 700.0), (4000.0, 500.0),
          (4000.0, 1500.0)]
-# Si: the Lobato row of Z = 14 (the kit's table, py4DSTEM's scattering_factors.txt), diamond cubic, a = 5.431 Å (ASE)
+# Si: the Lobato row of Z = 14 (the kit's table, py4DSTEM's scattering_factors.txt), diamond cubic, a = 5.43 Å (ASE, as the simulated disc)
 SI_LOBATO = [2.87189142611612350e+00, 5.08487103642989610e+00, -2.06173501195173530e+00, 4.29178185305126190e-01,
              2.17114024204478720e+00, 3.66485434192162230e-01, -6.63073633058801900e-02, 1.19710611296903400e-01,
              3.01070709670513740e-03, 1.43994536128397540e-02]
@@ -46,7 +46,7 @@ def minimum(n, t, xi):
 
 
 def si220(volts):
-    a = 5.431
+    a = 5.43
     g2 = 8 / a ** 2
     f = sum(SI_LOBATO[2 * i] * (2 + SI_LOBATO[2 * i + 1] * g2) / (1 + SI_LOBATO[2 * i + 1] * g2) ** 2 for i in range(5))
     big_f = 8 * f / a ** 3  # |F_220| of diamond cubic: 8 f, over V
@@ -77,8 +77,8 @@ def main():
     doc = {
         "source": "tools/pins/two-beam-thickness/pins.py: the closed form in NumPy " + np.__version__,
         "cases": cases,
-        "si220_200kV_extinction_distance": si220(200e3),
-        "si220_pendelloesung_period_abtem": 956.0,
+        "si_extinction_distance": si220(200e3),
+        "si_pendelloesung_period": 956.0,
     }
     OUT.write_text(json.dumps(doc, indent=1) + "\n")
     print("wrote", OUT)
