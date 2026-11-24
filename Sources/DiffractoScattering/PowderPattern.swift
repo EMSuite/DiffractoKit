@@ -110,6 +110,8 @@ public enum PowderPatternError: Error, Equatable, Sendable, CustomStringConverti
     case tooManyReflections(estimated: Double)
     /// An intensity came out non-finite at this reflection.
     case nonFiniteIntensity(MillerIndex)
+    /// The electron ring list was refused (`kinematicReflections`); the text is its reason.
+    case invalidRingList(String)
 
     public var description: String {
         switch self {
@@ -129,6 +131,8 @@ public enum PowderPatternError: Error, Equatable, Sendable, CustomStringConverti
                           + "for (%ld); narrow the 2θ range or use a longer wavelength.", n, ReflectionList.maximumReflections)
         case .nonFiniteIntensity(let hkl):
             return "The intensity of \(hkl) is not a finite number."
+        case .invalidRingList(let reason):
+            return "The ring pattern cannot be computed: \(reason)"
         }
     }
 }
