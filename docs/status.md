@@ -66,6 +66,10 @@ Live:
 - The full orientation of one spot pattern (`PatternOrientation.index`): template matches and zone-axis solutions each
   refined on positions and intensities, the best agreement with the look-alikes that agree as well, and a flag when the
   pattern cannot decide (an alternative, or a tilt the intensities fix poorly).
+- The thickness from the profile across a two-beam CBED disc (`TwoBeamThickness`): the whole profile fitted by the
+  two-beam intensity with the extinction distance inside a window about the phase's structure-factor value, the fringe
+  line as the cross-check, and both thicknesses when two fit equally; profiles with fewer than two minima a side are
+  refused. Checked on closed forms and an abTEM-simulated Si 220 disc (within 3 %), not yet on a measured pattern.
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
