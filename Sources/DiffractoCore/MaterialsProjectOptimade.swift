@@ -90,8 +90,7 @@ public enum MaterialsProjectOptimade {
             throw .unreadableFormula(text)
         }
         for symbol in counts.keys where Element.atomicNumber(forSymbol: symbol) == nil { throw .unknownElement(symbol) }
-        func gcd(_ a: Int, _ b: Int) -> Int { b == 0 ? a : gcd(b, a % b) }
-        let divisor = counts.values.reduce(0, gcd)
+        let divisor = counts.values.reduce(0, IntegerMath.gcd)
         return counts.keys.sorted().map { symbol in
             let n = counts[symbol]! / max(divisor, 1)
             return n == 1 ? symbol : "\(symbol)\(n)"
@@ -180,7 +179,11 @@ public enum MaterialsProjectOptimade {
         }
         let sorted = rows.sorted { lhs, rhs in
             let l = lhs.lowestEnergyAboveHull ?? .infinity, r = rhs.lowestEnergyAboveHull ?? .infinity
-            return l != r ? l < r : lhs.materialID < rhs.materialID
+            if l != r { return l < r }
+            // Ties (every stable entry has 0) by the id's number, as the keyed route's search orders them: mp-12 before mp-1027.
+            let ln = MaterialsProjectImport.materialNumber(lhs.materialID) ?? .max
+            let rn = MaterialsProjectImport.materialNumber(rhs.materialID) ?? .max
+            return ln != rn ? ln < rn : lhs.materialID < rhs.materialID
         }
         return .rows(sorted, more: envelope.meta?.moreDataAvailable ?? false)
     }

@@ -230,21 +230,10 @@ public struct ZoneAxisSolver: Sendable {
 
         // W acts on fractional coordinates (x → W x); on the Cartesian frame it is C = Aᵀ W A⁻ᵀ (Aᵀ: columns a₁, a₂, a₃),
         // and on a reflection h → h W (the orbit of h).
-        let a = structure.cell.realLattice
-        let at = simd_double3x3(columns: (a[0], a[1], a[2]))
-        let atInverse = at.inverse
-        var ops: [simd_double3x3] = []
-        var integer: [IntegerMatrix] = []
-        for w in structure.laueGroup.properRotations {
-            let wm = simd_double3x3(rows: w.rows.map { SIMD3<Double>(Double($0.x), Double($0.y), Double($0.z)) })
-            let c = at * wm * atInverse
-            // a proper rotation of the cell's frame (a cell that does not carry W is skipped)
-            let e = c * c.transpose - matrix_identity_double3x3
-            let err = [e.columns.0, e.columns.1, e.columns.2].map { simd_reduce_max(simd_abs($0)) }.max() ?? 1
-            guard err <= 1e-6 else { continue }
-            ops.append(c)
-            integer.append(w)
-        }
+        // A proper rotation of the cell's frame; a cell that does not carry W is skipped (`DoubleTiltHolder`, the one copy).
+        let carried = DoubleTiltHolder.cartesianProperRotations(of: structure)
+        var ops = carried.map(\.cartesian)
+        var integer = carried.map(\.integer)
         if ops.isEmpty { ops = [matrix_identity_double3x3]; integer = [.identity] }
         rotations = ops
         canonical = hkls.map { h in

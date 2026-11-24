@@ -1,6 +1,6 @@
-# Status: DiffractoKit 0.21.0 <!-- x-release-please-version -->
+# Status: DiffractoKit 0.22.0 <!-- x-release-please-version -->
 
-DiffractoKit 0.21.0. <!-- x-release-please-version -->
+DiffractoKit 0.22.0. <!-- x-release-please-version -->
 It builds on ImagoKit `"0.2.0"..<"1.0.0"`.
 
 Live:
@@ -86,9 +86,8 @@ Live:
   the zone-axis solver already compute, with ties where the pattern cannot tell phases apart; ranked evidence, never a
   verdict.
 
-Since 0.10.0: 0.11.0 (2026-10-30) dropped the unused public API; 0.12.0 (2026-11-01) added the items above, made the ACOM
-Metal path 1.9 to 3.2 times faster and the ring profile fit stop runs that cannot improve, and retired the apps-parity dumps.
-Details and the migration notes: `CHANGELOG.md`.
+Since 0.21.0: 0.22.0 adds the Materials Project search with the user's own key, extended XYZ and POSCAR atom models, the
+CIF writer and the thickness from a two-beam CBED disc. What each version changed, with the migration notes: `CHANGELOG.md`.
 
 ## In progress, not wired: phase orientations from the structure alone (#81)
 

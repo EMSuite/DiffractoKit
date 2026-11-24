@@ -4,6 +4,26 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.22.0](https://github.com/EMSuite/DiffractoKit/compare/0.21.0...0.22.0) (2026-11-24)
+
+
+### Features
+
+* a crystal structure is written as CIF ([#219](https://github.com/EMSuite/DiffractoKit/issues/219)) ([fd9f4cf](https://github.com/EMSuite/DiffractoKit/commit/fd9f4cfecda5a90f278dd188d3b316b79806c6ac))
+* Materials Project search with the user's own key ([#208](https://github.com/EMSuite/DiffractoKit/issues/208)) ([21296a9](https://github.com/EMSuite/DiffractoKit/commit/21296a96b3b14caf2c966a643a25c69e9d80d8d5))
+* read extended XYZ and POSCAR structure files ([#213](https://github.com/EMSuite/DiffractoKit/issues/213)) ([902d710](https://github.com/EMSuite/DiffractoKit/commit/902d7103cf7875f07f72b255e44783ee8bec302e))
+* thickness from a two-beam CBED disc profile ([#211](https://github.com/EMSuite/DiffractoKit/issues/211)) ([1a083a8](https://github.com/EMSuite/DiffractoKit/commit/1a083a84b38d6d24237c3ae39d5e63a3d51d1bad))
+
+
+### Bug Fixes
+
+* a CIF 2 small-molecule file with Cartesian site columns is read, not refused as macromolecular ([#229](https://github.com/EMSuite/DiffractoKit/issues/229)) ([b171b58](https://github.com/EMSuite/DiffractoKit/commit/b171b58524d77346b318d19f35372ace5aec2b5a))
+* Cancel stops the second pass of the two-pass classification ([#228](https://github.com/EMSuite/DiffractoKit/issues/228)) ([3593ed4](https://github.com/EMSuite/DiffractoKit/commit/3593ed4cc00bcfdba8c82ea55152cede5c12b5ef))
+* read a Materials Project cell the fixed centring matrix cannot convert ([#216](https://github.com/EMSuite/DiffractoKit/issues/216)) ([b364344](https://github.com/EMSuite/DiffractoKit/commit/b3643444f8c5a91f509250990117a1a3e31d9238))
+* read the Materials Project's alphabetical material ids ([#214](https://github.com/EMSuite/DiffractoKit/issues/214)) ([f4b6dbe](https://github.com/EMSuite/DiffractoKit/commit/f4b6dbe3d470ab08567c6124fc9f016f8e4c8a7e))
+* the keyless Materials Project search orders equal energies by the id's number, as the keyed one does ([#230](https://github.com/EMSuite/DiffractoKit/issues/230)) ([e483e3a](https://github.com/EMSuite/DiffractoKit/commit/e483e3a2468c1e9af57f3219e6c01827a1e53f87))
+* the keyless Materials Project search orders equal energies by the id's number; three duplicated helpers have one copy ([#226](https://github.com/EMSuite/DiffractoKit/issues/226)) ([e483e3a](https://github.com/EMSuite/DiffractoKit/commit/e483e3a2468c1e9af57f3219e6c01827a1e53f87))
+
 ## [0.21.0](https://github.com/EMSuite/DiffractoKit/compare/0.20.0...0.21.0) (2026-11-24)
 
 

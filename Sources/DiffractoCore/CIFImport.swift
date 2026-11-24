@@ -385,9 +385,11 @@ public enum CIFImport {
     /// The tags of a magnetic CIF (after the DDLm dot is folded), any one of which refuses the file.
     private static let magneticTagPrefixes = ["_space_group_magn", "_atom_site_moment", "_parent_space_group",
                                               "_space_group_symop_magn", "_magnetic_"]
-    /// The categories only a macromolecular CIF writes.
-    private static let macromolecularTagPrefixes = ["_entity.", "_entity_poly", "_pdbx_", "_struct_asym.", "_atom_site.label_",
-                                                    "_atom_site.auth_", "_atom_site.cartn_", "_atom_site.group_pdb"]
+    /// The categories and items only a macromolecular CIF writes. Not `_atom_site.cartn_` or `_atom_site.label_`: the core
+    /// DDLm dictionary has them too (`_atom_site.Cartn_x`, `_atom_site.label_component_0`), so a CIF 2 small-molecule file
+    /// that lists Cartesian coordinates beside its fractional ones is no mmCIF (#225).
+    private static let macromolecularTagPrefixes = ["_entity.", "_entity_poly", "_pdbx_", "_struct_asym.", "_atom_site.auth_",
+                                                    "_atom_site.group_pdb"]
 
     /// A DDLm (CIF 2) name, `_cell.length_a`, as its DDL1 alias `_cell_length_a`: the first dot after the category is the
     /// underscore of the older dictionaries (the core aliases are formed so).

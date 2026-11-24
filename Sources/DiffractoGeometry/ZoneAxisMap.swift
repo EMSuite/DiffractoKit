@@ -94,5 +94,5 @@ public enum ZoneAxisMap {
         return out
     }
 
-    private static func gcd(_ a: Int, _ b: Int) -> Int { b == 0 ? a : gcd(b, a % b) }
+    private static func gcd(_ a: Int, _ b: Int) -> Int { IntegerMath.gcd(a, b) }
 }

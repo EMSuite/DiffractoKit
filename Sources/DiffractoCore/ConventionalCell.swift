@@ -153,7 +153,7 @@ enum LatticeConstruction {
         return out
     }
 
-    static func gcd(_ a: Int, _ b: Int) -> Int { b == 0 ? abs(a) : gcd(b, a % b) }
+    static func gcd(_ a: Int, _ b: Int) -> Int { IntegerMath.gcd(a, b) }
 
     static func primitive(_ v: SIMD3<Int>) -> SIMD3<Int> {
         let g = gcd(gcd(v.x, v.y), v.z)
