@@ -1,4 +1,4 @@
-# Status: DiffractoKit 0.19.0 <!-- x-release-please-version -->
+# Status: DiffractoKit 0.20.0 <!-- x-release-please-version -->
 
 DiffractoKit 0.20.0. <!-- x-release-please-version -->
 It builds on ImagoKit `"0.2.0"..<"1.0.0"`.
@@ -25,6 +25,9 @@ Live:
   monoclinic a, b, c, β; triclinic all six), keeps the fractional sites and refuses an edit that changes the Laue class
   (#149).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
+- Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
+  structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
+  table bit for bit (`XRayScatteringFactors`).
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.

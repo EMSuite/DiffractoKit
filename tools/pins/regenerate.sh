@@ -33,10 +33,12 @@ if [ "${1:-}" = "--setup" ]; then
   exit 0
 fi
 
-# In order: structure-factors before ring-indexing and phase-vectors (they read its fixture), ring-pins before q-pins,
+# In order: structure-factors before ring-indexing, phase-vectors and powder-xrd (they read its fixture), ring-pins before q-pins,
 # cells before conventional-cell (it imports cells), misorientation before orientation-api (it imports it).
 generators=(
   pymatgen:structure-factors/pins.py
+  pymatgen:powder-xrd/make-table.py
+  pymatgen:powder-xrd/pins.py
   pymatgen:ring-calibration/ring-pins.py
   pymatgen:ring-calibration/q-pins.py
   pymatgen:cells/pins.py
