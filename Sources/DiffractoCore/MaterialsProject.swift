@@ -57,6 +57,19 @@ public struct MaterialsProjectDocument: Decodable, Sendable {
         case symmetry
     }
 
+    /// Decodes a served document. The id is kept in the form people know (`mp-134`, not the served `mp-aaaaaafe`;
+    /// `MaterialsProjectImport.displayMaterialID`); an id in neither form is kept as served.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let served = try c.decode(String.self, forKey: .materialID)
+        materialID = MaterialsProjectImport.displayMaterialID(served) ?? served
+        formulaPretty = try c.decodeIfPresent(String.self, forKey: .formulaPretty)
+        deprecated = try c.decodeIfPresent(Bool.self, forKey: .deprecated)
+        lastUpdated = try c.decodeIfPresent(String.self, forKey: .lastUpdated)
+        structure = try c.decodeIfPresent(MaterialsProjectStructure.self, forKey: .structure)
+        symmetry = try c.decodeIfPresent(MaterialsProjectSymmetry.self, forKey: .symmetry)
+    }
+
     public init(materialID: String, formulaPretty: String? = nil, deprecated: Bool? = nil, lastUpdated: String? = nil,
                 structure: MaterialsProjectStructure? = nil, symmetry: MaterialsProjectSymmetry? = nil) {
         self.materialID = materialID
@@ -180,7 +193,7 @@ public enum MaterialsProjectImport {
 
     /// Every named refusal. A deprecated MP entry still imports (the flag is the caller's to record).
     public enum Failure: Error, Equatable, LocalizedError, Sendable {
-        /// The material id does not match `^mp-[0-9]+$`.
+        /// The material id is neither `mp-<digits>` nor `mp-<letters a-z>` (emmet-core's alphabetical form).
         case invalidMaterialID(String)
         /// The response's `data` array was empty.
         case emptyResult(String)
@@ -219,10 +232,10 @@ public enum MaterialsProjectImport {
     /// The `GET /materials/summary/` request for one material id. The id is validated first: a malformed id comes back
     /// from the API as an empty `data` array, indistinguishable from "not found".
     public static func request(materialID: String, apiKey: String) throws -> URLRequest {
-        guard isValidMaterialID(materialID) else { throw Failure.invalidMaterialID(materialID) }
+        guard let id = displayMaterialID(materialID) else { throw Failure.invalidMaterialID(materialID) }
         var components = URLComponents(string: "https://api.materialsproject.org/materials/summary/")!
         components.queryItems = [
-            URLQueryItem(name: "material_ids", value: materialID),
+            URLQueryItem(name: "material_ids", value: id),
             URLQueryItem(name: "_fields", value: "material_id,formula_pretty,structure,symmetry,deprecated,last_updated"),
         ]
         guard let url = components.url else { throw Failure.invalidMaterialID(materialID) }
@@ -233,9 +246,39 @@ public enum MaterialsProjectImport {
     }
 
     static func isValidMaterialID(_ id: String) -> Bool {
-        guard id.hasPrefix("mp-") else { return false }
-        let digits = id.dropFirst(3)
-        return !digits.isEmpty && digits.allSatisfy { $0.isASCII && $0.isNumber }
+        materialNumber(id) != nil
+    }
+
+    /// The largest number the Materials Project still writes in the legacy form `mp-<digits>` (emmet-core 0.88.3
+    /// `AlphaID._cut_point`); every id above it exists only in the alphabetical form.
+    public static let legacyIDLimit = 3_347_529
+
+    /// The number behind a material id in either form: `mp-134` is 134, and so is `mp-aaaaaafe`, emmet-core's
+    /// alphabetical form (base 26, "a" is 0, any length; the main API serves every id this way since 2026). Nil for
+    /// anything else: no "mp-" prefix, an empty or mixed body, upper case, or a number too large to hold.
+    public static func materialNumber(_ id: String) -> Int? {
+        guard id.hasPrefix("mp-") else { return nil }
+        let body = id.dropFirst(3).unicodeScalars
+        guard !body.isEmpty, body.count <= 12 else { return nil }
+        if body.allSatisfy({ $0.value >= 48 && $0.value <= 57 }) { return Int(String(body)) }
+        guard body.allSatisfy({ $0.value >= 97 && $0.value <= 122 }) else { return nil }
+        return body.reduce(0) { $0 * 26 + Int($1.value - 97) }
+    }
+
+    /// The id as the Materials Project names it to people (emmet-core's `AlphaID.string`): `mp-<digits>` up to
+    /// ``legacyIDLimit``, the alphabetical form padded to eight letters above it. `mp-aaaaaafe` gives `mp-134`. Nil when
+    /// `materialNumber` is nil.
+    public static func displayMaterialID(_ id: String) -> String? {
+        guard let number = materialNumber(id) else { return nil }
+        if number <= legacyIDLimit { return "mp-\(number)" }
+        var letters: [Character] = []
+        var rest = number
+        repeat {
+            letters.append(Character(UnicodeScalar(UInt8(97 + rest % 26))))
+            rest /= 26
+        } while rest > 0
+        let padding = String(repeating: "a", count: max(0, 8 - letters.count))
+        return "mp-" + padding + String(letters.reversed())
     }
 
     /// Decodes the raw response body. A body that is not the documented envelope throws `DecodingError`.

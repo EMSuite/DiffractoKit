@@ -27,6 +27,8 @@ Live:
   elements, chemical system or formula, most stable first, deprecated and GNoME entries left out; `decodeSearch` reads
   the rows (stability, calculated-only and deprecated flags, the stated space group) and `databaseVersion(from:)` the
   database version. The kit holds no key; the answers recorded with the owner's key are still to come (#151).
+- Material ids in both forms: the main API serves emmet-core's alphabetical ids (`mp-aaaaaafe`); both routes accept
+  them and give every id in the form people know (`MaterialsProjectImport.displayMaterialID`: `mp-134`) (#203).
 - Lattice edits within the crystal system: `CrystalStructure.editingLattice` sets the free parameters (cubic a;
   tetragonal and hexagonal a, c; trigonal a, c in hexagonal axes and a, α in rhombohedral axes; orthorhombic a, b, c;
   monoclinic a, b, c, β; triclinic all six), keeps the fractional sites and refuses an edit that changes the Laue class

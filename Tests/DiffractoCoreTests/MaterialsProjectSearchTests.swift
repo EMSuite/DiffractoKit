@@ -84,8 +84,9 @@ struct MaterialsProjectSearchTests {
             return
         }
         #expect(!more)
-        #expect(rows.map(\.materialID) == ["mp-10", "mp-2", "mp-3", "mp-1"])
-        #expect(rows[0] == Route.SearchRow(
+        // Equal energies come in the order of the ids' numbers, not of their text.
+        #expect(rows.map(\.materialID) == ["mp-2", "mp-10", "mp-3", "mp-1"])
+        #expect(rows[1] == Route.SearchRow(
             materialID: "mp-10", formula: "Al", siteCount: 1, energyAboveHull: 0, isStable: true, theoretical: false,
             deprecated: false, symmetry: MaterialsProjectSymmetry(crystalSystem: "Cubic", symbol: "Fm-3m", number: 225,
                                                                   pointGroup: "m-3m")))
@@ -171,8 +172,9 @@ struct MaterialsProjectSearchTests {
         for search in manifest.searches {
             let answer = try Route.decodeSearch(Data(contentsOf: Self.directory.appendingPathComponent(search.file)))
             let expected: Route.SearchAnswer = search.rows.isEmpty ? .noResults : .rows(search.rows.map { row in
+                // The manifest keeps the ids as served (alphabetical); the rows give the form people know.
                 Route.SearchRow(
-                    materialID: row.materialID, formula: row.formula, siteCount: row.siteCount,
+                    materialID: Route.displayMaterialID(row.materialID) ?? row.materialID, formula: row.formula, siteCount: row.siteCount,
                     energyAboveHull: row.energyAboveHull, isStable: row.isStable, theoretical: row.theoretical,
                     deprecated: row.deprecated,
                     symmetry: row.symmetry.map {
