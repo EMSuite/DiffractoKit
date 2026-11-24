@@ -39,6 +39,9 @@ FIELDS = "chemical_formula_reduced,nsites,_mp_stability"
 CANDIDATES = ["Al", "Fe", "Mg", "Si", "ClCs", "Po", "In", "Sn", "O2Ti", "Al2O3", "Bi", "Ga", "U", "S", "I", "CuO",
               "O2Zr", "CFe3", "Al2Cu", "AlB2", "B", "Se", "Te", "P", "Mn", "Li2MnO3", "Ca", "Na", "Hg", "Pa", "CaCO3",
               "K2O4S", "Al2O5Si", "MgO3Si", "Cu", "Zn", "Sb", "As", "Ge"]
+# The version of what is chosen: 1 took the first entry of each lattice, 2 only entries whose space group does not
+# depend on the tolerance. Raise it when the selection changes.
+RECORDING = 2
 # The tolerances an entry's space group must not depend on (Å).
 SYMPRECS = [1e-4, 1e-3, 1e-2]
 LATTICES = ["aP", "mP", "mC", "oP", "oC", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"]
@@ -96,13 +99,22 @@ def bravais(attributes):
 
 
 def main():
+    # The workflow runs on every push to a pull request that holds this file. A recording made with this selection
+    # stands (the service's answers differ from day to day only in their metadata), unless --force asks for a new one;
+    # a change to what is chosen raises RECORDING, which records again on the next push.
+    manifest_path = os.path.join(OUT, "manifest.json")
+    if "--force" not in sys.argv and os.path.exists(manifest_path):
+        with open(manifest_path) as f:
+            if json.load(f).get("recording") == RECORDING:
+                print(f"the committed recording is recording {RECORDING}; nothing to do (--force records again)")
+                return
     os.makedirs(OUT, exist_ok=True)
     # A new recording replaces the old one whole (the pins file beside it is tools/pins/mp-optimade/pins.py's).
     for name in os.listdir(OUT):
         if name.endswith(".json") and name != "pymatgen-pins.json":
             os.remove(os.path.join(OUT, name))
     manifest = {"recorder": "tools/materials-project/record.py", "date": datetime.date.today().isoformat(),
-                "spglib": spglib.__version__, "symprecs": SYMPRECS, "files": [], "lattices": {}}
+                "recording": RECORDING, "spglib": spglib.__version__, "symprecs": SYMPRECS, "files": [], "lattices": {}}
 
     def keep(name, url, body, note):
         with open(os.path.join(OUT, name), "wb") as f:

@@ -1,7 +1,8 @@
 # Records the keyless Materials Project (OPTIMADE) responses the tests decode, on GitHub's Linux runner, which reaches the
 # service; the cloud sessions and the Mac's sandbox do not (DiffractoKit #150). No key is used. The recordings and their
 # manifest (URL, date, SHA-256) are committed to the branch the run is for: by hand (Run workflow, choose the branch), or
-# on a pull request that changes the recorder. A commit made here starts no CI run; the next push to the branch does.
+# on a pull request that holds the recorder, which records only when the committed recording is of an older selection
+# (record.py's RECORDING). A commit made here starts no CI run; the next push to the branch does.
 name: Record Materials Project responses
 
 on:
