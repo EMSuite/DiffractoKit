@@ -94,5 +94,21 @@ import DiffractoOrientation
             phases: [TwoPassPhase(candidate: s.candidate, symmetry: s.precipitateSymmetry)],
             matrixSymmetry: s.matrixSymmetry, settings: PhaseOrientationSearchSettings(reachInvAngstrom: Learning.reach),
             originX: Learning.origin, originY: Learning.origin, invAngstromPerPixel: Learning.q) == nil)
+        // Cancelled once the second pass has begun (its progress runs past 0.85): no result, and no wait for the pass (#224).
+        final class Flag: @unchecked Sendable {
+            private let lock = NSLock()
+            private var on = false
+            var value: Bool { lock.lock(); defer { lock.unlock() }; return on }
+            func set() { lock.lock(); defer { lock.unlock() }; on = true }
+        }
+        let inSecondPass = Flag()
+        #expect(PhaseVectorMatcher.classifyInTwoPasses(
+            residual: residual, matrixOrientations: matrix,
+            phases: [TwoPassPhase(candidate: s.candidate, symmetry: s.precipitateSymmetry)],
+            matrixSymmetry: s.matrixSymmetry, settings: PhaseOrientationSearchSettings(reachInvAngstrom: Learning.reach),
+            originX: Learning.origin, originY: Learning.origin, invAngstromPerPixel: Learning.q,
+            minimumPositions: 10,
+            isCancelled: { inSecondPass.value },
+            progress: { fraction in if fraction > 0.85 { inSecondPass.set() } }) == nil)
     }
 }

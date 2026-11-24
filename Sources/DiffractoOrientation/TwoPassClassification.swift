@@ -238,6 +238,9 @@ extension PhaseVectorMatcher {
         let step = max(1, total / 100)
         for i in 0..<total {
             if let progress, i % step == 0 { progress(0.85 + 0.15 * Double(i) / Double(total)) }
+            // Polled as often as progress is reported: this pass is most of a large scan's time on one thread, and Stop
+            // used to wait for all of it (#224).
+            if i % step == 0, isCancelled?() == true { return nil }
             // The whole pattern, without what the removal took for a neighbouring grain (DiffractoKit#103).
             var whole: [SIMD2<Double>]? = scan?[i]
             if let all = whole, let reflections = matrixReflections {
