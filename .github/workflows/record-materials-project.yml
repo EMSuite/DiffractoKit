@@ -37,7 +37,7 @@ jobs:
         run: python -I -B tools/materials-project/record.py
       - name: Commit the recordings
         run: |
-          git add Tests/DiffractoCoreTests/Fixtures/mp-optimade
+          git add --all Tests/DiffractoCoreTests/Fixtures/mp-optimade
           if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

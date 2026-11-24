@@ -13,9 +13,11 @@ SHA-256 of the bytes, to Tests/DiffractoCoreTests/Fixtures/mp-optimade/:
   manifest.json
 
 The entries are chosen, not typed: for each candidate formula the search is recorded, its rows are sorted by the lowest
-energy above the hull over the functionals listed, the five lowest are fetched, and spglib (symprec 1e-3 Å: a thousand
-times the server's rounding of 1e-6 Å, and well under any real displacement) names each one's Bravais lattice; the first
-entry of each of the 14 lattices is kept. Lattices no candidate fills are listed in the manifest as missing.
+energy above the hull over the functionals listed, the five lowest are fetched, and spglib names each one's space group
+at symprec 1e-4, 1e-3 and 1e-2 Å (a hundred to ten thousand times the server's rounding of 1e-6 Å). An entry is kept only
+when all three agree: a calculated cell that is nearly of a higher symmetry (a monoclinic angle 0.03 degrees off 90, a
+bcc cell strained by 0.2 %) reads differently at each tolerance, and no reference can pin it. The first stable entry of
+each of the 14 Bravais lattices is kept; lattices no candidate fills are listed in the manifest as missing.
 """
 import datetime
 import hashlib
@@ -37,6 +39,8 @@ FIELDS = "chemical_formula_reduced,nsites,_mp_stability"
 CANDIDATES = ["Al", "Fe", "Mg", "Si", "ClCs", "Po", "In", "Sn", "O2Ti", "Al2O3", "Bi", "Ga", "U", "S", "I", "CuO",
               "O2Zr", "CFe3", "Al2Cu", "AlB2", "B", "Se", "Te", "P", "Mn", "Li2MnO3", "Ca", "Na", "Hg", "Pa", "CaCO3",
               "K2O4S", "Al2O5Si", "MgO3Si", "Cu", "Zn", "Sb", "As", "Ge"]
+# The tolerances an entry's space group must not depend on (Å).
+SYMPRECS = [1e-4, 1e-3, 1e-2]
 LATTICES = ["aP", "mP", "mC", "oP", "oC", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"]
 
 
@@ -65,11 +69,12 @@ def bravais(attributes):
     fractional = cartesian @ np.linalg.inv(lattice)
     names = attributes["species_at_sites"]
     kinds = {name: i + 1 for i, name in enumerate(sorted(set(names)))}
-    dataset = spglib.get_symmetry_dataset((lattice, fractional, [kinds[n] for n in names]), symprec=1e-3)
-    if dataset is None:
+    cell = (lattice, fractional, [kinds[n] for n in names])
+    datasets = [spglib.get_symmetry_dataset(cell, symprec=symprec) for symprec in SYMPRECS]
+    if any(dataset is None for dataset in datasets) or len({dataset.number for dataset in datasets}) != 1:
         return None
-    symbol = dataset.international
-    number = dataset.number
+    symbol = datasets[0].international
+    number = datasets[0].number
     centring = symbol[0]
     if number <= 2:
         family = "a"
@@ -92,8 +97,12 @@ def bravais(attributes):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
+    # A new recording replaces the old one whole (the pins file beside it is tools/pins/mp-optimade/pins.py's).
+    for name in os.listdir(OUT):
+        if name.endswith(".json") and name != "pymatgen-pins.json":
+            os.remove(os.path.join(OUT, name))
     manifest = {"recorder": "tools/materials-project/record.py", "date": datetime.date.today().isoformat(),
-                "spglib": spglib.__version__, "files": [], "lattices": {}}
+                "spglib": spglib.__version__, "symprecs": SYMPRECS, "files": [], "lattices": {}}
 
     def keep(name, url, body, note):
         with open(os.path.join(OUT, name), "wb") as f:
@@ -130,7 +139,7 @@ def main():
             if not kept_search:
                 keep(f"search-{formula}.json", url, body, f"the search for {formula}")
                 kept_search = True
-            keep(f"entry-{row['id']}.json", entry_url, entry, f"{formula}, {lattice} (spglib, symprec 1e-3)")
+            keep(f"entry-{row['id']}.json", entry_url, entry, f"{formula}, {lattice} (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)")
             manifest["lattices"][lattice] = row["id"]
         time.sleep(0.5)
 
