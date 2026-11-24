@@ -118,7 +118,7 @@ public struct MaterialsProjectSpecies: Decodable, Sendable {
     }
 }
 
-public struct MaterialsProjectSymmetry: Decodable, Sendable {
+public struct MaterialsProjectSymmetry: Decodable, Sendable, Equatable {
     public let crystalSystem: String?
     public let symbol: String?
     public let number: Int?
