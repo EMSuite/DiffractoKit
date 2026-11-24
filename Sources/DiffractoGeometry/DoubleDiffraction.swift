@@ -40,7 +40,8 @@ public struct DoubleDiffractionRoute: Sendable, Equatable {
     }
     public let first: Step
     public let second: Step
-    /// I(g₁) · I(g₂), Å⁻⁸: ranks the routes, not an intensity.
+    /// A ranking weight, not an intensity: I(g₁) · I(g₂) in Å⁻⁸ for `DoubleDiffraction.spots`; (I₁ / max I₁)(I₂ / max I₂),
+    /// dimensionless, for `SpotPattern.doubleDiffraction(with:routeWeightCut:)`.
     public let weight: Double
 }
 
