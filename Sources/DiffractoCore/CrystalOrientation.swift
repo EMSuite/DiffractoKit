@@ -232,5 +232,5 @@ public struct CrystalOrientation: Sendable, Hashable, Codable, CustomStringConve
         return abs(simd_determinant(m) - 1) <= rotationTolerance
     }
 
-    static func gcd(_ a: Int, _ b: Int) -> Int { b == 0 ? a : gcd(b, a % b) }
+    static func gcd(_ a: Int, _ b: Int) -> Int { IntegerMath.gcd(a, b) }
 }

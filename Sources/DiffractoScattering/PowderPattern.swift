@@ -221,8 +221,9 @@ extension PowderPattern {
             let s2 = half * half
             var re = 0.0, im = 0.0
             for z in order {
-                var fs = 41.78214 * s2 * xraySum(z: z, s2: s2)
-                fs = Double(z) - fs
+                // pymatgen's form factor, Z − 41.78214 s² Σᵢ aᵢ exp(−bᵢ s²): the kit's one copy, in the same order of operations
+                // (the element is known to be in the table; a non-finite s² stays not a number, as it was).
+                var fs = XRayScatteringFactors.f(z: z, sSquared: s2) ?? .nan
                 if let bw = debyeWallerFactors[z], bw != 0 { fs *= exp(-bw * s2) }
                 var sre = 0.0, sim = 0.0
                 for site in groups[z]! {
@@ -271,14 +272,6 @@ extension PowderPattern {
                  intensity: bin.intensity / (factor / 100), absoluteIntensity: bin.intensity)
         }
         return PowderPattern(axis: .twoThetaDegrees, wavelengthAngstroms: lambda, range: twoThetaRange, peaks: peaks)
-    }
-
-    /// Σᵢ aᵢ exp(−bᵢ s²) of pymatgen's form factor (the element is known to be in the table).
-    private static func xraySum(z: Int, s2: Double) -> Double {
-        let p = XRayScatteringFactors.parameters[z - 1]
-        var sum = 0.0
-        for i in 0..<4 { sum += p[2 * i] * exp(-p[2 * i + 1] * s2) }
-        return sum
     }
 
     /// pymatgen's `Lattice.is_hexagonal()` (hex_angle_tol 5°, hex_length_tol 0.01 Å, absolute).

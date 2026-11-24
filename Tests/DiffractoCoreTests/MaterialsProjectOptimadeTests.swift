@@ -92,7 +92,8 @@ struct MaterialsProjectOptimadeTests {
             return
         }
         #expect(more)
-        #expect(decoded.map(\.materialID) == ["mp-10", "mp-2", "mp-3", "mp-1"])
+        // Equal energies by the id's number, as the keyed search orders them (#226): mp-2 before mp-10.
+        #expect(decoded.map(\.materialID) == ["mp-2", "mp-10", "mp-3", "mp-1"])
         #expect(decoded[2].lowestEnergyAboveHull == 0.05)
         #expect(decoded[3].lowestEnergyAboveHull == nil)
     }

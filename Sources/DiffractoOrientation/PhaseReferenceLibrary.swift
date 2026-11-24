@@ -376,11 +376,7 @@ public struct PhaseReferenceLibrary: Sendable {
     }()
 
     /// A true gcd: `gcd(0, 0)` is 0, not 1. Callers floor the RESULT.
-    private static func gcd(_ a: Int, _ b: Int) -> Int {
-        var a = a, b = b
-        while b != 0 { (a, b) = (b, a % b) }
-        return a
-    }
+    private static func gcd(_ a: Int, _ b: Int) -> Int { IntegerMath.gcd(a, b) }
 
     // MARK: Build
 
