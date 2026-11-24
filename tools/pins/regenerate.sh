@@ -45,6 +45,7 @@ generators=(
   pymatgen:cells/tetragonal-pins.py
   pymatgen:conventional-cell/pins.py
   pymatgen:cif-symmetry/pins.py
+  pymatgen:cif-export/pins.py
   pymatgen:cif-symmetry/hall-pins.py
   pymatgen:cif-symmetry/space-group-table.py
   pymatgen:cif-symmetry/space-group-pins.py

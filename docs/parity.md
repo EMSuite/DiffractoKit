@@ -39,18 +39,18 @@ and are counted apart.
 
 | Package | held | partly | not held | rows |
 |---|---|---|---|---|
-| pymatgen | 17 | 24 | 28 | 69 |
+| pymatgen | 17 | 25 | 27 | 69 |
 | py4DSTEM | 7 | 25 | 15 | 47 |
 | orix | 4 | 13 | 16 | 33 |
 | diffsims / pyxem (documentation only) | 0 | 7 | 2 | 9 |
 | ASE | 2 | 0 | 0 | 2 |
-| **all** | 30 | 69 | 61 | 160 |
+| **all** | 30 | 70 | 60 | 160 |
 
 | Plan | rows | held | partly | not held |
 |---|---|---|---|---|
 | study | 104 | 25 | 60 | 19 |
-| useful | 27 | 4 | 7 | 16 |
-| not planned | 29 | 0 | 0 | 29 |
+| useful | 28 | 4 | 8 | 16 |
+| not planned | 28 | 0 | 0 | 28 |
 
 "Held" is the only state that means a test compares the kit with that package's own output; every "partly" row names its check. The plan table counts the same rows by plan; its `study` line is the TEM study's path.
 
@@ -117,6 +117,7 @@ and are counted apart.
 | P56 | **closed form and a simulated disc** (no Python package measures thickness from a CBED disc; CrysTBox's twoBeamGUI does, closed source): the two-beam intensity I(s) = sin²(π t s_eff)/(ξ s_eff)², its minima and the fringe line (s_n/n)² = 1/t² − (1/ξ²)(1/n²) (Kelly, Jostsons, Blake and Napier, phys. stat. sol. (a) 31, 771 (1975); Allen, Philos. Mag. A 43, 325 (1981)) in NumPy 2.5.4, seven (t, ξ) from 40 to 400 nm and 50 to 150 nm, and the Si 220 extinction distance at 200 kV from the Lobato row; Si 220 discs at 200 kV simulated with abTEM 1.0.10 potential slices (Lobato, infinite projection, static lattice; one plane wave per point of the disc), 108 mrad off [001] at 60 to 300 nm and 42 mrad off at 250 nm | `tools/pins/two-beam-thickness/pins.py` -> `Tests/DiffractoGeometryTests/Fixtures/two-beam-thickness-pins.json`; `tools/pins/two-beam-thickness/disc.py` (abTEM venv, not in `regenerate.sh`) -> `two-beam-thickness-disc.json`; `fit.py` is the fit's NumPy twin | `TwoBeamThicknessTests`, `TwoBeamThicknessDiscTests` | closed form: intensity, and t and ξ fitted from noiseless profiles, rtol 1e-6; fringe line through exact minima rtol 1e-7 (the issue; `assert_allclose` float64 default); Si 220 ξ within 5 % of the 95.6 nm Pendellösung period of the multislice (966.7 Å, +1.1 %); simulated disc: thickness within 3 % at 108 mrad (the cloud experiment of 23 Nov 2026: +0.2 to +2.2 %), two candidates at 42 mrad, 250 nm |
 
 | P57 | ASE 3.29.0 `ase.io.read` (default index -1) on 25 atom-model files: ASE's own test inputs verbatim (`test_extxyz.py`, `test_poscar.py`, `test_vasp_poscar.py`, `testdata/vasp/POSCAR_example_1`, `doc/ase/io/172_ext.xyz`), exports by ASE's own `extxyz`, `xyz` and `vasp` writers (Si, Mg hcp, H2O without a cell, a three-frame Cu trajectory, SrTiO3 Direct and Cartesian, Al with a vacancy and selective dynamics, GaAs primitive), and VESTA's and atomsk's layouts written by hand (their real exports are #212) | `tools/pins/atom-models/pins.py` -> `Tests/DiffractoCoreTests/Fixtures/atom-models/` and `atom-models-pins.json` (ase 3.29.0, numpy 2.5.5) | `AtomModelTests` | elements, counts, pbc and frame counts exact; positions and cells the file states exact; converted ones (Direct coordinates, a scale factor) rtol 1e-7 (assert_allclose's float64 default, as ASE's reader tests); the VASP 4 file is refused by name (`noElementLine`) |
+| P58 | pymatgen-core 2026.10.16 `CifParser.from_str(...).parse_structures(primitive=False)` reads the CIF `CIFExport` writes (pin C1), and the kit's own round trip `CIFImport.read(CIFExport.text(of: s).text)` (pin C2), on the corpus `CIFExportCorpus`: P2's 19 structures, six with an edited lattice (`editingLattice`) and the three Materials Project inputs of P20 | `tools/pins/cif-export/pins.py` reads the kit's texts, committed byte for byte under `Tests/DiffractoCoreTests/Fixtures/cif-export/written/`, -> `cif-export/pymatgen-read-pins.json` | `CIFExportPymatgenTests` (C1: the kit writes the committed texts; pymatgen's cell and sites), `CIFExportTests` (C2, the P1 fallback, the text) | C1: cell 1e-7 relative, expanded sites as a multiset at 1e-7 modulo 1, element and occupancy equal; C2: cell and expanded sites (element, coordinates, occupancy, U_iso) equal to the bit |
 pyxem, diffsims and orix are **not pinned clones** here; py4DSTEM is held as its scattering table file (P5) and, for the vector
 matching and phase mapping of DiffractoOrientation, as a pinned f050d207 environment the pins run (P14, P18). The remaining unexecuted Python APIs below are a checklist, not an additional parity claim. P18 byte-checks the installed crystal.py, crystal_ACOM.py, crystal_viz.py and utils.py against the pinned clone before execution.
 
@@ -210,7 +211,7 @@ matching and phase mapping of DiffractoOrientation, as a pinned f050d207 environ
 | `pymatgen.io.optimade.OptimadeStructureAdapter` and the OPTIMADE search (a Materials Project structure without a key) | `MaterialsProjectOptimade` (`searchRequest`, `decodeSearch`, `entryRequest`, `decodeEntry`, `structure(from:)`) | **partly** | study | tests not shipped; I/O exact, cells at the route's `metricLengthTolerance` 1e-5 and sites at its `positionTolerance` 1e-3 Å | P48: 14 recorded entries, one per Bravais lattice, read to the conventional cell as pymatgen reads them; the recorded searches decode, most stable first, and a formula with no entry is told apart from an empty service. The service is never called by a test; entries whose symmetry depends on the tolerance are not pinned (#150) |
 | `CifParser.get_magsymops`, magnetic moments, oxidation states | none | not held | not planned (magnetic structures) | tests not shipped; assert_allclose defaults |  |
 | `CifParser.check`, `has_errors` | `CrystalStructure.validationIssues` | not held | useful | tests not shipped; assert_allclose defaults | related, different checks; never compared |
-| `CifWriter`, `get_bibtex_string` | none | not held | not planned (CIF export is out of scope (ROADMAP)) | tests not shipped; assert_allclose defaults | no CIF is written |
+| `CifWriter` (`get_bibtex_string` not held) | `CIFExport.text(of:options:)`, `CIFExport.Options`, `CIFExport.Outcome` | **partly** | useful | tests not shipped; P58 C1 cell 1e-7 relative and sites 1e-7, C2 exact | P58: the operation loop and one site per orbit, numbers in Swift's shortest exact form; the writer reads its own text back and writes P1 with every site, saying why, when the expansion differs from the structure in any bit (pymatgen's `CifWriter` writes the space group from `SpacegroupAnalyzer` with `symprec`; the kit writes the loop the file came with, else the structure's operations, and never a symmetry its read-back did not confirm). U_iso is written as `_atom_site_U_iso_or_equiv` (pymatgen writes none). Method: CIF 1.1, Hall, Allen and Brown, Acta Cryst. A47 (1991) 655 |
 
 ### 1.7 `pymatgen.analysis.diffraction` (TEMCalculator, XRDCalculator, NDCalculator)
 
