@@ -154,13 +154,15 @@ struct MaterialsProjectSearchTests {
         let summaries: [String]
     }
 
-    /// Recorded summaries whose stated group (found by the Materials Project at symprec 0.1 Å) is higher than their
-    /// atoms hold; the import finds the symmetry from the atoms, as spglib 2.8.0 does at symprec 1e-3: Bravais lattice, Laue class, conventional site count and volume (Å³)
-    /// (DiffractoKit #218).
-    static let readFromTheAtoms: [String: (bravais: String, laue: String, sites: Int, volume: Double)] = [
-        "mp-85": ("tI", "4/mmm", 2, 52.785029461107186),       // In, stated Fm-3m
-        "mp-623511": ("oI", "mmm", 2, 57.34645590476849),     // Sn, stated I4/mmm
-        "mp-77": ("aP", "-1", 32, 887.5956414230242),          // S, stated Fddd (spglib finds it only at 0.1 Å)
+    /// Recorded summaries whose stated group (found by the Materials Project at symprec 0.1 Å, angle tolerance 5°) the
+    /// fixed conversion cannot reach; the import reads the symmetry from the atoms, loosened through `symprecSteps`
+    /// until the stated crystal system and centring show: Bravais lattice, Laue class, conventional site count, volume
+    /// (Å³) and the spglib-equivalent symprec kept. spglib 2.8.0 at its default angle tolerance reads In I4/mmm and Sn
+    /// Immm at every step and S P1 at 0.01 Å, Fddd at 0.1 (DiffractoKit #218).
+    static let readFromTheAtoms: [String: (bravais: String, laue: String, sites: Int, volume: Double, symprec: Double)] = [
+        "mp-85": ("tI", "4/mmm", 2, 52.785029461107186, 5e-4),       // In, stated Fm-3m, which no step reaches
+        "mp-623511": ("oI", "mmm", 2, 57.34645590476849, 5e-4),     // Sn, stated I4/mmm, which no step reaches
+        "mp-77": ("oF", "mmm", 128, 4 * 887.5956414230242, 0.1),     // S, stated Fddd, reached at 0.1
     ]
 
     static func manifest() throws -> Manifest {
@@ -203,7 +205,9 @@ struct MaterialsProjectSearchTests {
                 #expect(MaterialsProjectRecordingTests.bravais(of: structure) == want.bravais, "\(id) Bravais lattice")
                 #expect(structure.laueClass?.rawValue == want.laue, "\(id) Laue class")
                 #expect(structure.sites.count == want.sites, "\(id) site count")
+                // A cell idealised to its family at 0.1 Å keeps the volume to about 2e-7 (S: α = 89.966° made 90°).
                 #expect(abs(structure.cell.volume - want.volume) <= 1e-6 * want.volume, "\(id) volume \(structure.cell.volume)")
+                #expect(imported.symprec == want.symprec, "\(id) symprec \(String(describing: imported.symprec))")
             }
         }
         #expect(Set(Self.readFromTheAtoms.keys).isSubset(of: manifest.summaries))

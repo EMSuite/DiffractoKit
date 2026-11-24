@@ -116,6 +116,7 @@ struct MaterialsProjectImportTests {
         #expect(read.structure.sites.count == 4)
         #expect(abs(read.structure.cell.a - 2.9 * 2.0.squareRoot()) <= 1e-6 * 4.1)
         #expect(read.cell == .conventional(centring: "F"))
+        #expect(read.symprec == 5e-4)  // the tight reading: hexagonal is reached at no step
     }
 
     @Test func expectationVerdicts() {
