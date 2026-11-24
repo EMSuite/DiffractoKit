@@ -1,0 +1,6366 @@
+{
+"spglib": "2.8.0",
+"seed": 20261123,
+"settings": [
+{
+"hall": 1,
+"hallSymbol": "P 1",
+"shift": [
+0.044101076181966126,
+0.23673106976050273,
+0.06590120328818061
+],
+"number": 1,
+"hallNumber": 1,
+"international": "P1"
+},
+{
+"hall": 2,
+"hallSymbol": "-P 1",
+"shift": [
+0.4329063686359118,
+0.7316968545914464,
+0.5161767105882273
+],
+"number": 2,
+"hallNumber": 2,
+"international": "P-1"
+},
+{
+"hall": 3,
+"hallSymbol": "P 2y",
+"shift": [
+0.5324330154554361,
+0.07823159360816101,
+0.8460320264776451
+],
+"number": 3,
+"hallNumber": 3,
+"international": "P2"
+},
+{
+"hall": 4,
+"hallSymbol": "P 2",
+"shift": [
+0.012435806314893494,
+0.9562792905844466,
+0.5142583264694504
+],
+"number": 3,
+"hallNumber": 3,
+"international": "P2"
+},
+{
+"hall": 5,
+"hallSymbol": "P 2x",
+"shift": [
+0.6379082011574175,
+0.9340036066552356,
+0.7925497042455696
+],
+"number": 3,
+"hallNumber": 3,
+"international": "P2"
+},
+{
+"hall": 6,
+"hallSymbol": "P 2yb",
+"shift": [
+0.4697177328421609,
+0.9842202338920435,
+0.07675648924800416
+],
+"number": 4,
+"hallNumber": 6,
+"international": "P2_1"
+},
+{
+"hall": 7,
+"hallSymbol": "P 2c",
+"shift": [
+0.9195229120168092,
+0.13405547409455154,
+0.08544530009016027
+],
+"number": 4,
+"hallNumber": 6,
+"international": "P2_1"
+},
+{
+"hall": 8,
+"hallSymbol": "P 2xa",
+"shift": [
+0.40145915357294604,
+0.6683073467363245,
+0.9729961341409494
+],
+"number": 4,
+"hallNumber": 6,
+"international": "P2_1"
+},
+{
+"hall": 9,
+"hallSymbol": "C 2y",
+"shift": [
+0.9178089345129273,
+0.10533313855004045,
+0.9931249558679185
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 10,
+"hallSymbol": "A 2y",
+"shift": [
+0.4105556889946692,
+0.2628651595598551,
+0.2012517689800407
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 11,
+"hallSymbol": "I 2y",
+"shift": [
+0.5446493819514368,
+0.0884999189759954,
+0.008744735204515797
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 12,
+"hallSymbol": "A 2",
+"shift": [
+0.9668906881277006,
+0.7463904214223066,
+0.8141609110832613
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 13,
+"hallSymbol": "B 2",
+"shift": [
+0.05802405666828159,
+0.2252602806721259,
+0.8646889958756454
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 14,
+"hallSymbol": "I 2",
+"shift": [
+0.9782438500715688,
+0.895484162530961,
+0.5443986741338435
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 15,
+"hallSymbol": "B 2x",
+"shift": [
+0.7368512028275137,
+0.5421209785241812,
+0.9662449791646437
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 16,
+"hallSymbol": "C 2x",
+"shift": [
+0.16355307939100738,
+0.39941968093939306,
+0.1269902744521001
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 17,
+"hallSymbol": "I 2x",
+"shift": [
+0.6924744311647423,
+0.2711819117577535,
+0.26122053602604023
+],
+"number": 5,
+"hallNumber": 9,
+"international": "C2"
+},
+{
+"hall": 18,
+"hallSymbol": "P -2y",
+"shift": [
+0.3203580037904371,
+0.03132387832671313,
+0.20832441347287267
+],
+"number": 6,
+"hallNumber": 18,
+"international": "Pm"
+},
+{
+"hall": 19,
+"hallSymbol": "P -2",
+"shift": [
+0.34075811755785024,
+0.16999379137431214,
+0.8511275808389661
+],
+"number": 6,
+"hallNumber": 18,
+"international": "Pm"
+},
+{
+"hall": 20,
+"hallSymbol": "P -2x",
+"shift": [
+0.8241772123170529,
+0.06439083600883799,
+0.11627547581971398
+],
+"number": 6,
+"hallNumber": 18,
+"international": "Pm"
+},
+{
+"hall": 21,
+"hallSymbol": "P -2yc",
+"shift": [
+0.26388396333808484,
+0.5264304577561638,
+0.4189788826648282
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 22,
+"hallSymbol": "P -2yac",
+"shift": [
+0.5641405727467121,
+0.7958553006206704,
+0.5894755714491966
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 23,
+"hallSymbol": "P -2ya",
+"shift": [
+0.34427508842317756,
+0.7492958206732866,
+0.2014496003970604
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 24,
+"hallSymbol": "P -2a",
+"shift": [
+0.9961113538142325,
+0.25009871431731723,
+0.21227993672517687
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 25,
+"hallSymbol": "P -2ab",
+"shift": [
+0.8973258043566459,
+0.9872104677051075,
+0.9086658864063031
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 26,
+"hallSymbol": "P -2b",
+"shift": [
+0.3879309529880266,
+0.7669628128180133,
+0.7918957452942499
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 27,
+"hallSymbol": "P -2xb",
+"shift": [
+0.8226212236841044,
+0.7199041053715564,
+0.13226842278828788
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 28,
+"hallSymbol": "P -2xbc",
+"shift": [
+0.09343949146117858,
+0.8875200025420873,
+0.5099272803476043
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 29,
+"hallSymbol": "P -2xc",
+"shift": [
+0.10168481292879672,
+0.6080983387688762,
+0.43171905976712155
+],
+"number": 7,
+"hallNumber": 21,
+"international": "Pc"
+},
+{
+"hall": 30,
+"hallSymbol": "C -2y",
+"shift": [
+0.540632330682395,
+0.5476431874833616,
+0.6842391199364943
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 31,
+"hallSymbol": "A -2y",
+"shift": [
+0.8414164896306814,
+0.7603563290998105,
+0.16875987716691931
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 32,
+"hallSymbol": "I -2y",
+"shift": [
+0.8084709280583338,
+0.1653164551856633,
+0.3147413291763158
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 33,
+"hallSymbol": "A -2",
+"shift": [
+0.25482304306379033,
+0.6633840004721306,
+0.6274933318346942
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 34,
+"hallSymbol": "B -2",
+"shift": [
+0.6718263271829467,
+0.23777256996798546,
+0.9656615501136775
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 35,
+"hallSymbol": "I -2",
+"shift": [
+0.96115733769328,
+0.5068729442161006,
+0.12131709777834543
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 36,
+"hallSymbol": "B -2x",
+"shift": [
+0.6567722320363278,
+0.10887412312587841,
+0.5988004855863859
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 37,
+"hallSymbol": "C -2x",
+"shift": [
+0.9861341769119596,
+0.10879150965110862,
+0.879961727647918
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 38,
+"hallSymbol": "I -2x",
+"shift": [
+0.7112176571626864,
+0.09822476566288574,
+0.7902581250686246
+],
+"number": 8,
+"hallNumber": 30,
+"international": "Cm"
+},
+{
+"hall": 39,
+"hallSymbol": "C -2yc",
+"shift": [
+0.16242874024108334,
+0.6627301660591315,
+0.05259527118498508
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 40,
+"hallSymbol": "A -2yab",
+"shift": [
+0.4088129346275349,
+0.6199379954074986,
+0.9277424174508422
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 41,
+"hallSymbol": "I -2ya",
+"shift": [
+0.26037103865845757,
+0.2356292710328659,
+0.29883452033567437
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 42,
+"hallSymbol": "A -2ya",
+"shift": [
+0.7106720130515869,
+0.5454151588404418,
+0.4993637972487325
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 43,
+"hallSymbol": "C -2yac",
+"shift": [
+0.33597242790164783,
+0.3949668119232512,
+0.48531955467697274
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 44,
+"hallSymbol": "I -2yc",
+"shift": [
+0.38930884309798863,
+0.24924559664665946,
+0.3290441894456546
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 45,
+"hallSymbol": "A -2a",
+"shift": [
+0.5187274557211492,
+0.2111233115153176,
+0.11347033431712672
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 46,
+"hallSymbol": "B -2ab",
+"shift": [
+0.29016634360088067,
+0.37431843604422654,
+0.0960137646018514
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 47,
+"hallSymbol": "I -2b",
+"shift": [
+0.691530446804147,
+0.7366380650637757,
+0.5166573384823663
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 48,
+"hallSymbol": "B -2b",
+"shift": [
+0.32045103589091584,
+0.2980247259423535,
+0.9085790864631221
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 49,
+"hallSymbol": "A -2ab",
+"shift": [
+0.3586868029795982,
+0.6169357511402108,
+0.6244128616150886
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 50,
+"hallSymbol": "I -2a",
+"shift": [
+0.18812448619722655,
+0.924152533705074,
+0.41870076636689235
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 51,
+"hallSymbol": "B -2xb",
+"shift": [
+0.9666983050560957,
+0.05652312850611674,
+0.9783583564747745
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 52,
+"hallSymbol": "C -2xac",
+"shift": [
+0.027061280080321826,
+0.6385989995440112,
+0.9269106865118407
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 53,
+"hallSymbol": "I -2xc",
+"shift": [
+0.2503283072709891,
+0.10558904145576553,
+0.7210426778152789
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 54,
+"hallSymbol": "C -2xc",
+"shift": [
+0.508174885613001,
+0.8134342048437423,
+0.8155777745632449
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 55,
+"hallSymbol": "B -2xab",
+"shift": [
+0.6665566504906203,
+0.8498939610015501,
+0.7556439881065377
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 56,
+"hallSymbol": "I -2xb",
+"shift": [
+0.8618176570794184,
+0.03676855147564784,
+0.737732162716961
+],
+"number": 9,
+"hallNumber": 39,
+"international": "Cc"
+},
+{
+"hall": 57,
+"hallSymbol": "-P 2y",
+"shift": [
+0.8899436687836225,
+0.8692191487259022,
+0.2287201816740635
+],
+"number": 10,
+"hallNumber": 57,
+"international": "P2/m"
+},
+{
+"hall": 58,
+"hallSymbol": "-P 2",
+"shift": [
+0.3078937824946699,
+0.6903933227497403,
+0.226675199327403
+],
+"number": 10,
+"hallNumber": 57,
+"international": "P2/m"
+},
+{
+"hall": 59,
+"hallSymbol": "-P 2x",
+"shift": [
+0.533387387745273,
+0.46834798150710355,
+0.6836265235801929
+],
+"number": 10,
+"hallNumber": 57,
+"international": "P2/m"
+},
+{
+"hall": 60,
+"hallSymbol": "-P 2yb",
+"shift": [
+0.4898742313370008,
+0.43553701600874295,
+0.5435166560769199
+],
+"number": 11,
+"hallNumber": 60,
+"international": "P2_1/m"
+},
+{
+"hall": 61,
+"hallSymbol": "-P 2c",
+"shift": [
+0.6721337904316839,
+0.30469901751603,
+0.6354455429796078
+],
+"number": 11,
+"hallNumber": 60,
+"international": "P2_1/m"
+},
+{
+"hall": 62,
+"hallSymbol": "-P 2xa",
+"shift": [
+0.9379772086325633,
+0.9164078395240485,
+0.204788872991989
+],
+"number": 11,
+"hallNumber": 60,
+"international": "P2_1/m"
+},
+{
+"hall": 63,
+"hallSymbol": "-C 2y",
+"shift": [
+0.04054653591549928,
+0.036797804604411066,
+0.3727178030014672
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 64,
+"hallSymbol": "-A 2y",
+"shift": [
+0.5050367504375824,
+0.689590249693493,
+0.36627914294459896
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 65,
+"hallSymbol": "-I 2y",
+"shift": [
+0.8959128748216735,
+0.957784013980053,
+0.8256032700419448
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 66,
+"hallSymbol": "-A 2",
+"shift": [
+0.35633349401829784,
+0.8441563147352168,
+0.20771196056131502
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 67,
+"hallSymbol": "-B 2",
+"shift": [
+0.20695607423350593,
+0.2291843352279067,
+0.3788012938735822
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 68,
+"hallSymbol": "-I 2",
+"shift": [
+0.12485354752901989,
+0.04043650723816128,
+0.8616350347392095
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 69,
+"hallSymbol": "-B 2x",
+"shift": [
+0.8294856493844296,
+0.21219231369945113,
+0.5112327550513189
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 70,
+"hallSymbol": "-C 2x",
+"shift": [
+0.6021726013352947,
+0.76700251355399,
+0.7029245018408128
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 71,
+"hallSymbol": "-I 2x",
+"shift": [
+0.1743852569794897,
+0.5522856850232633,
+0.6613671775258373
+],
+"number": 12,
+"hallNumber": 63,
+"international": "C2/m"
+},
+{
+"hall": 72,
+"hallSymbol": "-P 2yc",
+"shift": [
+0.9556578283662432,
+0.6088387552203629,
+0.747305029074211
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 73,
+"hallSymbol": "-P 2yac",
+"shift": [
+0.02124241789640624,
+0.26455844716359034,
+0.6169091283512109
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 74,
+"hallSymbol": "-P 2ya",
+"shift": [
+0.7297102256767007,
+0.8276619564224594,
+0.5035613717475578
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 75,
+"hallSymbol": "-P 2a",
+"shift": [
+0.28633403362649756,
+0.5757860338392926,
+0.164603589059386
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 76,
+"hallSymbol": "-P 2ab",
+"shift": [
+0.1435226970429424,
+0.03874825279631777,
+0.7519791177054996
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 77,
+"hallSymbol": "-P 2b",
+"shift": [
+0.8599973767845307,
+0.05494192069494819,
+0.01722759479087499
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 78,
+"hallSymbol": "-P 2xb",
+"shift": [
+0.047639106088723016,
+0.24477517753980538,
+0.8412105635877973
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 79,
+"hallSymbol": "-P 2xbc",
+"shift": [
+0.16931526111742778,
+0.5421177855894883,
+0.04343227418009399
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 80,
+"hallSymbol": "-P 2xc",
+"shift": [
+0.6914441027162739,
+0.5957699823098489,
+0.8421094727733015
+],
+"number": 13,
+"hallNumber": 72,
+"international": "P2/c"
+},
+{
+"hall": 81,
+"hallSymbol": "-P 2ybc",
+"shift": [
+0.1787237585791298,
+0.4461144289508855,
+0.4209992879772789
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 82,
+"hallSymbol": "-P 2yn",
+"shift": [
+0.23116924660972094,
+0.45403706361806884,
+0.6986173514156903
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 83,
+"hallSymbol": "-P 2yab",
+"shift": [
+0.8702538134204941,
+0.8516678602199698,
+0.46154301759590644
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 84,
+"hallSymbol": "-P 2ac",
+"shift": [
+0.4062938356889887,
+0.9547838375054188,
+0.8352098495704174
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 85,
+"hallSymbol": "-P 2n",
+"shift": [
+0.808180941542508,
+0.10399022200121588,
+0.9676726520084037
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 86,
+"hallSymbol": "-P 2bc",
+"shift": [
+0.32907990143992827,
+0.7111415489087073,
+0.037120549774094624
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 87,
+"hallSymbol": "-P 2xab",
+"shift": [
+0.7093952638846367,
+0.04874762615001804,
+0.09500701045061122
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 88,
+"hallSymbol": "-P 2xn",
+"shift": [
+0.35460423408161845,
+0.6006423325591995,
+0.9733080456263936
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 89,
+"hallSymbol": "-P 2xac",
+"shift": [
+0.9673629367607058,
+0.11338756551373208,
+0.4077585860852925
+],
+"number": 14,
+"hallNumber": 81,
+"international": "P2_1/c"
+},
+{
+"hall": 90,
+"hallSymbol": "-C 2yc",
+"shift": [
+0.5545167153940513,
+0.04755025143066349,
+0.12589467499441753
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 91,
+"hallSymbol": "-A 2yab",
+"shift": [
+0.08815502182554091,
+0.3918943363003441,
+0.7063876604261927
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 92,
+"hallSymbol": "-I 2ya",
+"shift": [
+0.0360039913423561,
+0.26540031211310744,
+0.061651425240585866
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 93,
+"hallSymbol": "-A 2ya",
+"shift": [
+0.2515270639322962,
+0.9003328414816294,
+0.8938287438635686
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 94,
+"hallSymbol": "-C 2yac",
+"shift": [
+0.223674288091958,
+0.7579853046423632,
+0.51738779642579
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 95,
+"hallSymbol": "-I 2yc",
+"shift": [
+0.1964349636850664,
+0.3911660884220116,
+0.41938260119709847
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 96,
+"hallSymbol": "-A 2a",
+"shift": [
+0.8251015145725938,
+0.4782802338380705,
+0.3104496249419404
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 97,
+"hallSymbol": "-B 2ab",
+"shift": [
+0.30248203841625254,
+0.5419246718349043,
+0.1478324460032855
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 98,
+"hallSymbol": "-I 2b",
+"shift": [
+0.9604453756071422,
+0.2599167285598679,
+0.08147486536995485
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 99,
+"hallSymbol": "-B 2b",
+"shift": [
+0.8994699416575039,
+0.2502083695012327,
+0.5297264103295893
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 100,
+"hallSymbol": "-A 2ab",
+"shift": [
+0.9805930030388567,
+0.7177982861218506,
+0.8545292091940243
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 101,
+"hallSymbol": "-I 2a",
+"shift": [
+0.5724871788101947,
+0.008414469215088594,
+0.8546003362040104
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 102,
+"hallSymbol": "-B 2xb",
+"shift": [
+0.06559473645715952,
+0.6984342162142645,
+0.38400017653333995
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 103,
+"hallSymbol": "-C 2xac",
+"shift": [
+0.7047054761501076,
+0.4377845188622468,
+0.29646729249763926
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 104,
+"hallSymbol": "-I 2xc",
+"shift": [
+0.4436768875224649,
+0.40985119286322724,
+0.5495777477035565
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 105,
+"hallSymbol": "-C 2xc",
+"shift": [
+0.3024710388195081,
+0.7355972420004903,
+0.63536482500979
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 106,
+"hallSymbol": "-B 2xab",
+"shift": [
+0.42878425960471955,
+0.13695090123946374,
+0.22717092099264136
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 107,
+"hallSymbol": "-I 2xb",
+"shift": [
+0.676766062117504,
+0.9227692550536163,
+0.9505938152247119
+],
+"number": 15,
+"hallNumber": 90,
+"international": "C2/c"
+},
+{
+"hall": 108,
+"hallSymbol": "P 2 2",
+"shift": [
+0.9243519478694032,
+0.5318236024801722,
+0.178425422743426
+],
+"number": 16,
+"hallNumber": 108,
+"international": "P222"
+},
+{
+"hall": 109,
+"hallSymbol": "P 2c 2",
+"shift": [
+0.3976209539618587,
+0.8541974930657379,
+0.5793227828707596
+],
+"number": 17,
+"hallNumber": 109,
+"international": "P222_1"
+},
+{
+"hall": 110,
+"hallSymbol": "P 2a 2a",
+"shift": [
+0.19079646219646285,
+0.22846029526242562,
+0.5168887282147745
+],
+"number": 17,
+"hallNumber": 109,
+"international": "P222_1"
+},
+{
+"hall": 111,
+"hallSymbol": "P 2 2b",
+"shift": [
+0.07587103021204311,
+0.5472345177347211,
+0.7047566268294732
+],
+"number": 17,
+"hallNumber": 109,
+"international": "P222_1"
+},
+{
+"hall": 112,
+"hallSymbol": "P 2 2ab",
+"shift": [
+0.563546969875365,
+0.21274020389947412,
+0.5106768291473185
+],
+"number": 18,
+"hallNumber": 112,
+"international": "P2_12_12"
+},
+{
+"hall": 113,
+"hallSymbol": "P 2bc 2",
+"shift": [
+0.9572881014426541,
+0.14582357755000164,
+0.2371127602365105
+],
+"number": 18,
+"hallNumber": 112,
+"international": "P2_12_12"
+},
+{
+"hall": 114,
+"hallSymbol": "P 2ac 2ac",
+"shift": [
+0.5312008001669001,
+0.15659431660791023,
+0.6937414683163413
+],
+"number": 18,
+"hallNumber": 112,
+"international": "P2_12_12"
+},
+{
+"hall": 115,
+"hallSymbol": "P 2ac 2ab",
+"shift": [
+0.16546343150610154,
+0.8619479872504477,
+0.6865229469814884
+],
+"number": 19,
+"hallNumber": 115,
+"international": "P2_12_12_1"
+},
+{
+"hall": 116,
+"hallSymbol": "C 2c 2",
+"shift": [
+0.32286227101878573,
+0.4762381709955503,
+0.9930577674351894
+],
+"number": 20,
+"hallNumber": 116,
+"international": "C222_1"
+},
+{
+"hall": 117,
+"hallSymbol": "A 2a 2a",
+"shift": [
+0.9460500595888779,
+0.5832728140269934,
+0.492693828681358
+],
+"number": 20,
+"hallNumber": 116,
+"international": "C222_1"
+},
+{
+"hall": 118,
+"hallSymbol": "B 2 2b",
+"shift": [
+0.5704381546072186,
+0.40677454661917833,
+0.018847566054418285
+],
+"number": 20,
+"hallNumber": 116,
+"international": "C222_1"
+},
+{
+"hall": 119,
+"hallSymbol": "C 2 2",
+"shift": [
+0.8665723573520886,
+0.492551693629829,
+0.649192151735057
+],
+"number": 21,
+"hallNumber": 119,
+"international": "C222"
+},
+{
+"hall": 120,
+"hallSymbol": "A 2 2",
+"shift": [
+0.6512778432579484,
+0.25955796778291595,
+0.46147435102630485
+],
+"number": 21,
+"hallNumber": 119,
+"international": "C222"
+},
+{
+"hall": 121,
+"hallSymbol": "B 2 2",
+"shift": [
+0.39251874245058127,
+0.46811388371597495,
+0.9274452471249098
+],
+"number": 21,
+"hallNumber": 119,
+"international": "C222"
+},
+{
+"hall": 122,
+"hallSymbol": "F 2 2",
+"shift": [
+0.9932157044423858,
+0.5793076420083824,
+0.5484068328032472
+],
+"number": 22,
+"hallNumber": 122,
+"international": "F222"
+},
+{
+"hall": 123,
+"hallSymbol": "I 2 2",
+"shift": [
+0.07244784974161267,
+0.8450951164586663,
+0.8558453950980409
+],
+"number": 23,
+"hallNumber": 123,
+"international": "I222"
+},
+{
+"hall": 124,
+"hallSymbol": "I 2b 2c",
+"shift": [
+0.5635678212744946,
+0.1487709381245491,
+0.5850241746600249
+],
+"number": 24,
+"hallNumber": 124,
+"international": "I2_12_12_1"
+},
+{
+"hall": 125,
+"hallSymbol": "P 2 -2",
+"shift": [
+0.2158114681870813,
+0.9407787747366126,
+0.6425013156324878
+],
+"number": 25,
+"hallNumber": 125,
+"international": "Pmm2"
+},
+{
+"hall": 126,
+"hallSymbol": "P -2 2",
+"shift": [
+0.5772858458721443,
+0.983813782898498,
+0.23003382567996
+],
+"number": 25,
+"hallNumber": 125,
+"international": "Pmm2"
+},
+{
+"hall": 127,
+"hallSymbol": "P -2 -2",
+"shift": [
+0.6163753355749688,
+0.5126511545151772,
+0.7246195035683884
+],
+"number": 25,
+"hallNumber": 125,
+"international": "Pmm2"
+},
+{
+"hall": 128,
+"hallSymbol": "P 2c -2",
+"shift": [
+0.8050605364269524,
+0.5500892835273704,
+0.8286334081559759
+],
+"number": 26,
+"hallNumber": 128,
+"international": "Pmc2_1"
+},
+{
+"hall": 129,
+"hallSymbol": "P 2c -2c",
+"shift": [
+0.6021322385514898,
+0.026922406241760677,
+0.756737859822182
+],
+"number": 26,
+"hallNumber": 128,
+"international": "Pmc2_1"
+},
+{
+"hall": 130,
+"hallSymbol": "P -2a 2a",
+"shift": [
+0.31955373952269095,
+0.7867072583838502,
+0.750435999217375
+],
+"number": 26,
+"hallNumber": 128,
+"international": "Pmc2_1"
+},
+{
+"hall": 131,
+"hallSymbol": "P -2 2a",
+"shift": [
+0.7627279648756462,
+0.1734965052995644,
+0.5974459587866922
+],
+"number": 26,
+"hallNumber": 128,
+"international": "Pmc2_1"
+},
+{
+"hall": 132,
+"hallSymbol": "P -2 -2b",
+"shift": [
+0.1449248897216463,
+0.6721654671776727,
+0.3982068233622831
+],
+"number": 26,
+"hallNumber": 128,
+"international": "Pmc2_1"
+},
+{
+"hall": 133,
+"hallSymbol": "P -2b -2",
+"shift": [
+0.4987692649957731,
+0.5742375331372327,
+0.13992067969721644
+],
+"number": 26,
+"hallNumber": 128,
+"international": "Pmc2_1"
+},
+{
+"hall": 134,
+"hallSymbol": "P 2 -2c",
+"shift": [
+0.7092314522123875,
+0.6608683873838176,
+0.2767438007234363
+],
+"number": 27,
+"hallNumber": 134,
+"international": "Pcc2"
+},
+{
+"hall": 135,
+"hallSymbol": "P -2a 2",
+"shift": [
+0.04514504608258474,
+0.15306995358657127,
+0.04791480543461302
+],
+"number": 27,
+"hallNumber": 134,
+"international": "Pcc2"
+},
+{
+"hall": 136,
+"hallSymbol": "P -2b -2b",
+"shift": [
+0.35797704084547144,
+0.2710101747390802,
+0.10077420562405548
+],
+"number": 27,
+"hallNumber": 134,
+"international": "Pcc2"
+},
+{
+"hall": 137,
+"hallSymbol": "P 2 -2a",
+"shift": [
+0.1582451805165631,
+0.6786235666503041,
+0.6284201479713635
+],
+"number": 28,
+"hallNumber": 137,
+"international": "Pma2"
+},
+{
+"hall": 138,
+"hallSymbol": "P 2 -2b",
+"shift": [
+0.7780928577002242,
+0.23018038934542095,
+0.6619777412248743
+],
+"number": 28,
+"hallNumber": 137,
+"international": "Pma2"
+},
+{
+"hall": 139,
+"hallSymbol": "P -2b 2",
+"shift": [
+0.7091407260877347,
+0.42229278736985065,
+0.9966873372316148
+],
+"number": 28,
+"hallNumber": 137,
+"international": "Pma2"
+},
+{
+"hall": 140,
+"hallSymbol": "P -2c 2",
+"shift": [
+0.17751643355973346,
+0.7140766881514721,
+0.5920516860514026
+],
+"number": 28,
+"hallNumber": 137,
+"international": "Pma2"
+},
+{
+"hall": 141,
+"hallSymbol": "P -2c -2c",
+"shift": [
+0.7437011759722701,
+0.602363525590041,
+0.48866396436473536
+],
+"number": 28,
+"hallNumber": 137,
+"international": "Pma2"
+},
+{
+"hall": 142,
+"hallSymbol": "P -2a -2a",
+"shift": [
+0.8875313003195288,
+0.9994216284955582,
+0.53603484810312
+],
+"number": 28,
+"hallNumber": 137,
+"international": "Pma2"
+},
+{
+"hall": 143,
+"hallSymbol": "P 2c -2ac",
+"shift": [
+0.46638032117978545,
+0.7732249922170472,
+0.2464368178094335
+],
+"number": 29,
+"hallNumber": 143,
+"international": "Pca2_1"
+},
+{
+"hall": 144,
+"hallSymbol": "P 2c -2b",
+"shift": [
+0.039658020049745946,
+0.9309800384845756,
+0.15183812340606906
+],
+"number": 29,
+"hallNumber": 143,
+"international": "Pca2_1"
+},
+{
+"hall": 145,
+"hallSymbol": "P -2b 2a",
+"shift": [
+0.28296538946047356,
+0.7126548438854915,
+0.6573687585724775
+],
+"number": 29,
+"hallNumber": 143,
+"international": "Pca2_1"
+},
+{
+"hall": 146,
+"hallSymbol": "P -2ac 2a",
+"shift": [
+0.1323445411919214,
+0.9345129488417327,
+0.10024154182542555
+],
+"number": 29,
+"hallNumber": 143,
+"international": "Pca2_1"
+},
+{
+"hall": 147,
+"hallSymbol": "P -2bc -2c",
+"shift": [
+0.9661583585080521,
+0.48315323674588295,
+0.9375077829036115
+],
+"number": 29,
+"hallNumber": 143,
+"international": "Pca2_1"
+},
+{
+"hall": 148,
+"hallSymbol": "P -2a -2ab",
+"shift": [
+0.6720891688220685,
+0.5168745096978061,
+0.11290631630269798
+],
+"number": 29,
+"hallNumber": 143,
+"international": "Pca2_1"
+},
+{
+"hall": 149,
+"hallSymbol": "P 2 -2bc",
+"shift": [
+0.8971113671366465,
+0.3344200364688844,
+0.42090212769625956
+],
+"number": 30,
+"hallNumber": 149,
+"international": "Pnc2"
+},
+{
+"hall": 150,
+"hallSymbol": "P 2 -2ac",
+"shift": [
+0.42895208824897035,
+0.021679184407285557,
+0.9268804270578225
+],
+"number": 30,
+"hallNumber": 149,
+"international": "Pnc2"
+},
+{
+"hall": 151,
+"hallSymbol": "P -2ac 2",
+"shift": [
+0.7520767745989864,
+0.41739957149577456,
+0.37727842317583615
+],
+"number": 30,
+"hallNumber": 149,
+"international": "Pnc2"
+},
+{
+"hall": 152,
+"hallSymbol": "P -2ab 2",
+"shift": [
+0.6339272766156436,
+0.20291754195813028,
+0.10200621336471005
+],
+"number": 30,
+"hallNumber": 149,
+"international": "Pnc2"
+},
+{
+"hall": 153,
+"hallSymbol": "P -2ab -2ab",
+"shift": [
+0.36818685336595347,
+0.31922017041407746,
+0.5640991575693738
+],
+"number": 30,
+"hallNumber": 149,
+"international": "Pnc2"
+},
+{
+"hall": 154,
+"hallSymbol": "P -2bc -2bc",
+"shift": [
+0.4887504033330258,
+0.35946221272668144,
+0.14321778272505215
+],
+"number": 30,
+"hallNumber": 149,
+"international": "Pnc2"
+},
+{
+"hall": 155,
+"hallSymbol": "P 2ac -2",
+"shift": [
+0.8525003802866453,
+0.7403769161577299,
+0.5559044491278695
+],
+"number": 31,
+"hallNumber": 155,
+"international": "Pmn2_1"
+},
+{
+"hall": 156,
+"hallSymbol": "P 2bc -2bc",
+"shift": [
+0.31488360488472744,
+0.36625938136859915,
+0.18288673261029653
+],
+"number": 31,
+"hallNumber": 155,
+"international": "Pmn2_1"
+},
+{
+"hall": 157,
+"hallSymbol": "P -2ab 2ab",
+"shift": [
+0.11921027936527984,
+0.13448638600663199,
+0.6333383783398464
+],
+"number": 31,
+"hallNumber": 155,
+"international": "Pmn2_1"
+},
+{
+"hall": 158,
+"hallSymbol": "P -2 2ac",
+"shift": [
+0.05447209898616767,
+0.8488111596037086,
+0.16374663448207016
+],
+"number": 31,
+"hallNumber": 155,
+"international": "Pmn2_1"
+},
+{
+"hall": 159,
+"hallSymbol": "P -2 -2bc",
+"shift": [
+0.40457840515614973,
+0.09793911982074477,
+0.7825940679262826
+],
+"number": 31,
+"hallNumber": 155,
+"international": "Pmn2_1"
+},
+{
+"hall": 160,
+"hallSymbol": "P -2ab -2",
+"shift": [
+0.20307678052695965,
+0.5256895223801482,
+0.08411496343548486
+],
+"number": 31,
+"hallNumber": 155,
+"international": "Pmn2_1"
+},
+{
+"hall": 161,
+"hallSymbol": "P 2 -2ab",
+"shift": [
+0.5762582684782087,
+0.4101665619782394,
+0.6837736052489902
+],
+"number": 32,
+"hallNumber": 161,
+"international": "Pba2"
+},
+{
+"hall": 162,
+"hallSymbol": "P -2bc 2",
+"shift": [
+0.7291094122092899,
+0.7677328856775101,
+0.8589549417375715
+],
+"number": 32,
+"hallNumber": 161,
+"international": "Pba2"
+},
+{
+"hall": 163,
+"hallSymbol": "P -2ac -2ac",
+"shift": [
+0.7742878507288486,
+0.6805207249615929,
+0.5675862638303463
+],
+"number": 32,
+"hallNumber": 161,
+"international": "Pba2"
+},
+{
+"hall": 164,
+"hallSymbol": "P 2c -2n",
+"shift": [
+0.8862280643406545,
+0.8674868189162672,
+0.4982830424169231
+],
+"number": 33,
+"hallNumber": 164,
+"international": "Pna2_1"
+},
+{
+"hall": 165,
+"hallSymbol": "P 2c -2ab",
+"shift": [
+0.2572281833292963,
+0.08982474088805226,
+0.45741686550276905
+],
+"number": 33,
+"hallNumber": 164,
+"international": "Pna2_1"
+},
+{
+"hall": 166,
+"hallSymbol": "P -2bc 2a",
+"shift": [
+0.18267586897177102,
+0.4740690830620484,
+0.3189106658380765
+],
+"number": 33,
+"hallNumber": 164,
+"international": "Pna2_1"
+},
+{
+"hall": 167,
+"hallSymbol": "P -2n 2a",
+"shift": [
+0.7286113034232824,
+0.660600906865043,
+0.9895269131647895
+],
+"number": 33,
+"hallNumber": 164,
+"international": "Pna2_1"
+},
+{
+"hall": 168,
+"hallSymbol": "P -2n -2ac",
+"shift": [
+0.3977825840786212,
+0.9623391645341736,
+0.36769593232309383
+],
+"number": 33,
+"hallNumber": 164,
+"international": "Pna2_1"
+},
+{
+"hall": 169,
+"hallSymbol": "P -2ac -2n",
+"shift": [
+0.2599549573793739,
+0.24864293117652492,
+0.14176527996972788
+],
+"number": 33,
+"hallNumber": 164,
+"international": "Pna2_1"
+},
+{
+"hall": 170,
+"hallSymbol": "P 2 -2n",
+"shift": [
+0.4244357447827194,
+0.07685190841599121,
+0.3452527711126505
+],
+"number": 34,
+"hallNumber": 170,
+"international": "Pnn2"
+},
+{
+"hall": 171,
+"hallSymbol": "P -2n 2",
+"shift": [
+0.785684417297842,
+0.7695178119469512,
+0.23150610195487542
+],
+"number": 34,
+"hallNumber": 170,
+"international": "Pnn2"
+},
+{
+"hall": 172,
+"hallSymbol": "P -2n -2n",
+"shift": [
+0.898538832871971,
+0.041383607621115814,
+0.9241560527525282
+],
+"number": 34,
+"hallNumber": 170,
+"international": "Pnn2"
+},
+{
+"hall": 173,
+"hallSymbol": "C 2 -2",
+"shift": [
+0.05997087707925186,
+0.42414704132013714,
+0.9973158869130624
+],
+"number": 35,
+"hallNumber": 173,
+"international": "Cmm2"
+},
+{
+"hall": 174,
+"hallSymbol": "A -2 2",
+"shift": [
+0.8758262459766759,
+0.14802287092632027,
+0.4873764317225241
+],
+"number": 35,
+"hallNumber": 173,
+"international": "Cmm2"
+},
+{
+"hall": 175,
+"hallSymbol": "B -2 -2",
+"shift": [
+0.006012196595993169,
+0.004925627395796384,
+0.5632814195449146
+],
+"number": 35,
+"hallNumber": 173,
+"international": "Cmm2"
+},
+{
+"hall": 176,
+"hallSymbol": "C 2c -2",
+"shift": [
+0.09748372567293306,
+0.17954259974856956,
+0.5993193907450982
+],
+"number": 36,
+"hallNumber": 176,
+"international": "Cmc2_1"
+},
+{
+"hall": 177,
+"hallSymbol": "C 2c -2c",
+"shift": [
+0.10373829508813992,
+0.1972086010636639,
+0.24032654371989592
+],
+"number": 36,
+"hallNumber": 176,
+"international": "Cmc2_1"
+},
+{
+"hall": 178,
+"hallSymbol": "A -2a 2a",
+"shift": [
+0.5911911565039516,
+0.6484582955742154,
+0.9354220131628607
+],
+"number": 36,
+"hallNumber": 176,
+"international": "Cmc2_1"
+},
+{
+"hall": 179,
+"hallSymbol": "A -2 2a",
+"shift": [
+0.2045379088999144,
+0.6867903953968736,
+0.4261767335224257
+],
+"number": 36,
+"hallNumber": 176,
+"international": "Cmc2_1"
+},
+{
+"hall": 180,
+"hallSymbol": "B -2 -2b",
+"shift": [
+0.39031112179078564,
+0.7501028347411136,
+0.448888276752165
+],
+"number": 36,
+"hallNumber": 176,
+"international": "Cmc2_1"
+},
+{
+"hall": 181,
+"hallSymbol": "B -2b -2",
+"shift": [
+0.8693386942672029,
+0.20732512062582142,
+0.002987973992394699
+],
+"number": 36,
+"hallNumber": 176,
+"international": "Cmc2_1"
+},
+{
+"hall": 182,
+"hallSymbol": "C 2 -2c",
+"shift": [
+0.10265420181377216,
+0.7051887915243998,
+0.4215661365204989
+],
+"number": 37,
+"hallNumber": 182,
+"international": "Ccc2"
+},
+{
+"hall": 183,
+"hallSymbol": "A -2a 2",
+"shift": [
+0.9296090296952104,
+0.8984529249578879,
+0.9204312447489853
+],
+"number": 37,
+"hallNumber": 182,
+"international": "Ccc2"
+},
+{
+"hall": 184,
+"hallSymbol": "B -2b -2b",
+"shift": [
+0.6726186721342272,
+0.7720091697768754,
+0.13410941173239965
+],
+"number": 37,
+"hallNumber": 182,
+"international": "Ccc2"
+},
+{
+"hall": 185,
+"hallSymbol": "A 2 -2",
+"shift": [
+0.19961021905902332,
+0.3778469804798771,
+0.16278743261600792
+],
+"number": 38,
+"hallNumber": 185,
+"international": "Amm2"
+},
+{
+"hall": 186,
+"hallSymbol": "B 2 -2",
+"shift": [
+0.6300031966537188,
+0.3831323590240918,
+0.5678309635333215
+],
+"number": 38,
+"hallNumber": 185,
+"international": "Amm2"
+},
+{
+"hall": 187,
+"hallSymbol": "B -2 2",
+"shift": [
+0.20813166304044894,
+0.059719556032893806,
+0.14184934706450336
+],
+"number": 38,
+"hallNumber": 185,
+"international": "Amm2"
+},
+{
+"hall": 188,
+"hallSymbol": "C -2 2",
+"shift": [
+0.2019372147467039,
+0.9914926560057229,
+0.9465423396953272
+],
+"number": 38,
+"hallNumber": 185,
+"international": "Amm2"
+},
+{
+"hall": 189,
+"hallSymbol": "C -2 -2",
+"shift": [
+0.6475188102662025,
+0.046718784729227414,
+0.9075253099737567
+],
+"number": 38,
+"hallNumber": 185,
+"international": "Amm2"
+},
+{
+"hall": 190,
+"hallSymbol": "A -2 -2",
+"shift": [
+0.34487365203132936,
+0.03379367752404927,
+0.42923531115622715
+],
+"number": 38,
+"hallNumber": 185,
+"international": "Amm2"
+},
+{
+"hall": 191,
+"hallSymbol": "A 2 -2b",
+"shift": [
+0.3971379427405164,
+0.6104434232092547,
+0.38340560183095607
+],
+"number": 39,
+"hallNumber": 191,
+"international": "Aem2"
+},
+{
+"hall": 192,
+"hallSymbol": "B 2 -2a",
+"shift": [
+0.8171711266746217,
+0.24390543442863533,
+0.2835104442762705
+],
+"number": 39,
+"hallNumber": 191,
+"international": "Aem2"
+},
+{
+"hall": 193,
+"hallSymbol": "B -2a 2",
+"shift": [
+0.4261902790918214,
+0.9094594781032195,
+0.9982749390056451
+],
+"number": 39,
+"hallNumber": 191,
+"international": "Aem2"
+},
+{
+"hall": 194,
+"hallSymbol": "C -2a 2",
+"shift": [
+0.31080487552672964,
+0.14809832073871088,
+0.39659952748068883
+],
+"number": 39,
+"hallNumber": 191,
+"international": "Aem2"
+},
+{
+"hall": 195,
+"hallSymbol": "C -2a -2a",
+"shift": [
+0.1362248594589942,
+0.7677175626761996,
+0.08910124208440795
+],
+"number": 39,
+"hallNumber": 191,
+"international": "Aem2"
+},
+{
+"hall": 196,
+"hallSymbol": "A -2b -2b",
+"shift": [
+0.6383712792828353,
+0.38749442327734496,
+0.09675603266748778
+],
+"number": 39,
+"hallNumber": 191,
+"international": "Aem2"
+},
+{
+"hall": 197,
+"hallSymbol": "A 2 -2a",
+"shift": [
+0.6159356555037624,
+0.09271808435768258,
+0.1224329619987653
+],
+"number": 40,
+"hallNumber": 197,
+"international": "Ama2"
+},
+{
+"hall": 198,
+"hallSymbol": "B 2 -2b",
+"shift": [
+0.9710967173807349,
+0.7098175082538486,
+0.8999698705802468
+],
+"number": 40,
+"hallNumber": 197,
+"international": "Ama2"
+},
+{
+"hall": 199,
+"hallSymbol": "B -2b 2",
+"shift": [
+0.35578069870799545,
+0.2161684711911953,
+0.7666966055506046
+],
+"number": 40,
+"hallNumber": 197,
+"international": "Ama2"
+},
+{
+"hall": 200,
+"hallSymbol": "C -2c 2",
+"shift": [
+0.1818911678013273,
+0.834192656935472,
+0.7163504695402365
+],
+"number": 40,
+"hallNumber": 197,
+"international": "Ama2"
+},
+{
+"hall": 201,
+"hallSymbol": "C -2c -2c",
+"shift": [
+0.4314413723121546,
+0.11686037837514485,
+0.9276649215811438
+],
+"number": 40,
+"hallNumber": 197,
+"international": "Ama2"
+},
+{
+"hall": 202,
+"hallSymbol": "A -2a -2a",
+"shift": [
+0.8835328983089602,
+0.2082045112090325,
+0.7386704299591077
+],
+"number": 40,
+"hallNumber": 197,
+"international": "Ama2"
+},
+{
+"hall": 203,
+"hallSymbol": "A 2 -2ab",
+"shift": [
+0.6470512091822775,
+0.5525064771605371,
+0.9153806478062417
+],
+"number": 41,
+"hallNumber": 203,
+"international": "Aea2"
+},
+{
+"hall": 204,
+"hallSymbol": "B 2 -2ab",
+"shift": [
+0.17758530651973614,
+0.26367744115056135,
+0.5455052611167596
+],
+"number": 41,
+"hallNumber": 203,
+"international": "Aea2"
+},
+{
+"hall": 205,
+"hallSymbol": "B -2ab 2",
+"shift": [
+0.7714908646394016,
+0.22020358414646246,
+0.08943596943726972
+],
+"number": 41,
+"hallNumber": 203,
+"international": "Aea2"
+},
+{
+"hall": 206,
+"hallSymbol": "C -2ac 2",
+"shift": [
+0.8125396494766827,
+0.3628677618435242,
+0.4882128711521435
+],
+"number": 41,
+"hallNumber": 203,
+"international": "Aea2"
+},
+{
+"hall": 207,
+"hallSymbol": "C -2ac -2ac",
+"shift": [
+0.9448231053158558,
+0.2676755221484871,
+0.13155718878222855
+],
+"number": 41,
+"hallNumber": 203,
+"international": "Aea2"
+},
+{
+"hall": 208,
+"hallSymbol": "A -2ab -2ab",
+"shift": [
+0.5245412894984638,
+0.5375600230839092,
+0.5052715764268251
+],
+"number": 41,
+"hallNumber": 203,
+"international": "Aea2"
+},
+{
+"hall": 209,
+"hallSymbol": "F 2 -2",
+"shift": [
+0.056370112434432684,
+0.7431396988645066,
+0.46983309652103566
+],
+"number": 42,
+"hallNumber": 209,
+"international": "Fmm2"
+},
+{
+"hall": 210,
+"hallSymbol": "F -2 2",
+"shift": [
+0.7047523747962225,
+0.8376695142651769,
+0.741540187664592
+],
+"number": 42,
+"hallNumber": 209,
+"international": "Fmm2"
+},
+{
+"hall": 211,
+"hallSymbol": "F -2 -2",
+"shift": [
+0.5121336984182977,
+0.6659152351992736,
+0.5658408118864416
+],
+"number": 42,
+"hallNumber": 209,
+"international": "Fmm2"
+},
+{
+"hall": 212,
+"hallSymbol": "F 2 -2d",
+"shift": [
+0.994842847313332,
+0.5649363054539361,
+0.9695702889951157
+],
+"number": 43,
+"hallNumber": 212,
+"international": "Fdd2"
+},
+{
+"hall": 213,
+"hallSymbol": "F -2d 2",
+"shift": [
+0.5199128379110227,
+0.8333361649130021,
+0.46908612202752376
+],
+"number": 43,
+"hallNumber": 212,
+"international": "Fdd2"
+},
+{
+"hall": 214,
+"hallSymbol": "F -2d -2d",
+"shift": [
+0.9819622870568082,
+0.5482338691103503,
+0.09127089562091728
+],
+"number": 43,
+"hallNumber": 212,
+"international": "Fdd2"
+},
+{
+"hall": 215,
+"hallSymbol": "I 2 -2",
+"shift": [
+0.46465963467811733,
+0.8815986892515827,
+0.8832476906880393
+],
+"number": 44,
+"hallNumber": 215,
+"international": "Imm2"
+},
+{
+"hall": 216,
+"hallSymbol": "I -2 2",
+"shift": [
+0.23299495141745163,
+0.04680865017662583,
+0.8146469680808558
+],
+"number": 44,
+"hallNumber": 215,
+"international": "Imm2"
+},
+{
+"hall": 217,
+"hallSymbol": "I -2 -2",
+"shift": [
+0.9178959538207613,
+0.06452769540528736,
+0.5216675582906162
+],
+"number": 44,
+"hallNumber": 215,
+"international": "Imm2"
+},
+{
+"hall": 218,
+"hallSymbol": "I 2 -2c",
+"shift": [
+0.6194268432768405,
+0.8590845525450729,
+0.4773058894812484
+],
+"number": 45,
+"hallNumber": 218,
+"international": "Iba2"
+},
+{
+"hall": 219,
+"hallSymbol": "I -2a 2",
+"shift": [
+0.6600780729174175,
+0.34538181548915614,
+0.3620504304105455
+],
+"number": 45,
+"hallNumber": 218,
+"international": "Iba2"
+},
+{
+"hall": 220,
+"hallSymbol": "I -2b -2b",
+"shift": [
+0.2639227954462283,
+0.07275753574204369,
+0.5352966930702293
+],
+"number": 45,
+"hallNumber": 218,
+"international": "Iba2"
+},
+{
+"hall": 221,
+"hallSymbol": "I 2 -2a",
+"shift": [
+0.783028502920703,
+0.13357579085878057,
+0.10590266871864273
+],
+"number": 46,
+"hallNumber": 221,
+"international": "Ima2"
+},
+{
+"hall": 222,
+"hallSymbol": "I 2 -2b",
+"shift": [
+0.7134968143301192,
+0.27053239026727716,
+0.6191552449517146
+],
+"number": 46,
+"hallNumber": 221,
+"international": "Ima2"
+},
+{
+"hall": 223,
+"hallSymbol": "I -2b 2",
+"shift": [
+0.37920931294392934,
+0.9872833518465669,
+0.4267315565829154
+],
+"number": 46,
+"hallNumber": 221,
+"international": "Ima2"
+},
+{
+"hall": 224,
+"hallSymbol": "I -2c 2",
+"shift": [
+0.9343885672630894,
+0.06040721868354848,
+0.3523632656306893
+],
+"number": 46,
+"hallNumber": 221,
+"international": "Ima2"
+},
+{
+"hall": 225,
+"hallSymbol": "I -2c -2c",
+"shift": [
+0.9622548771769903,
+0.318214094223665,
+0.3322023398745406
+],
+"number": 46,
+"hallNumber": 221,
+"international": "Ima2"
+},
+{
+"hall": 226,
+"hallSymbol": "I -2a -2a",
+"shift": [
+0.05699246423559301,
+0.08566155139774778,
+0.06424993052565031
+],
+"number": 46,
+"hallNumber": 221,
+"international": "Ima2"
+},
+{
+"hall": 227,
+"hallSymbol": "-P 2 2",
+"shift": [
+0.26537433801688515,
+0.5941182547729641,
+0.7335530902556234
+],
+"number": 47,
+"hallNumber": 227,
+"international": "Pmmm"
+},
+{
+"hall": 228,
+"hallSymbol": "P 2 2 -1n",
+"shift": [
+0.8294930727133261,
+0.7171460933766914,
+0.20567894421418842
+],
+"number": 48,
+"hallNumber": 228,
+"international": "Pnnn"
+},
+{
+"hall": 229,
+"hallSymbol": "-P 2ab 2bc",
+"shift": [
+0.09563000824084211,
+0.7475000996396373,
+0.10351150597909653
+],
+"number": 48,
+"hallNumber": 228,
+"international": "Pnnn"
+},
+{
+"hall": 230,
+"hallSymbol": "-P 2 2c",
+"shift": [
+0.19564567729347193,
+0.4187685914558237,
+0.6037186347283992
+],
+"number": 49,
+"hallNumber": 230,
+"international": "Pccm"
+},
+{
+"hall": 231,
+"hallSymbol": "-P 2a 2",
+"shift": [
+0.5863295528815672,
+0.20576027384701756,
+0.4986829505747571
+],
+"number": 49,
+"hallNumber": 230,
+"international": "Pccm"
+},
+{
+"hall": 232,
+"hallSymbol": "-P 2b 2b",
+"shift": [
+0.13302203861871476,
+0.6516857953791754,
+0.6182411996960209
+],
+"number": 49,
+"hallNumber": 230,
+"international": "Pccm"
+},
+{
+"hall": 233,
+"hallSymbol": "P 2 2 -1ab",
+"shift": [
+0.6389317182644386,
+0.1854474651845367,
+0.19007346288221771
+],
+"number": 50,
+"hallNumber": 233,
+"international": "Pban"
+},
+{
+"hall": 234,
+"hallSymbol": "-P 2ab 2b",
+"shift": [
+0.7736723464552756,
+0.8021481495640075,
+0.5803024899907503
+],
+"number": 50,
+"hallNumber": 233,
+"international": "Pban"
+},
+{
+"hall": 235,
+"hallSymbol": "P 2 2 -1bc",
+"shift": [
+0.10490095207776828,
+0.43449619652441873,
+0.8190737936538744
+],
+"number": 50,
+"hallNumber": 233,
+"international": "Pban"
+},
+{
+"hall": 236,
+"hallSymbol": "-P 2b 2bc",
+"shift": [
+0.3443371159066241,
+0.3438032787305709,
+0.658535524566285
+],
+"number": 50,
+"hallNumber": 233,
+"international": "Pban"
+},
+{
+"hall": 237,
+"hallSymbol": "P 2 2 -1ac",
+"shift": [
+0.83799092545696,
+0.034611532904041176,
+0.6539299525188721
+],
+"number": 50,
+"hallNumber": 233,
+"international": "Pban"
+},
+{
+"hall": 238,
+"hallSymbol": "-P 2a 2c",
+"shift": [
+0.6862194134347844,
+0.23261339039172735,
+0.8314972783151713
+],
+"number": 50,
+"hallNumber": 233,
+"international": "Pban"
+},
+{
+"hall": 239,
+"hallSymbol": "-P 2a 2a",
+"shift": [
+0.5530938531517927,
+0.7011485188986507,
+0.07641921082156478
+],
+"number": 51,
+"hallNumber": 239,
+"international": "Pmma"
+},
+{
+"hall": 240,
+"hallSymbol": "-P 2b 2",
+"shift": [
+0.03609211149883296,
+0.4224697219797173,
+0.5167508607657804
+],
+"number": 51,
+"hallNumber": 239,
+"international": "Pmma"
+},
+{
+"hall": 241,
+"hallSymbol": "-P 2 2b",
+"shift": [
+0.09269759352214335,
+0.12995141745966132,
+0.010398860379673525
+],
+"number": 51,
+"hallNumber": 239,
+"international": "Pmma"
+},
+{
+"hall": 242,
+"hallSymbol": "-P 2c 2c",
+"shift": [
+0.8536539128320537,
+0.4902505970772466,
+0.5223145526842103
+],
+"number": 51,
+"hallNumber": 239,
+"international": "Pmma"
+},
+{
+"hall": 243,
+"hallSymbol": "-P 2c 2",
+"shift": [
+0.9337542369444187,
+0.43885724226732314,
+0.1752999551108686
+],
+"number": 51,
+"hallNumber": 239,
+"international": "Pmma"
+},
+{
+"hall": 244,
+"hallSymbol": "-P 2 2a",
+"shift": [
+0.20854658459360653,
+0.13704488764875022,
+0.6742855548040796
+],
+"number": 51,
+"hallNumber": 239,
+"international": "Pmma"
+},
+{
+"hall": 245,
+"hallSymbol": "-P 2a 2bc",
+"shift": [
+0.5766680641904218,
+0.012710243939660693,
+0.7494160061703679
+],
+"number": 52,
+"hallNumber": 245,
+"international": "Pnna"
+},
+{
+"hall": 246,
+"hallSymbol": "-P 2b 2n",
+"shift": [
+0.1702570028470718,
+0.02512182820158093,
+0.6808285586973344
+],
+"number": 52,
+"hallNumber": 245,
+"international": "Pnna"
+},
+{
+"hall": 247,
+"hallSymbol": "-P 2n 2b",
+"shift": [
+0.5877737107965818,
+0.9282900977157884,
+0.6224421276092598
+],
+"number": 52,
+"hallNumber": 245,
+"international": "Pnna"
+},
+{
+"hall": 248,
+"hallSymbol": "-P 2ab 2c",
+"shift": [
+0.5205759081419032,
+0.1500308352969294,
+0.6426800196485616
+],
+"number": 52,
+"hallNumber": 245,
+"international": "Pnna"
+},
+{
+"hall": 249,
+"hallSymbol": "-P 2ab 2n",
+"shift": [
+0.23082215571366327,
+0.7365120040766487,
+0.616113681935643
+],
+"number": 52,
+"hallNumber": 245,
+"international": "Pnna"
+},
+{
+"hall": 250,
+"hallSymbol": "-P 2n 2bc",
+"shift": [
+0.9044270262251657,
+0.5014204146646501,
+0.07690108496321657
+],
+"number": 52,
+"hallNumber": 245,
+"international": "Pnna"
+},
+{
+"hall": 251,
+"hallSymbol": "-P 2ac 2",
+"shift": [
+0.9446357723097978,
+0.4335086837661847,
+0.46129278095753357
+],
+"number": 53,
+"hallNumber": 251,
+"international": "Pmna"
+},
+{
+"hall": 252,
+"hallSymbol": "-P 2bc 2bc",
+"shift": [
+0.6199824004083238,
+0.5830790980876231,
+0.3850057044206169
+],
+"number": 53,
+"hallNumber": 251,
+"international": "Pmna"
+},
+{
+"hall": 253,
+"hallSymbol": "-P 2ab 2ab",
+"shift": [
+0.5785989780650852,
+0.9583400969409844,
+0.13951095768494925
+],
+"number": 53,
+"hallNumber": 251,
+"international": "Pmna"
+},
+{
+"hall": 254,
+"hallSymbol": "-P 2 2ac",
+"shift": [
+0.21585902065752016,
+0.06794508155651313,
+0.6031733232879689
+],
+"number": 53,
+"hallNumber": 251,
+"international": "Pmna"
+},
+{
+"hall": 255,
+"hallSymbol": "-P 2 2bc",
+"shift": [
+0.643677034378311,
+0.3450678329516006,
+0.9937504134458938
+],
+"number": 53,
+"hallNumber": 251,
+"international": "Pmna"
+},
+{
+"hall": 256,
+"hallSymbol": "-P 2ab 2",
+"shift": [
+0.08464987669671498,
+0.9511648420402566,
+0.8247976858015885
+],
+"number": 53,
+"hallNumber": 251,
+"international": "Pmna"
+},
+{
+"hall": 257,
+"hallSymbol": "-P 2a 2ac",
+"shift": [
+0.09564595722070157,
+0.36433296461035547,
+0.5196665132085162
+],
+"number": 54,
+"hallNumber": 257,
+"international": "Pcca"
+},
+{
+"hall": 258,
+"hallSymbol": "-P 2b 2c",
+"shift": [
+0.7916180441857867,
+0.9810109052198405,
+0.7997322234776495
+],
+"number": 54,
+"hallNumber": 257,
+"international": "Pcca"
+},
+{
+"hall": 259,
+"hallSymbol": "-P 2a 2b",
+"shift": [
+0.3225063222686113,
+0.8569210056629722,
+0.5955226409113993
+],
+"number": 54,
+"hallNumber": 257,
+"international": "Pcca"
+},
+{
+"hall": 260,
+"hallSymbol": "-P 2ac 2c",
+"shift": [
+0.33235935910547,
+0.21215373858983255,
+0.837467607428491
+],
+"number": 54,
+"hallNumber": 257,
+"international": "Pcca"
+},
+{
+"hall": 261,
+"hallSymbol": "-P 2bc 2b",
+"shift": [
+0.542908243776998,
+0.4777513869173038,
+0.1928716295709998
+],
+"number": 54,
+"hallNumber": 257,
+"international": "Pcca"
+},
+{
+"hall": 262,
+"hallSymbol": "-P 2b 2ab",
+"shift": [
+0.2847860055158872,
+0.9245008666838271,
+0.09546759395986681
+],
+"number": 54,
+"hallNumber": 257,
+"international": "Pcca"
+},
+{
+"hall": 263,
+"hallSymbol": "-P 2 2ab",
+"shift": [
+0.141200140732614,
+0.38235340317667277,
+0.8958186042418822
+],
+"number": 55,
+"hallNumber": 263,
+"international": "Pbam"
+},
+{
+"hall": 264,
+"hallSymbol": "-P 2bc 2",
+"shift": [
+0.5030214387487182,
+0.7027653757016966,
+0.7941011828008846
+],
+"number": 55,
+"hallNumber": 263,
+"international": "Pbam"
+},
+{
+"hall": 265,
+"hallSymbol": "-P 2ac 2ac",
+"shift": [
+0.2556246675063313,
+0.9861106535977385,
+0.22866540347222053
+],
+"number": 55,
+"hallNumber": 263,
+"international": "Pbam"
+},
+{
+"hall": 266,
+"hallSymbol": "-P 2ab 2ac",
+"shift": [
+0.5082986203684723,
+0.09667402849656104,
+0.9589372508057443
+],
+"number": 56,
+"hallNumber": 266,
+"international": "Pccn"
+},
+{
+"hall": 267,
+"hallSymbol": "-P 2ac 2bc",
+"shift": [
+0.4148942832686102,
+0.551302471587395,
+0.3815728886518496
+],
+"number": 56,
+"hallNumber": 266,
+"international": "Pccn"
+},
+{
+"hall": 268,
+"hallSymbol": "-P 2bc 2ab",
+"shift": [
+0.99727716657033,
+0.3015889414823424,
+0.9588233000785455
+],
+"number": 56,
+"hallNumber": 266,
+"international": "Pccn"
+},
+{
+"hall": 269,
+"hallSymbol": "-P 2c 2b",
+"shift": [
+0.6427848258813844,
+0.9242892868901723,
+0.8625388827320328
+],
+"number": 57,
+"hallNumber": 269,
+"international": "Pbcm"
+},
+{
+"hall": 270,
+"hallSymbol": "-P 2c 2ac",
+"shift": [
+0.6510787226488092,
+0.6606262419474703,
+0.5594304763642985
+],
+"number": 57,
+"hallNumber": 269,
+"international": "Pbcm"
+},
+{
+"hall": 271,
+"hallSymbol": "-P 2ac 2a",
+"shift": [
+0.7448925841672862,
+0.3409692519701758,
+0.17518052232686132
+],
+"number": 57,
+"hallNumber": 269,
+"international": "Pbcm"
+},
+{
+"hall": 272,
+"hallSymbol": "-P 2b 2a",
+"shift": [
+0.9012422011815512,
+0.8405602550640578,
+0.523017675450178
+],
+"number": 57,
+"hallNumber": 269,
+"international": "Pbcm"
+},
+{
+"hall": 273,
+"hallSymbol": "-P 2a 2ab",
+"shift": [
+0.9993001540632644,
+0.31040488942614586,
+0.8492754768009155
+],
+"number": 57,
+"hallNumber": 269,
+"international": "Pbcm"
+},
+{
+"hall": 274,
+"hallSymbol": "-P 2bc 2c",
+"shift": [
+0.9254906153515186,
+0.9223167871156666,
+0.7538556914830045
+],
+"number": 57,
+"hallNumber": 269,
+"international": "Pbcm"
+},
+{
+"hall": 275,
+"hallSymbol": "-P 2 2n",
+"shift": [
+0.879208897374633,
+0.6371345855974107,
+0.1766655365758495
+],
+"number": 58,
+"hallNumber": 275,
+"international": "Pnnm"
+},
+{
+"hall": 276,
+"hallSymbol": "-P 2n 2",
+"shift": [
+0.4453166543674857,
+0.5633166725803295,
+0.20525477027689076
+],
+"number": 58,
+"hallNumber": 275,
+"international": "Pnnm"
+},
+{
+"hall": 277,
+"hallSymbol": "-P 2n 2n",
+"shift": [
+0.3002761696768871,
+0.7253900222739073,
+0.6698444945400995
+],
+"number": 58,
+"hallNumber": 275,
+"international": "Pnnm"
+},
+{
+"hall": 278,
+"hallSymbol": "P 2 2ab -1ab",
+"shift": [
+0.609181268081375,
+0.08902173143299319,
+0.02187363259425812
+],
+"number": 59,
+"hallNumber": 278,
+"international": "Pmmn"
+},
+{
+"hall": 279,
+"hallSymbol": "-P 2ab 2a",
+"shift": [
+0.2733634994313874,
+0.19841254248619877,
+0.7150951323242074
+],
+"number": 59,
+"hallNumber": 278,
+"international": "Pmmn"
+},
+{
+"hall": 280,
+"hallSymbol": "P 2bc 2 -1bc",
+"shift": [
+0.7294417256153353,
+0.11839149236406332,
+0.3753642405120826
+],
+"number": 59,
+"hallNumber": 278,
+"international": "Pmmn"
+},
+{
+"hall": 281,
+"hallSymbol": "-P 2c 2bc",
+"shift": [
+0.45586165994480166,
+0.3186025939142878,
+0.317337766774453
+],
+"number": 59,
+"hallNumber": 278,
+"international": "Pmmn"
+},
+{
+"hall": 282,
+"hallSymbol": "P 2ac 2ac -1ac",
+"shift": [
+0.9707228869093938,
+0.7069628786813258,
+0.5085928890619188
+],
+"number": 59,
+"hallNumber": 278,
+"international": "Pmmn"
+},
+{
+"hall": 283,
+"hallSymbol": "-P 2c 2a",
+"shift": [
+0.6791319955326757,
+0.49018082360692417,
+0.6574439964096244
+],
+"number": 59,
+"hallNumber": 278,
+"international": "Pmmn"
+},
+{
+"hall": 284,
+"hallSymbol": "-P 2n 2ab",
+"shift": [
+0.3569136402219789,
+0.7021388795504601,
+0.8735678905145002
+],
+"number": 60,
+"hallNumber": 284,
+"international": "Pbcn"
+},
+{
+"hall": 285,
+"hallSymbol": "-P 2n 2c",
+"shift": [
+0.7264353771644945,
+0.20810254812495133,
+0.5462967102300281
+],
+"number": 60,
+"hallNumber": 284,
+"international": "Pbcn"
+},
+{
+"hall": 286,
+"hallSymbol": "-P 2a 2n",
+"shift": [
+0.26678805379073767,
+0.9116621988678831,
+0.9897238125115669
+],
+"number": 60,
+"hallNumber": 284,
+"international": "Pbcn"
+},
+{
+"hall": 287,
+"hallSymbol": "-P 2bc 2n",
+"shift": [
+0.7637893615697032,
+0.8652508075640065,
+0.030807675757223207
+],
+"number": 60,
+"hallNumber": 284,
+"international": "Pbcn"
+},
+{
+"hall": 288,
+"hallSymbol": "-P 2ac 2b",
+"shift": [
+0.33321869598078535,
+0.6446518283207359,
+0.9732254046477231
+],
+"number": 60,
+"hallNumber": 284,
+"international": "Pbcn"
+},
+{
+"hall": 289,
+"hallSymbol": "-P 2b 2ac",
+"shift": [
+0.6072503481013587,
+0.22982296609410124,
+0.6129108055528071
+],
+"number": 60,
+"hallNumber": 284,
+"international": "Pbcn"
+},
+{
+"hall": 290,
+"hallSymbol": "-P 2ac 2ab",
+"shift": [
+0.8527045276700969,
+0.22686055137286676,
+0.7518511421818385
+],
+"number": 61,
+"hallNumber": 290,
+"international": "Pbca"
+},
+{
+"hall": 291,
+"hallSymbol": "-P 2bc 2ac",
+"shift": [
+0.6731280771229394,
+0.6961337473072586,
+0.1499928069827332
+],
+"number": 61,
+"hallNumber": 290,
+"international": "Pbca"
+},
+{
+"hall": 292,
+"hallSymbol": "-P 2ac 2n",
+"shift": [
+0.5200759056550905,
+0.4414538457304741,
+0.6959577886486364
+],
+"number": 62,
+"hallNumber": 292,
+"international": "Pnma"
+},
+{
+"hall": 293,
+"hallSymbol": "-P 2bc 2a",
+"shift": [
+0.8285626963719551,
+0.18166921314209705,
+0.4101625917256213
+],
+"number": 62,
+"hallNumber": 292,
+"international": "Pnma"
+},
+{
+"hall": 294,
+"hallSymbol": "-P 2c 2ab",
+"shift": [
+0.8477907801318189,
+0.7458564286621566,
+0.4595981612246244
+],
+"number": 62,
+"hallNumber": 292,
+"international": "Pnma"
+},
+{
+"hall": 295,
+"hallSymbol": "-P 2n 2ac",
+"shift": [
+0.5953919482212711,
+0.4922658829568336,
+0.047942187232862254
+],
+"number": 62,
+"hallNumber": 292,
+"international": "Pnma"
+},
+{
+"hall": 296,
+"hallSymbol": "-P 2n 2a",
+"shift": [
+0.8611979061786068,
+0.9023954474715893,
+0.5307609872156086
+],
+"number": 62,
+"hallNumber": 292,
+"international": "Pnma"
+},
+{
+"hall": 297,
+"hallSymbol": "-P 2c 2n",
+"shift": [
+0.4109366561373864,
+0.7415091737194338,
+0.14548856933610688
+],
+"number": 62,
+"hallNumber": 292,
+"international": "Pnma"
+},
+{
+"hall": 298,
+"hallSymbol": "-C 2c 2",
+"shift": [
+0.882981892434974,
+0.37704128462665,
+0.34743555416100047
+],
+"number": 63,
+"hallNumber": 298,
+"international": "Cmcm"
+},
+{
+"hall": 299,
+"hallSymbol": "-C 2c 2c",
+"shift": [
+0.08075922920749534,
+0.11341887173050036,
+0.9883172451842788
+],
+"number": 63,
+"hallNumber": 298,
+"international": "Cmcm"
+},
+{
+"hall": 300,
+"hallSymbol": "-A 2a 2a",
+"shift": [
+0.30309613554081094,
+0.08260123787329454,
+0.4003583986481676
+],
+"number": 63,
+"hallNumber": 298,
+"international": "Cmcm"
+},
+{
+"hall": 301,
+"hallSymbol": "-A 2 2a",
+"shift": [
+0.6380336418848274,
+0.43311765240541167,
+0.7998263910879647
+],
+"number": 63,
+"hallNumber": 298,
+"international": "Cmcm"
+},
+{
+"hall": 302,
+"hallSymbol": "-B 2 2b",
+"shift": [
+0.9858808416722172,
+0.21202030107715542,
+0.06673914374518009
+],
+"number": 63,
+"hallNumber": 298,
+"international": "Cmcm"
+},
+{
+"hall": 303,
+"hallSymbol": "-B 2b 2",
+"shift": [
+0.43491468507603503,
+0.1024406262095009,
+0.23237575940752542
+],
+"number": 63,
+"hallNumber": 298,
+"international": "Cmcm"
+},
+{
+"hall": 304,
+"hallSymbol": "-C 2ac 2",
+"shift": [
+0.8004375618500852,
+0.6533271080792235,
+0.18961540679190536
+],
+"number": 64,
+"hallNumber": 304,
+"international": "Cmce"
+},
+{
+"hall": 305,
+"hallSymbol": "-C 2ac 2ac",
+"shift": [
+0.2169118438138089,
+0.10565955015743533,
+0.12253943624170571
+],
+"number": 64,
+"hallNumber": 304,
+"international": "Cmce"
+},
+{
+"hall": 306,
+"hallSymbol": "-A 2ab 2ab",
+"shift": [
+0.8644436799599349,
+0.005901392775646053,
+0.9220036933481716
+],
+"number": 64,
+"hallNumber": 304,
+"international": "Cmce"
+},
+{
+"hall": 307,
+"hallSymbol": "-A 2 2ab",
+"shift": [
+0.021212026115744353,
+0.7587025403506662,
+0.2122988206830937
+],
+"number": 64,
+"hallNumber": 304,
+"international": "Cmce"
+},
+{
+"hall": 308,
+"hallSymbol": "-B 2 2ab",
+"shift": [
+0.10656347655139742,
+0.5123266122141635,
+0.7713320256224144
+],
+"number": 64,
+"hallNumber": 304,
+"international": "Cmce"
+},
+{
+"hall": 309,
+"hallSymbol": "-B 2ab 2",
+"shift": [
+0.9250923984474235,
+0.7964285060096002,
+0.33998411913390025
+],
+"number": 64,
+"hallNumber": 304,
+"international": "Cmce"
+},
+{
+"hall": 310,
+"hallSymbol": "-C 2 2",
+"shift": [
+0.16106658185629308,
+0.5329796594984768,
+0.9761660928620889
+],
+"number": 65,
+"hallNumber": 310,
+"international": "Cmmm"
+},
+{
+"hall": 311,
+"hallSymbol": "-A 2 2",
+"shift": [
+0.8714456970085549,
+0.019926486605425175,
+0.3625299780550645
+],
+"number": 65,
+"hallNumber": 310,
+"international": "Cmmm"
+},
+{
+"hall": 312,
+"hallSymbol": "-B 2 2",
+"shift": [
+0.3810361515086922,
+0.6991778621827187,
+0.9902520204940454
+],
+"number": 65,
+"hallNumber": 310,
+"international": "Cmmm"
+},
+{
+"hall": 313,
+"hallSymbol": "-C 2 2c",
+"shift": [
+0.2815388281268445,
+0.43696149631925496,
+0.9109934324755596
+],
+"number": 66,
+"hallNumber": 313,
+"international": "Cccm"
+},
+{
+"hall": 314,
+"hallSymbol": "-A 2a 2",
+"shift": [
+0.5161823833897202,
+0.618643932774634,
+0.9848448164221791
+],
+"number": 66,
+"hallNumber": 313,
+"international": "Cccm"
+},
+{
+"hall": 315,
+"hallSymbol": "-B 2b 2b",
+"shift": [
+0.13745396366431928,
+0.9737444990274315,
+0.39809105649020937
+],
+"number": 66,
+"hallNumber": 313,
+"international": "Cccm"
+},
+{
+"hall": 316,
+"hallSymbol": "-C 2a 2",
+"shift": [
+0.8835556456607669,
+0.791891970076749,
+0.2561698913739404
+],
+"number": 67,
+"hallNumber": 316,
+"international": "Cmme"
+},
+{
+"hall": 317,
+"hallSymbol": "-C 2a 2a",
+"shift": [
+0.8861525149902308,
+0.818146461939253,
+0.03777980641036416
+],
+"number": 67,
+"hallNumber": 316,
+"international": "Cmme"
+},
+{
+"hall": 318,
+"hallSymbol": "-A 2b 2b",
+"shift": [
+0.5721314285533727,
+0.5799043042282057,
+0.5050816280566194
+],
+"number": 67,
+"hallNumber": 316,
+"international": "Cmme"
+},
+{
+"hall": 319,
+"hallSymbol": "-A 2 2b",
+"shift": [
+0.5804052601287537,
+0.2963248153690041,
+0.8870076467788559
+],
+"number": 67,
+"hallNumber": 316,
+"international": "Cmme"
+},
+{
+"hall": 320,
+"hallSymbol": "-B 2 2a",
+"shift": [
+0.7639807232300114,
+0.6842622125152161,
+0.6502233500680475
+],
+"number": 67,
+"hallNumber": 316,
+"international": "Cmme"
+},
+{
+"hall": 321,
+"hallSymbol": "-B 2a 2",
+"shift": [
+0.14179307920085504,
+0.5528707988793302,
+0.05810237274596164
+],
+"number": 67,
+"hallNumber": 316,
+"international": "Cmme"
+},
+{
+"hall": 322,
+"hallSymbol": "C 2 2 -1ac",
+"shift": [
+0.4340990499933455,
+0.6575020029834331,
+0.08727998434585615
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 323,
+"hallSymbol": "-C 2a 2ac",
+"shift": [
+0.4705661002628201,
+0.5991046823667007,
+0.8903133388748615
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 324,
+"hallSymbol": "C 2 2 -1ac",
+"shift": [
+0.6137997874319365,
+0.9578269321775871,
+0.896137868938374
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 325,
+"hallSymbol": "-C 2a 2c",
+"shift": [
+0.13346623272727443,
+0.5740195103452356,
+0.03523723135999035
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 326,
+"hallSymbol": "A 2 2 -1ab",
+"shift": [
+0.721308602460268,
+0.42963505465868723,
+0.8927054074509778
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 327,
+"hallSymbol": "-A 2a 2b",
+"shift": [
+0.4746045358659313,
+0.9482373777740404,
+0.7366340022550002
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 328,
+"hallSymbol": "A 2 2 -1ab",
+"shift": [
+0.00884599200403724,
+0.36522207576327315,
+0.18138776430325587
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 329,
+"hallSymbol": "-A 2ab 2b",
+"shift": [
+0.8239371361806169,
+0.2709183277753735,
+0.008085028278182693
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 330,
+"hallSymbol": "B 2 2 -1ab",
+"shift": [
+0.4017717544846241,
+0.6630275989391157,
+0.7573157094439552
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 331,
+"hallSymbol": "-B 2ab 2b",
+"shift": [
+0.9108798253760412,
+0.35676410701323424,
+0.7565779381843367
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 332,
+"hallSymbol": "B 2 2 -1ab",
+"shift": [
+0.9099035352021656,
+0.8420261719590448,
+0.7109684202757904
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 333,
+"hallSymbol": "-B 2b 2ab",
+"shift": [
+0.10941665593634087,
+0.342291022238848,
+0.6252000489458377
+],
+"number": 68,
+"hallNumber": 322,
+"international": "Ccce"
+},
+{
+"hall": 334,
+"hallSymbol": "-F 2 2",
+"shift": [
+0.3102825393236126,
+0.7797868664093588,
+0.9190756456561152
+],
+"number": 69,
+"hallNumber": 334,
+"international": "Fmmm"
+},
+{
+"hall": 335,
+"hallSymbol": "F 2 2 -1d",
+"shift": [
+0.004143975727414206,
+0.975432249691457,
+0.6557295127621295
+],
+"number": 70,
+"hallNumber": 335,
+"international": "Fddd"
+},
+{
+"hall": 336,
+"hallSymbol": "-F 2uv 2vw",
+"shift": [
+0.6935536772244266,
+0.10553201745014207,
+0.2524754569609603
+],
+"number": 70,
+"hallNumber": 335,
+"international": "Fddd"
+},
+{
+"hall": 337,
+"hallSymbol": "-I 2 2",
+"shift": [
+0.7834849591575261,
+0.5188773980033443,
+0.6292989353311422
+],
+"number": 71,
+"hallNumber": 337,
+"international": "Immm"
+},
+{
+"hall": 338,
+"hallSymbol": "-I 2 2c",
+"shift": [
+0.7340117092061831,
+0.1403430472564029,
+0.10040259452194056
+],
+"number": 72,
+"hallNumber": 338,
+"international": "Ibam"
+},
+{
+"hall": 339,
+"hallSymbol": "-I 2a 2",
+"shift": [
+0.8908785105110134,
+0.45498710374014395,
+0.3431240494942609
+],
+"number": 72,
+"hallNumber": 338,
+"international": "Ibam"
+},
+{
+"hall": 340,
+"hallSymbol": "-I 2b 2b",
+"shift": [
+0.06653448764752212,
+0.5997799774228687,
+0.8299850101291413
+],
+"number": 72,
+"hallNumber": 338,
+"international": "Ibam"
+},
+{
+"hall": 341,
+"hallSymbol": "-I 2b 2c",
+"shift": [
+0.1010746735998761,
+0.9646280074627727,
+0.3167033772200172
+],
+"number": 73,
+"hallNumber": 341,
+"international": "Ibca"
+},
+{
+"hall": 342,
+"hallSymbol": "-I 2a 2b",
+"shift": [
+0.003993845201252233,
+0.5437868577207164,
+0.5796642001015498
+],
+"number": 73,
+"hallNumber": 341,
+"international": "Ibca"
+},
+{
+"hall": 343,
+"hallSymbol": "-I 2b 2",
+"shift": [
+0.6486605218326355,
+0.5967046354741775,
+0.5692999406008653
+],
+"number": 74,
+"hallNumber": 343,
+"international": "Imma"
+},
+{
+"hall": 344,
+"hallSymbol": "-I 2a 2a",
+"shift": [
+0.95983630702347,
+0.12278997245071266,
+0.20674506670153858
+],
+"number": 74,
+"hallNumber": 343,
+"international": "Imma"
+},
+{
+"hall": 345,
+"hallSymbol": "-I 2c 2c",
+"shift": [
+0.42216589834898943,
+0.6206457031547596,
+0.34769210152644536
+],
+"number": 74,
+"hallNumber": 343,
+"international": "Imma"
+},
+{
+"hall": 346,
+"hallSymbol": "-I 2 2b",
+"shift": [
+0.32499467885463973,
+0.41666345320191267,
+0.2360251171091945
+],
+"number": 74,
+"hallNumber": 343,
+"international": "Imma"
+},
+{
+"hall": 347,
+"hallSymbol": "-I 2 2a",
+"shift": [
+0.38680975318464583,
+0.5856335884226576,
+0.22109039100523753
+],
+"number": 74,
+"hallNumber": 343,
+"international": "Imma"
+},
+{
+"hall": 348,
+"hallSymbol": "-I 2c 2",
+"shift": [
+0.7673247628324901,
+0.38938865126454403,
+0.14223493835512302
+],
+"number": 74,
+"hallNumber": 343,
+"international": "Imma"
+},
+{
+"hall": 349,
+"hallSymbol": "P 4",
+"shift": [
+0.4740455626389575,
+0.45435360917281653,
+0.686624256119457
+],
+"number": 75,
+"hallNumber": 349,
+"international": "P4"
+},
+{
+"hall": 350,
+"hallSymbol": "P 4w",
+"shift": [
+0.7959035242949518,
+0.44930363372562,
+0.09342152801578374
+],
+"number": 76,
+"hallNumber": 350,
+"international": "P4_1"
+},
+{
+"hall": 351,
+"hallSymbol": "P 4c",
+"shift": [
+0.755771665356819,
+0.9556289982429547,
+0.3518370987170475
+],
+"number": 77,
+"hallNumber": 351,
+"international": "P4_2"
+},
+{
+"hall": 352,
+"hallSymbol": "P 4cw",
+"shift": [
+0.13145364662548042,
+0.27361675780164463,
+0.130734126545077
+],
+"number": 78,
+"hallNumber": 352,
+"international": "P4_3"
+},
+{
+"hall": 353,
+"hallSymbol": "I 4",
+"shift": [
+0.958109881776606,
+0.5006803104675408,
+0.31259229479848016
+],
+"number": 79,
+"hallNumber": 353,
+"international": "I4"
+},
+{
+"hall": 354,
+"hallSymbol": "I 4bw",
+"shift": [
+0.2709297818977515,
+0.21053125517316496,
+0.7040036019600869
+],
+"number": 80,
+"hallNumber": 354,
+"international": "I4_1"
+},
+{
+"hall": 355,
+"hallSymbol": "P -4",
+"shift": [
+0.9206790413024551,
+0.9729583849521393,
+0.7118120738304965
+],
+"number": 81,
+"hallNumber": 355,
+"international": "P-4"
+},
+{
+"hall": 356,
+"hallSymbol": "I -4",
+"shift": [
+0.45101614737833295,
+0.7289763842234321,
+0.12118442939976604
+],
+"number": 82,
+"hallNumber": 356,
+"international": "I-4"
+},
+{
+"hall": 357,
+"hallSymbol": "-P 4",
+"shift": [
+0.2917073331237735,
+0.6819206121915444,
+0.5495669873457327
+],
+"number": 83,
+"hallNumber": 357,
+"international": "P4/m"
+},
+{
+"hall": 358,
+"hallSymbol": "-P 4c",
+"shift": [
+0.18953995829643566,
+0.473834309507852,
+0.16216185387120985
+],
+"number": 84,
+"hallNumber": 358,
+"international": "P4_2/m"
+},
+{
+"hall": 359,
+"hallSymbol": "P 4ab -1ab",
+"shift": [
+0.6522435144485748,
+0.07155912284811872,
+0.5020265200751652
+],
+"number": 85,
+"hallNumber": 359,
+"international": "P4/n"
+},
+{
+"hall": 360,
+"hallSymbol": "-P 4a",
+"shift": [
+0.42965912192489253,
+0.8012733795772611,
+0.1905438872633184
+],
+"number": 85,
+"hallNumber": 359,
+"international": "P4/n"
+},
+{
+"hall": 361,
+"hallSymbol": "P 4n -1n",
+"shift": [
+0.011895080387364976,
+0.7757670325866741,
+0.27725204320041774
+],
+"number": 86,
+"hallNumber": 361,
+"international": "P4_2/n"
+},
+{
+"hall": 362,
+"hallSymbol": "-P 4bc",
+"shift": [
+0.8804802124405365,
+0.5186235185295346,
+0.1585100903836698
+],
+"number": 86,
+"hallNumber": 361,
+"international": "P4_2/n"
+},
+{
+"hall": 363,
+"hallSymbol": "-I 4",
+"shift": [
+0.7315848063800486,
+0.5021082140901386,
+0.9514481297205907
+],
+"number": 87,
+"hallNumber": 363,
+"international": "I4/m"
+},
+{
+"hall": 364,
+"hallSymbol": "I 4bw -1bw",
+"shift": [
+0.3227378001006932,
+0.6737637321256087,
+0.5224560065982464
+],
+"number": 88,
+"hallNumber": 364,
+"international": "I4_1/a"
+},
+{
+"hall": 365,
+"hallSymbol": "-I 4ad",
+"shift": [
+0.7684030077481842,
+0.9587486134621365,
+0.7641368954112634
+],
+"number": 88,
+"hallNumber": 364,
+"international": "I4_1/a"
+},
+{
+"hall": 366,
+"hallSymbol": "P 4 2",
+"shift": [
+0.44142793126545754,
+0.8263751931613214,
+0.19878949630714393
+],
+"number": 89,
+"hallNumber": 366,
+"international": "P422"
+},
+{
+"hall": 367,
+"hallSymbol": "P 4ab 2ab",
+"shift": [
+0.39235604798886226,
+0.19209986590751793,
+0.09719142847631568
+],
+"number": 90,
+"hallNumber": 367,
+"international": "P42_12"
+},
+{
+"hall": 368,
+"hallSymbol": "P 4w 2c",
+"shift": [
+0.5834255721530076,
+0.5971603170568744,
+0.7961943766027247
+],
+"number": 91,
+"hallNumber": 368,
+"international": "P4_122"
+},
+{
+"hall": 369,
+"hallSymbol": "P 4abw 2nw",
+"shift": [
+0.8432969118240883,
+0.9744498458393857,
+0.8712824812861525
+],
+"number": 92,
+"hallNumber": 369,
+"international": "P4_12_12"
+},
+{
+"hall": 370,
+"hallSymbol": "P 4c 2",
+"shift": [
+0.623855251155901,
+0.20276380961208584,
+0.4985861899876336
+],
+"number": 93,
+"hallNumber": 370,
+"international": "P4_222"
+},
+{
+"hall": 371,
+"hallSymbol": "P 4n 2n",
+"shift": [
+0.04006125966731999,
+0.770091970811239,
+0.9568751072405223
+],
+"number": 94,
+"hallNumber": 371,
+"international": "P4_22_12"
+},
+{
+"hall": 372,
+"hallSymbol": "P 4cw 2c",
+"shift": [
+0.8900287805880016,
+0.46508105033900726,
+0.1294027963099379
+],
+"number": 95,
+"hallNumber": 372,
+"international": "P4_322"
+},
+{
+"hall": 373,
+"hallSymbol": "P 4nw 2abw",
+"shift": [
+0.9083659391518907,
+0.23203277439247894,
+0.7152765812556177
+],
+"number": 96,
+"hallNumber": 373,
+"international": "P4_32_12"
+},
+{
+"hall": 374,
+"hallSymbol": "I 4 2",
+"shift": [
+0.0748187538346724,
+0.2654082884690361,
+0.5733144558218617
+],
+"number": 97,
+"hallNumber": 374,
+"international": "I422"
+},
+{
+"hall": 375,
+"hallSymbol": "I 4bw 2bw",
+"shift": [
+0.48703319701683845,
+0.8488881287823294,
+0.40718523107384375
+],
+"number": 98,
+"hallNumber": 375,
+"international": "I4_122"
+},
+{
+"hall": 376,
+"hallSymbol": "P 4 -2",
+"shift": [
+0.005727849024396825,
+0.8506377766994913,
+0.4584231938228088
+],
+"number": 99,
+"hallNumber": 376,
+"international": "P4mm"
+},
+{
+"hall": 377,
+"hallSymbol": "P 4 -2ab",
+"shift": [
+0.006299597963855708,
+0.5797897124348355,
+0.20868806477482826
+],
+"number": 100,
+"hallNumber": 377,
+"international": "P4bm"
+},
+{
+"hall": 378,
+"hallSymbol": "P 4c -2c",
+"shift": [
+0.1945879708832533,
+0.14673700293052783,
+0.22621146003203108
+],
+"number": 101,
+"hallNumber": 378,
+"international": "P4_2cm"
+},
+{
+"hall": 379,
+"hallSymbol": "P 4n -2n",
+"shift": [
+0.3864723358042257,
+0.8950369569301593,
+0.7280455255135377
+],
+"number": 102,
+"hallNumber": 379,
+"international": "P4_2nm"
+},
+{
+"hall": 380,
+"hallSymbol": "P 4 -2c",
+"shift": [
+0.6436931051266921,
+0.5987733779679437,
+0.44433434466961996
+],
+"number": 103,
+"hallNumber": 380,
+"international": "P4cc"
+},
+{
+"hall": 381,
+"hallSymbol": "P 4 -2n",
+"shift": [
+0.31718711860553417,
+0.20850233512462701,
+0.2519351627966877
+],
+"number": 104,
+"hallNumber": 381,
+"international": "P4nc"
+},
+{
+"hall": 382,
+"hallSymbol": "P 4c -2",
+"shift": [
+0.30762859306555357,
+0.5560254272142049,
+0.6261755475441719
+],
+"number": 105,
+"hallNumber": 382,
+"international": "P4_2mc"
+},
+{
+"hall": 383,
+"hallSymbol": "P 4c -2ab",
+"shift": [
+0.14647827158332172,
+0.6291138015529164,
+0.13310204189633812
+],
+"number": 106,
+"hallNumber": 383,
+"international": "P4_2bc"
+},
+{
+"hall": 384,
+"hallSymbol": "I 4 -2",
+"shift": [
+0.5274614613615447,
+0.10135591263854404,
+0.9244739442201928
+],
+"number": 107,
+"hallNumber": 384,
+"international": "I4mm"
+},
+{
+"hall": 385,
+"hallSymbol": "I 4 -2c",
+"shift": [
+0.3018046922742842,
+0.2346567146644991,
+0.932618271151067
+],
+"number": 108,
+"hallNumber": 385,
+"international": "I4cm"
+},
+{
+"hall": 386,
+"hallSymbol": "I 4bw -2",
+"shift": [
+0.9344922119218192,
+0.6690254151303443,
+0.25336576364075913
+],
+"number": 109,
+"hallNumber": 386,
+"international": "I4_1md"
+},
+{
+"hall": 387,
+"hallSymbol": "I 4bw -2c",
+"shift": [
+0.8483149405335619,
+0.32368969927475577,
+0.006792944853640348
+],
+"number": 110,
+"hallNumber": 387,
+"international": "I4_1cd"
+},
+{
+"hall": 388,
+"hallSymbol": "P -4 2",
+"shift": [
+0.9046196772994703,
+0.3389123048979996,
+0.7897100029715586
+],
+"number": 111,
+"hallNumber": 388,
+"international": "P-42m"
+},
+{
+"hall": 389,
+"hallSymbol": "P -4 2c",
+"shift": [
+0.8157924575918621,
+0.3957153312338937,
+0.5389633841197222
+],
+"number": 112,
+"hallNumber": 389,
+"international": "P-42c"
+},
+{
+"hall": 390,
+"hallSymbol": "P -4 2ab",
+"shift": [
+0.4872854842995189,
+0.6845690741061714,
+0.4224743361966632
+],
+"number": 113,
+"hallNumber": 390,
+"international": "P-42_1m"
+},
+{
+"hall": 391,
+"hallSymbol": "P -4 2n",
+"shift": [
+0.26012286081460045,
+0.7694957722981909,
+0.11263278661592768
+],
+"number": 114,
+"hallNumber": 391,
+"international": "P-42_1c"
+},
+{
+"hall": 392,
+"hallSymbol": "P -4 -2",
+"shift": [
+0.4111789393872387,
+0.10243363031237052,
+0.10351082243737819
+],
+"number": 115,
+"hallNumber": 392,
+"international": "P-4m2"
+},
+{
+"hall": 393,
+"hallSymbol": "P -4 -2c",
+"shift": [
+0.7271528676121466,
+0.8167727040018562,
+0.9261146121141797
+],
+"number": 116,
+"hallNumber": 393,
+"international": "P-4c2"
+},
+{
+"hall": 394,
+"hallSymbol": "P -4 -2ab",
+"shift": [
+0.9485895703042189,
+0.23784005571432365,
+0.4791824783051253
+],
+"number": 117,
+"hallNumber": 394,
+"international": "P-4b2"
+},
+{
+"hall": 395,
+"hallSymbol": "P -4 -2n",
+"shift": [
+0.6308446691193909,
+0.9943377664726762,
+0.15725261728643047
+],
+"number": 118,
+"hallNumber": 395,
+"international": "P-4n2"
+},
+{
+"hall": 396,
+"hallSymbol": "I -4 -2",
+"shift": [
+0.42392177091310757,
+0.386101836866771,
+0.987656464621521
+],
+"number": 119,
+"hallNumber": 396,
+"international": "I-4m2"
+},
+{
+"hall": 397,
+"hallSymbol": "I -4 -2c",
+"shift": [
+0.45297068076396263,
+0.1415671287129262,
+0.6650236745060003
+],
+"number": 120,
+"hallNumber": 397,
+"international": "I-4c2"
+},
+{
+"hall": 398,
+"hallSymbol": "I -4 2",
+"shift": [
+0.36433309251132706,
+0.27110663845664884,
+0.7918763092487284
+],
+"number": 121,
+"hallNumber": 398,
+"international": "I-42m"
+},
+{
+"hall": 399,
+"hallSymbol": "I -4 2bw",
+"shift": [
+0.2064023000116899,
+0.5092709093614514,
+0.6850694558515397
+],
+"number": 122,
+"hallNumber": 399,
+"international": "I-42d"
+},
+{
+"hall": 400,
+"hallSymbol": "-P 4 2",
+"shift": [
+0.8268247377232413,
+0.19005461775915022,
+0.7365090039161536
+],
+"number": 123,
+"hallNumber": 400,
+"international": "P4/mmm"
+},
+{
+"hall": 401,
+"hallSymbol": "-P 4 2c",
+"shift": [
+0.529272245251139,
+0.2679470514944434,
+0.9686862364695517
+],
+"number": 124,
+"hallNumber": 401,
+"international": "P4/mcc"
+},
+{
+"hall": 402,
+"hallSymbol": "P 4 2 -1ab",
+"shift": [
+0.8243566817769815,
+0.5769299518125645,
+0.3675874584557106
+],
+"number": 125,
+"hallNumber": 402,
+"international": "P4/nbm"
+},
+{
+"hall": 403,
+"hallSymbol": "-P 4a 2b",
+"shift": [
+0.02637680314574653,
+0.44129621656507834,
+0.7824637380786904
+],
+"number": 125,
+"hallNumber": 402,
+"international": "P4/nbm"
+},
+{
+"hall": 404,
+"hallSymbol": "P 4 2 -1n",
+"shift": [
+0.6468933528442415,
+0.1681889334780109,
+0.04899720772944438
+],
+"number": 126,
+"hallNumber": 404,
+"international": "P4/nnc"
+},
+{
+"hall": 405,
+"hallSymbol": "-P 4a 2bc",
+"shift": [
+0.1915921296692279,
+0.2609845573779709,
+0.9540285499185605
+],
+"number": 126,
+"hallNumber": 404,
+"international": "P4/nnc"
+},
+{
+"hall": 406,
+"hallSymbol": "-P 4 2ab",
+"shift": [
+0.6858973083294788,
+0.0010027997701250735,
+0.36330810686029813
+],
+"number": 127,
+"hallNumber": 406,
+"international": "P4/mbm"
+},
+{
+"hall": 407,
+"hallSymbol": "-P 4 2n",
+"shift": [
+0.5648497408187295,
+0.5555381116540804,
+0.9654511259050242
+],
+"number": 128,
+"hallNumber": 407,
+"international": "P4/mnc"
+},
+{
+"hall": 408,
+"hallSymbol": "P 4ab 2ab -1ab",
+"shift": [
+0.9530556548762206,
+0.45884548880042597,
+0.7037438880078912
+],
+"number": 129,
+"hallNumber": 408,
+"international": "P4/nmm"
+},
+{
+"hall": 409,
+"hallSymbol": "-P 4a 2a",
+"shift": [
+0.5954101124590566,
+0.2160927908321132,
+0.4294867989232274
+],
+"number": 129,
+"hallNumber": 408,
+"international": "P4/nmm"
+},
+{
+"hall": 410,
+"hallSymbol": "P 4ab 2n -1ab",
+"shift": [
+0.2880483286445873,
+0.056572002428572965,
+0.8836874307340142
+],
+"number": 130,
+"hallNumber": 410,
+"international": "P4/ncc"
+},
+{
+"hall": 411,
+"hallSymbol": "-P 4a 2ac",
+"shift": [
+0.18647459356112928,
+0.18411077978659451,
+0.4698413514914527
+],
+"number": 130,
+"hallNumber": 410,
+"international": "P4/ncc"
+},
+{
+"hall": 412,
+"hallSymbol": "-P 4c 2",
+"shift": [
+0.5295485119121888,
+0.5050728498700705,
+0.6813403509064277
+],
+"number": 131,
+"hallNumber": 412,
+"international": "P4_2/mmc"
+},
+{
+"hall": 413,
+"hallSymbol": "-P 4c 2c",
+"shift": [
+0.6718221121607041,
+0.003491641768240572,
+0.27583686868243995
+],
+"number": 132,
+"hallNumber": 413,
+"international": "P4_2/mcm"
+},
+{
+"hall": 414,
+"hallSymbol": "P 4n 2c -1n",
+"shift": [
+0.8521470341921024,
+0.839599441258463,
+0.11022376538081324
+],
+"number": 133,
+"hallNumber": 414,
+"international": "P4_2/nbc"
+},
+{
+"hall": 415,
+"hallSymbol": "-P 4ac 2b",
+"shift": [
+0.28248896659977607,
+0.4429157793781944,
+0.7847146278202745
+],
+"number": 133,
+"hallNumber": 414,
+"international": "P4_2/nbc"
+},
+{
+"hall": 416,
+"hallSymbol": "P 4n 2 -1n",
+"shift": [
+0.4830013733621402,
+0.4066050031206484,
+0.7348433716847262
+],
+"number": 134,
+"hallNumber": 416,
+"international": "P4_2/nnm"
+},
+{
+"hall": 417,
+"hallSymbol": "-P 4ac 2bc",
+"shift": [
+0.34128251244897,
+0.5865574650722303,
+0.19736116769604317
+],
+"number": 134,
+"hallNumber": 416,
+"international": "P4_2/nnm"
+},
+{
+"hall": 418,
+"hallSymbol": "-P 4c 2ab",
+"shift": [
+0.44358275185623186,
+0.5811313739525885,
+0.5725938403910085
+],
+"number": 135,
+"hallNumber": 418,
+"international": "P4_2/mbc"
+},
+{
+"hall": 419,
+"hallSymbol": "-P 4n 2n",
+"shift": [
+0.10552080890960103,
+0.8119977810640747,
+0.06211521201212811
+],
+"number": 136,
+"hallNumber": 419,
+"international": "P4_2/mnm"
+},
+{
+"hall": 420,
+"hallSymbol": "P 4n 2n -1n",
+"shift": [
+0.0658881139345302,
+0.33443374833876227,
+0.8563755943407069
+],
+"number": 137,
+"hallNumber": 420,
+"international": "P4_2/nmc"
+},
+{
+"hall": 421,
+"hallSymbol": "-P 4ac 2a",
+"shift": [
+0.6255769059171449,
+0.8578990957786731,
+0.9372105549068305
+],
+"number": 137,
+"hallNumber": 420,
+"international": "P4_2/nmc"
+},
+{
+"hall": 422,
+"hallSymbol": "P 4n 2ab -1n",
+"shift": [
+0.26863702729159145,
+0.5041041438974181,
+0.6087562280307138
+],
+"number": 138,
+"hallNumber": 422,
+"international": "P4_2/ncm"
+},
+{
+"hall": 423,
+"hallSymbol": "-P 4ac 2ac",
+"shift": [
+0.28770552966696017,
+0.7228033664744188,
+0.6284360481082765
+],
+"number": 138,
+"hallNumber": 422,
+"international": "P4_2/ncm"
+},
+{
+"hall": 424,
+"hallSymbol": "-I 4 2",
+"shift": [
+0.4871006962416339,
+0.2597158251715659,
+0.7264861317882952
+],
+"number": 139,
+"hallNumber": 424,
+"international": "I4/mmm"
+},
+{
+"hall": 425,
+"hallSymbol": "-I 4 2c",
+"shift": [
+0.7457914153483757,
+0.5532073668053631,
+0.22822721712087712
+],
+"number": 140,
+"hallNumber": 425,
+"international": "I4/mcm"
+},
+{
+"hall": 426,
+"hallSymbol": "I 4bw 2bw -1bw",
+"shift": [
+0.05113169897580294,
+0.7891506498703929,
+0.6871662258567854
+],
+"number": 141,
+"hallNumber": 426,
+"international": "I4_1/amd"
+},
+{
+"hall": 427,
+"hallSymbol": "-I 4bd 2",
+"shift": [
+0.7770528268087866,
+0.16822676040673168,
+0.5947255151292782
+],
+"number": 141,
+"hallNumber": 426,
+"international": "I4_1/amd"
+},
+{
+"hall": 428,
+"hallSymbol": "I 4bw 2aw -1bw",
+"shift": [
+0.8894617241977818,
+0.085339146750527,
+0.680147246630227
+],
+"number": 142,
+"hallNumber": 428,
+"international": "I4_1/acd"
+},
+{
+"hall": 429,
+"hallSymbol": "-I 4bd 2c",
+"shift": [
+0.9632411642911214,
+0.18912840167445422,
+0.4989237736455254
+],
+"number": 142,
+"hallNumber": 428,
+"international": "I4_1/acd"
+},
+{
+"hall": 430,
+"hallSymbol": "P 3",
+"shift": [
+0.46892415766883,
+0.1363507653256718,
+0.5298891219115734
+],
+"number": 143,
+"hallNumber": 430,
+"international": "P3"
+},
+{
+"hall": 431,
+"hallSymbol": "P 31",
+"shift": [
+0.1658284568863535,
+0.51207745256013,
+0.9458157164432544
+],
+"number": 144,
+"hallNumber": 431,
+"international": "P3_1"
+},
+{
+"hall": 432,
+"hallSymbol": "P 32",
+"shift": [
+0.10121073809343739,
+0.06709141862598156,
+0.6180385328979049
+],
+"number": 145,
+"hallNumber": 432,
+"international": "P3_2"
+},
+{
+"hall": 433,
+"hallSymbol": "R 3",
+"shift": [
+0.7426464896740039,
+0.5660241229224858,
+0.02201571609027564
+],
+"number": 146,
+"hallNumber": 433,
+"international": "R3"
+},
+{
+"hall": 434,
+"hallSymbol": "P 3*",
+"shift": [
+0.10545942320880985,
+0.5166612591226223,
+0.06743285107355024
+],
+"number": 146,
+"hallNumber": 433,
+"international": "R3"
+},
+{
+"hall": 435,
+"hallSymbol": "-P 3",
+"shift": [
+0.519733347264162,
+0.44747694240555524,
+0.9807316895715508
+],
+"number": 147,
+"hallNumber": 435,
+"international": "P-3"
+},
+{
+"hall": 436,
+"hallSymbol": "-R 3",
+"shift": [
+0.7626625812028027,
+0.9761724688148214,
+0.27640871036527404
+],
+"number": 148,
+"hallNumber": 436,
+"international": "R-3"
+},
+{
+"hall": 437,
+"hallSymbol": "-P 3*",
+"shift": [
+0.7010386307686747,
+0.7606633894261214,
+0.5551553571832197
+],
+"number": 148,
+"hallNumber": 436,
+"international": "R-3"
+},
+{
+"hall": 438,
+"hallSymbol": "P 3 2",
+"shift": [
+0.4782916216607602,
+0.8099328250014013,
+0.22737811483016357
+],
+"number": 149,
+"hallNumber": 438,
+"international": "P312"
+},
+{
+"hall": 439,
+"hallSymbol": "P 3 2\"",
+"shift": [
+0.5412651993902347,
+0.8056522820457075,
+0.767528991783897
+],
+"number": 150,
+"hallNumber": 439,
+"international": "P321"
+},
+{
+"hall": 440,
+"hallSymbol": "P 31 2 (0 0 4)",
+"shift": [
+0.42714360923073924,
+0.4619279733745224,
+0.030277438742997376
+],
+"number": 151,
+"hallNumber": 440,
+"international": "P3_112"
+},
+{
+"hall": 441,
+"hallSymbol": "P 31 2\"",
+"shift": [
+0.5618184157777281,
+0.6368294243817806,
+0.8282260636398747
+],
+"number": 152,
+"hallNumber": 441,
+"international": "P3_121"
+},
+{
+"hall": 442,
+"hallSymbol": "P 32 2 (0 0 2)",
+"shift": [
+0.8283537452158389,
+0.8760170764432753,
+0.7206815972081795
+],
+"number": 153,
+"hallNumber": 442,
+"international": "P3_212"
+},
+{
+"hall": 443,
+"hallSymbol": "P 32 2\"",
+"shift": [
+0.04063331432347639,
+0.3235235339826318,
+0.3274168824100617
+],
+"number": 154,
+"hallNumber": 443,
+"international": "P3_221"
+},
+{
+"hall": 444,
+"hallSymbol": "R 3 2\"",
+"shift": [
+0.458799723573319,
+0.7908739737280321,
+0.428166922472453
+],
+"number": 155,
+"hallNumber": 444,
+"international": "R32"
+},
+{
+"hall": 445,
+"hallSymbol": "P 3* 2",
+"shift": [
+0.500205396142214,
+0.712809252470951,
+0.8680074063994813
+],
+"number": 155,
+"hallNumber": 444,
+"international": "R32"
+},
+{
+"hall": 446,
+"hallSymbol": "P 3 -2\"",
+"shift": [
+0.7269182599303432,
+0.7918936200607994,
+0.8805818986342017
+],
+"number": 156,
+"hallNumber": 446,
+"international": "P3m1"
+},
+{
+"hall": 447,
+"hallSymbol": "P 3 -2",
+"shift": [
+0.2959178084527101,
+0.3506211084599178,
+0.7039679547555537
+],
+"number": 157,
+"hallNumber": 447,
+"international": "P31m"
+},
+{
+"hall": 448,
+"hallSymbol": "P 3 -2\"c",
+"shift": [
+0.8346326374101405,
+0.7569467139056746,
+0.33093907990308313
+],
+"number": 158,
+"hallNumber": 448,
+"international": "P3c1"
+},
+{
+"hall": 449,
+"hallSymbol": "P 3 -2c",
+"shift": [
+0.9706677311295526,
+0.10923905548618773,
+0.8279070899727099
+],
+"number": 159,
+"hallNumber": 449,
+"international": "P31c"
+},
+{
+"hall": 450,
+"hallSymbol": "R 3 -2\"",
+"shift": [
+0.5001915558668738,
+0.5920356256883609,
+0.6963916849061504
+],
+"number": 160,
+"hallNumber": 450,
+"international": "R3m"
+},
+{
+"hall": 451,
+"hallSymbol": "P 3* -2",
+"shift": [
+0.018821762934044473,
+0.3543613352639696,
+0.29552219473858254
+],
+"number": 160,
+"hallNumber": 450,
+"international": "R3m"
+},
+{
+"hall": 452,
+"hallSymbol": "R 3 -2\"c",
+"shift": [
+0.9491271593582139,
+0.22414052048552535,
+0.1435957080137985
+],
+"number": 161,
+"hallNumber": 452,
+"international": "R3c"
+},
+{
+"hall": 453,
+"hallSymbol": "P 3* -2n",
+"shift": [
+0.9730935264507863,
+0.2822668244419353,
+0.9558415216753039
+],
+"number": 161,
+"hallNumber": 452,
+"international": "R3c"
+},
+{
+"hall": 454,
+"hallSymbol": "-P 3 2",
+"shift": [
+0.27252085044728525,
+0.948409897881093,
+0.5989342166787796
+],
+"number": 162,
+"hallNumber": 454,
+"international": "P-31m"
+},
+{
+"hall": 455,
+"hallSymbol": "-P 3 2c",
+"shift": [
+0.5917582240955813,
+0.6774686248168978,
+0.45161337205756613
+],
+"number": 163,
+"hallNumber": 455,
+"international": "P-31c"
+},
+{
+"hall": 456,
+"hallSymbol": "-P 3 2\"",
+"shift": [
+0.3575104409716052,
+0.07448838207935737,
+0.12436163895870855
+],
+"number": 164,
+"hallNumber": 456,
+"international": "P-3m1"
+},
+{
+"hall": 457,
+"hallSymbol": "-P 3 2\"c",
+"shift": [
+0.34697370299314434,
+0.5429821199388037,
+0.833552108857618
+],
+"number": 165,
+"hallNumber": 457,
+"international": "P-3c1"
+},
+{
+"hall": 458,
+"hallSymbol": "-R 3 2\"",
+"shift": [
+0.9285446205864982,
+0.010981246737779227,
+0.3788134923855556
+],
+"number": 166,
+"hallNumber": 458,
+"international": "R-3m"
+},
+{
+"hall": 459,
+"hallSymbol": "-P 3* 2",
+"shift": [
+0.39066758713137173,
+0.20470390411061767,
+0.6031143680821011
+],
+"number": 166,
+"hallNumber": 458,
+"international": "R-3m"
+},
+{
+"hall": 460,
+"hallSymbol": "-R 3 2\"c",
+"shift": [
+0.7361166849688103,
+0.5861101751265579,
+0.702006164721378
+],
+"number": 167,
+"hallNumber": 460,
+"international": "R-3c"
+},
+{
+"hall": 461,
+"hallSymbol": "-P 3* 2n",
+"shift": [
+0.038995465451893474,
+0.44905431912925675,
+0.16367328287705474
+],
+"number": 167,
+"hallNumber": 460,
+"international": "R-3c"
+},
+{
+"hall": 462,
+"hallSymbol": "P 6",
+"shift": [
+0.6012576535902752,
+0.4378810272178325,
+0.4332762347657356
+],
+"number": 168,
+"hallNumber": 462,
+"international": "P6"
+},
+{
+"hall": 463,
+"hallSymbol": "P 61",
+"shift": [
+0.5433142093382353,
+0.29824602132705735,
+0.5987868351339126
+],
+"number": 169,
+"hallNumber": 463,
+"international": "P6_1"
+},
+{
+"hall": 464,
+"hallSymbol": "P 65",
+"shift": [
+0.4159138230379992,
+0.3251973506391661,
+0.8858249322449069
+],
+"number": 170,
+"hallNumber": 464,
+"international": "P6_5"
+},
+{
+"hall": 465,
+"hallSymbol": "P 62",
+"shift": [
+0.1917969721344811,
+0.4214475876397682,
+0.7237369628606736
+],
+"number": 171,
+"hallNumber": 465,
+"international": "P6_2"
+},
+{
+"hall": 466,
+"hallSymbol": "P 64",
+"shift": [
+0.26601194632866587,
+0.08583408431563666,
+0.26056885547818676
+],
+"number": 172,
+"hallNumber": 466,
+"international": "P6_4"
+},
+{
+"hall": 467,
+"hallSymbol": "P 6c",
+"shift": [
+0.5476216237219336,
+0.7918026331608049,
+0.1262079640024436
+],
+"number": 173,
+"hallNumber": 467,
+"international": "P6_3"
+},
+{
+"hall": 468,
+"hallSymbol": "P -6",
+"shift": [
+0.5817316749325395,
+0.9937100277076337,
+0.15604407944688292
+],
+"number": 174,
+"hallNumber": 468,
+"international": "P-6"
+},
+{
+"hall": 469,
+"hallSymbol": "-P 6",
+"shift": [
+0.5147156676226201,
+0.7421436792828776,
+0.2661958028709269
+],
+"number": 175,
+"hallNumber": 469,
+"international": "P6/m"
+},
+{
+"hall": 470,
+"hallSymbol": "-P 6c",
+"shift": [
+0.2822566998506103,
+0.9037971958931091,
+0.7007251327428019
+],
+"number": 176,
+"hallNumber": 470,
+"international": "P6_3/m"
+},
+{
+"hall": 471,
+"hallSymbol": "P 6 2",
+"shift": [
+0.036622374614298625,
+0.5158711492535106,
+0.23969599335732217
+],
+"number": 177,
+"hallNumber": 471,
+"international": "P622"
+},
+{
+"hall": 472,
+"hallSymbol": "P 61 2 (0 0 5)",
+"shift": [
+0.6112514104769335,
+0.7753766002522682,
+0.28135375405720797
+],
+"number": 178,
+"hallNumber": 472,
+"international": "P6_122"
+},
+{
+"hall": 473,
+"hallSymbol": "P 65 2 (0 0 1)",
+"shift": [
+0.8294484021672396,
+0.3681104865945891,
+0.770358459394416
+],
+"number": 179,
+"hallNumber": 473,
+"international": "P6_522"
+},
+{
+"hall": 474,
+"hallSymbol": "P 62 2 (0 0 4)",
+"shift": [
+0.831657736561974,
+0.1868158914864665,
+0.2754922054126564
+],
+"number": 180,
+"hallNumber": 474,
+"international": "P6_222"
+},
+{
+"hall": 475,
+"hallSymbol": "P 64 2 (0 0 2)",
+"shift": [
+0.6474325873487348,
+0.14070666469480642,
+0.5159646451106027
+],
+"number": 181,
+"hallNumber": 475,
+"international": "P6_422"
+},
+{
+"hall": 476,
+"hallSymbol": "P 6c 2c",
+"shift": [
+0.18266384111079803,
+0.5461471516945848,
+0.5490325725397861
+],
+"number": 182,
+"hallNumber": 476,
+"international": "P6_322"
+},
+{
+"hall": 477,
+"hallSymbol": "P 6 -2",
+"shift": [
+0.1203422096291401,
+0.6878081706553358,
+0.6716844509625046
+],
+"number": 183,
+"hallNumber": 477,
+"international": "P6mm"
+},
+{
+"hall": 478,
+"hallSymbol": "P 6 -2c",
+"shift": [
+0.7025903827976363,
+0.8308023247350685,
+0.0034461437878530177
+],
+"number": 184,
+"hallNumber": 478,
+"international": "P6cc"
+},
+{
+"hall": 479,
+"hallSymbol": "P 6c -2",
+"shift": [
+0.7403983483820457,
+0.8108844086326601,
+0.9435401166093477
+],
+"number": 185,
+"hallNumber": 479,
+"international": "P6_3cm"
+},
+{
+"hall": 480,
+"hallSymbol": "P 6c -2c",
+"shift": [
+0.12033559639085001,
+0.5710638076112355,
+0.27194220597091423
+],
+"number": 186,
+"hallNumber": 480,
+"international": "P6_3mc"
+},
+{
+"hall": 481,
+"hallSymbol": "P -6 2",
+"shift": [
+0.931406540028969,
+0.9721156120993808,
+0.14352291855555066
+],
+"number": 187,
+"hallNumber": 481,
+"international": "P-6m2"
+},
+{
+"hall": 482,
+"hallSymbol": "P -6c 2",
+"shift": [
+0.4408243953106157,
+0.8473090668476205,
+0.10891008690484338
+],
+"number": 188,
+"hallNumber": 482,
+"international": "P-6c2"
+},
+{
+"hall": 483,
+"hallSymbol": "P -6 -2",
+"shift": [
+0.15090587975372372,
+0.3859897197494122,
+0.8969213527867445
+],
+"number": 189,
+"hallNumber": 483,
+"international": "P-62m"
+},
+{
+"hall": 484,
+"hallSymbol": "P -6c -2c",
+"shift": [
+0.2562834918584477,
+0.1682193616170351,
+0.01954511668005554
+],
+"number": 190,
+"hallNumber": 484,
+"international": "P-62c"
+},
+{
+"hall": 485,
+"hallSymbol": "-P 6 2",
+"shift": [
+0.43713640208745885,
+0.7869580081096653,
+0.8129992070322288
+],
+"number": 191,
+"hallNumber": 485,
+"international": "P6/mmm"
+},
+{
+"hall": 486,
+"hallSymbol": "-P 6 2c",
+"shift": [
+0.25718044634002135,
+0.6263471844236294,
+0.33237440837693244
+],
+"number": 192,
+"hallNumber": 486,
+"international": "P6/mcc"
+},
+{
+"hall": 487,
+"hallSymbol": "-P 6c 2",
+"shift": [
+0.0906191885732176,
+0.4506206262980861,
+0.5205688112841405
+],
+"number": 193,
+"hallNumber": 487,
+"international": "P6_3/mcm"
+},
+{
+"hall": 488,
+"hallSymbol": "-P 6c 2c",
+"shift": [
+0.7493510403103641,
+0.4261302649442178,
+0.5989191624849888
+],
+"number": 194,
+"hallNumber": 488,
+"international": "P6_3/mmc"
+},
+{
+"hall": 489,
+"hallSymbol": "P 2 2 3",
+"shift": [
+0.9337222420163116,
+0.9785535489838603,
+0.59983678994637
+],
+"number": 195,
+"hallNumber": 489,
+"international": "P23"
+},
+{
+"hall": 490,
+"hallSymbol": "F 2 2 3",
+"shift": [
+0.5791056992206643,
+0.9876623155913533,
+0.9652477388942998
+],
+"number": 196,
+"hallNumber": 490,
+"international": "F23"
+},
+{
+"hall": 491,
+"hallSymbol": "I 2 2 3",
+"shift": [
+0.11469032258467704,
+0.4556497121534764,
+0.1833796855021016
+],
+"number": 197,
+"hallNumber": 491,
+"international": "I23"
+},
+{
+"hall": 492,
+"hallSymbol": "P 2ac 2ab 3",
+"shift": [
+0.15216805060761296,
+0.8756092113866029,
+0.26192108376299705
+],
+"number": 198,
+"hallNumber": 492,
+"international": "P2_13"
+},
+{
+"hall": 493,
+"hallSymbol": "I 2b 2c 3",
+"shift": [
+0.31174611140235786,
+0.05013752518656012,
+0.5879848115828352
+],
+"number": 199,
+"hallNumber": 493,
+"international": "I2_13"
+},
+{
+"hall": 494,
+"hallSymbol": "-P 2 2 3",
+"shift": [
+0.04411751887936277,
+0.34397827651017443,
+0.6167592592619521
+],
+"number": 200,
+"hallNumber": 494,
+"international": "Pm-3"
+},
+{
+"hall": 495,
+"hallSymbol": "P 2 2 3 -1n",
+"shift": [
+0.7466993479581696,
+0.7601997288894072,
+0.22977926235435542
+],
+"number": 201,
+"hallNumber": 495,
+"international": "Pn-3"
+},
+{
+"hall": 496,
+"hallSymbol": "-P 2ab 2bc 3",
+"shift": [
+0.7444209192098912,
+0.3591990183538034,
+0.6032212848169866
+],
+"number": 201,
+"hallNumber": 495,
+"international": "Pn-3"
+},
+{
+"hall": 497,
+"hallSymbol": "-F 2 2 3",
+"shift": [
+0.8199771791062278,
+0.8608362558568416,
+0.9305731354139877
+],
+"number": 202,
+"hallNumber": 497,
+"international": "Fm-3"
+},
+{
+"hall": 498,
+"hallSymbol": "F 2 2 3 -1d",
+"shift": [
+0.15816795596468403,
+0.7365196871562615,
+0.2691258486878856
+],
+"number": 203,
+"hallNumber": 498,
+"international": "Fd-3"
+},
+{
+"hall": 499,
+"hallSymbol": "-F 2uv 2vw 3",
+"shift": [
+0.893897555382386,
+0.7271429848173195,
+0.3644735299913767
+],
+"number": 203,
+"hallNumber": 498,
+"international": "Fd-3"
+},
+{
+"hall": 500,
+"hallSymbol": "-I 2 2 3",
+"shift": [
+0.022782232392691726,
+0.27820079972745915,
+0.8292728294997986
+],
+"number": 204,
+"hallNumber": 500,
+"international": "Im-3"
+},
+{
+"hall": 501,
+"hallSymbol": "-P 2ac 2ab 3",
+"shift": [
+0.27366156167470324,
+0.26203532963048903,
+0.118709942383869
+],
+"number": 205,
+"hallNumber": 501,
+"international": "Pa-3"
+},
+{
+"hall": 502,
+"hallSymbol": "-I 2b 2c 3",
+"shift": [
+0.2957776756241426,
+0.12676150794361885,
+0.5156246555384933
+],
+"number": 206,
+"hallNumber": 502,
+"international": "Ia-3"
+},
+{
+"hall": 503,
+"hallSymbol": "P 4 2 3",
+"shift": [
+0.06918605585786275,
+0.26925948919878506,
+0.6758451017361746
+],
+"number": 207,
+"hallNumber": 503,
+"international": "P432"
+},
+{
+"hall": 504,
+"hallSymbol": "P 4n 2 3",
+"shift": [
+0.8910368393317789,
+0.5952090927619668,
+0.10063951745582456
+],
+"number": 208,
+"hallNumber": 504,
+"international": "P4_232"
+},
+{
+"hall": 505,
+"hallSymbol": "F 4 2 3",
+"shift": [
+0.7984979211697089,
+0.14979245986748457,
+0.8425799489550584
+],
+"number": 209,
+"hallNumber": 505,
+"international": "F432"
+},
+{
+"hall": 506,
+"hallSymbol": "F 4d 2 3",
+"shift": [
+0.3687776665962085,
+0.131743491906802,
+0.13212307069209384
+],
+"number": 210,
+"hallNumber": 506,
+"international": "F4_132"
+},
+{
+"hall": 507,
+"hallSymbol": "I 4 2 3",
+"shift": [
+0.8999849251850949,
+0.43624331672321803,
+0.8844778805627571
+],
+"number": 211,
+"hallNumber": 507,
+"international": "I432"
+},
+{
+"hall": 508,
+"hallSymbol": "P 4acd 2ab 3",
+"shift": [
+0.25440040824015697,
+0.13914649331340168,
+0.030037096703478094
+],
+"number": 212,
+"hallNumber": 508,
+"international": "P4_332"
+},
+{
+"hall": 509,
+"hallSymbol": "P 4bd 2ab 3",
+"shift": [
+0.014150127267323898,
+0.44757149650535033,
+0.30613872361210404
+],
+"number": 213,
+"hallNumber": 509,
+"international": "P4_132"
+},
+{
+"hall": 510,
+"hallSymbol": "I 4bd 2c 3",
+"shift": [
+0.9552916346634883,
+0.8720151396497019,
+0.29657678429255385
+],
+"number": 214,
+"hallNumber": 510,
+"international": "I4_132"
+},
+{
+"hall": 511,
+"hallSymbol": "P -4 2 3",
+"shift": [
+0.06459371915445744,
+0.35145421971968294,
+0.4317120690133376
+],
+"number": 215,
+"hallNumber": 511,
+"international": "P-43m"
+},
+{
+"hall": 512,
+"hallSymbol": "F -4 2 3",
+"shift": [
+0.23598868360241188,
+0.395968421000211,
+0.8102029337993241
+],
+"number": 216,
+"hallNumber": 512,
+"international": "F-43m"
+},
+{
+"hall": 513,
+"hallSymbol": "I -4 2 3",
+"shift": [
+0.15647534672481722,
+0.55593195579708,
+0.17628869826242966
+],
+"number": 217,
+"hallNumber": 513,
+"international": "I-43m"
+},
+{
+"hall": 514,
+"hallSymbol": "P -4n 2 3",
+"shift": [
+0.39674667608436975,
+0.34859256396795046,
+0.7601480601880117
+],
+"number": 218,
+"hallNumber": 514,
+"international": "P-43n"
+},
+{
+"hall": 515,
+"hallSymbol": "F -4a 2 3",
+"shift": [
+0.32753651945832585,
+0.72539007510436,
+0.5111395380641914
+],
+"number": 219,
+"hallNumber": 515,
+"international": "F-43c"
+},
+{
+"hall": 516,
+"hallSymbol": "I -4bd 2c 3",
+"shift": [
+0.9713178000589813,
+0.34222136604083453,
+0.908828001208974
+],
+"number": 220,
+"hallNumber": 516,
+"international": "I-43d"
+},
+{
+"hall": 517,
+"hallSymbol": "-P 4 2 3",
+"shift": [
+0.7826879134930324,
+0.6334639662276592,
+0.21123247377830134
+],
+"number": 221,
+"hallNumber": 517,
+"international": "Pm-3m"
+},
+{
+"hall": 518,
+"hallSymbol": "P 4 2 3 -1n",
+"shift": [
+0.39706205376240356,
+0.7362169255797236,
+0.7026495473366059
+],
+"number": 222,
+"hallNumber": 518,
+"international": "Pn-3n"
+},
+{
+"hall": 519,
+"hallSymbol": "-P 4a 2bc 3",
+"shift": [
+0.8474302299173839,
+0.33907472831211705,
+0.5165801925160743
+],
+"number": 222,
+"hallNumber": 518,
+"international": "Pn-3n"
+},
+{
+"hall": 520,
+"hallSymbol": "-P 4n 2 3",
+"shift": [
+0.7161388472643152,
+0.9786052609800561,
+0.9848099194209823
+],
+"number": 223,
+"hallNumber": 520,
+"international": "Pm-3n"
+},
+{
+"hall": 521,
+"hallSymbol": "P 4n 2 3 -1n",
+"shift": [
+0.6515637344271058,
+0.9872405765892369,
+0.3810289152400069
+],
+"number": 224,
+"hallNumber": 521,
+"international": "Pn-3m"
+},
+{
+"hall": 522,
+"hallSymbol": "-P 4bc 2bc 3",
+"shift": [
+0.19943452377034743,
+0.266537214268215,
+0.7980621046330695
+],
+"number": 224,
+"hallNumber": 521,
+"international": "Pn-3m"
+},
+{
+"hall": 523,
+"hallSymbol": "-F 4 2 3",
+"shift": [
+0.07860186379186662,
+0.735968737579111,
+0.9058707582978429
+],
+"number": 225,
+"hallNumber": 523,
+"international": "Fm-3m"
+},
+{
+"hall": 524,
+"hallSymbol": "-F 4a 2 3",
+"shift": [
+0.6985151690778146,
+0.6428973818771552,
+0.02731684155031666
+],
+"number": 226,
+"hallNumber": 524,
+"international": "Fm-3c"
+},
+{
+"hall": 525,
+"hallSymbol": "F 4d 2 3 -1d",
+"shift": [
+0.3401115939431054,
+0.7338786578118968,
+0.5412945189154158
+],
+"number": 227,
+"hallNumber": 525,
+"international": "Fd-3m"
+},
+{
+"hall": 526,
+"hallSymbol": "-F 4vw 2vw 3",
+"shift": [
+0.879639263588241,
+0.7719547592695564,
+0.7195786190940078
+],
+"number": 227,
+"hallNumber": 525,
+"international": "Fd-3m"
+},
+{
+"hall": 527,
+"hallSymbol": "F 4d 2 3 -1ad",
+"shift": [
+0.18172811398363298,
+0.15248084949299856,
+0.18680108991030286
+],
+"number": 228,
+"hallNumber": 527,
+"international": "Fd-3c"
+},
+{
+"hall": 528,
+"hallSymbol": "-F 4ud 2vw 3",
+"shift": [
+0.3309544177939583,
+0.8383941363848858,
+0.9775638767269369
+],
+"number": 228,
+"hallNumber": 527,
+"international": "Fd-3c"
+},
+{
+"hall": 529,
+"hallSymbol": "-I 4 2 3",
+"shift": [
+0.6620962536939006,
+0.16040361247770984,
+0.7772692573082752
+],
+"number": 229,
+"hallNumber": 529,
+"international": "Im-3m"
+},
+{
+"hall": 530,
+"hallSymbol": "-I 4bd 2c 3",
+"shift": [
+0.1212915562973298,
+0.9765711922928005,
+0.5386062699812298
+],
+"number": 230,
+"hallNumber": 530,
+"international": "Ia-3d"
+}
+]
+}

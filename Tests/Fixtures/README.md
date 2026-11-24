@@ -102,6 +102,7 @@ No fixture is copied from the test data of pymatgen, orix or py4DSTEM.
 | `DiffractoCoreTests/Fixtures/rocksalt_P1_origin_shifted.cif` | 823 B | review regression CIF, read by `RefuterRegressionTests` | written for this kit (GPL-3.0-only) |
 | `DiffractoCoreTests/Fixtures/silicon_Fd-3m.cif` | 498 B | `tools/pins/cells/pins.py`, `tools/pins/structure-factors/pins.py` | mac4DSTEM tests: from mac4DSTEM 7448401b (GPL-3.0, same author), named in its first comment line |
 | `DiffractoCoreTests/Fixtures/space-group-symbol-pins.json` | 62.9 KB | `tools/pins/cif-symmetry/space-group-pins.py` |  |
+| `DiffractoCoreTests/Fixtures/space-group-type-pins.json` | 90.3 KB | `tools/pins/cif-symmetry/space-group-type-pins.py` |  |
 | `DiffractoCoreTests/Fixtures/spglib-conventional-cell-pins.json` | 2.2 MB | `tools/pins/conventional-cell/pins.py` |  |
 | `DiffractoCoreTests/Fixtures/tetragonal-pins.json` | 14.3 KB | `tools/pins/cells/tetragonal-pins.py` |  |
 | `DiffractoCoreTests/Fixtures/tetragonal_a_equals_c.cif` | 387 B | `tools/pins/cells/pins.py` | mac4DSTEM tests: from mac4DSTEM 7448401b (GPL-3.0, same author), named in its first comment line |
