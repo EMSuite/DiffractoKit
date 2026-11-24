@@ -163,7 +163,7 @@ public enum MaterialsProjectOptimade {
         let envelope: SearchEnvelope = try decodeEnvelope(data)
         let rows = (envelope.data ?? []).map { item in
             Row(materialID: item.id, formula: item.attributes?.chemicalFormulaReduced, siteCount: item.attributes?.nsites,
-                energyAboveHull: (item.attributes?.mpStability ?? [:]).compactMapValues { $0.energyAboveHull })
+                energyAboveHull: (item.attributes?.mpStability ?? [:]).compactMapValues { $0?.energyAboveHull })
         }
         if rows.isEmpty {
             return envelope.meta?.dataAvailable == 0 ? .serviceEmpty : .noResults
@@ -222,16 +222,19 @@ public enum MaterialsProjectOptimade {
     /// a number that is not finite, a site without a species, an unknown element, a lattice that cannot be reduced.
     public static func structure(from entry: Entry) throws(MaterialsProjectImport.Failure) -> MaterialsProjectImport.ImportedStructure {
         let id = entry.materialID
-        let rows = entry.latticeVectors
+        var rows = entry.latticeVectors
         guard rows.count == 3, rows.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }) else {
             throw .malformed("\(id)'s lattice holds a number that is not finite.")
         }
         guard !entry.cartesianPositions.isEmpty, entry.cartesianPositions.count == entry.speciesAtSites.count else {
             throw .malformed("\(id) lists \(entry.cartesianPositions.count) positions and \(entry.speciesAtSites.count) species.")
         }
+        let servedVolume = simd_double3x3(columns: (rows[0], rows[1], rows[2])).determinant
+        guard servedVolume.isFinite, abs(servedVolume) > 0 else { throw .malformed("\(id)'s lattice has no volume.") }
+        // A left-handed basis is the same lattice with a and b swapped (the fractional x and y swap with them); a cell
+        // rebuilt from lengths and angles is always right-handed, so without the swap a chiral structure would mirror.
+        if servedVolume < 0 { rows.swapAt(0, 1) }
         let basis = simd_double3x3(columns: (rows[0], rows[1], rows[2]))
-        let volume = basis.determinant
-        guard volume.isFinite, abs(volume) > 0 else { throw .malformed("\(id)'s lattice has no volume.") }
         let toFractional = basis.inverse
         let speciesByName = Dictionary(entry.species.map { ($0.name, $0) }, uniquingKeysWith: { first, _ in first })
         var sites: [AtomSite] = []
@@ -271,8 +274,10 @@ public enum MaterialsProjectOptimade {
         }
         let structure = CrystalStructure.detectingSymmetry(cell: conventional.cell, sites: conventional.sites, name: id,
                                                            metricLengthTolerance: metricLengthTolerance)
-        let outcome: CellStandardisation.Outcome = conventional.transformation == .identity
-            ? .asServed : .conventional(centring: conventional.bravais.centring)
+        // A P lattice that was only reduced or relabelled is no conversion from a centred primitive cell.
+        let centring = conventional.bravais.centring
+        let outcome: CellStandardisation.Outcome = conventional.transformation == .identity || centring == "P"
+            ? .asServed : .conventional(centring: centring)
         return MaterialsProjectImport.ImportedStructure(structure: structure, cell: outcome)
     }
 
@@ -324,7 +329,8 @@ public enum MaterialsProjectOptimade {
     private struct Attributes: Decodable {
         let chemicalFormulaReduced: String?
         let nsites: Int?
-        let mpStability: [String: Stability]?
+        // A functional with a null entry is dropped, not a reason to refuse the whole search.
+        let mpStability: [String: Stability?]?
         let lastModified: String?
         let latticeVectors: [[Double]]?
         let cartesianSitePositions: [[Double]]?

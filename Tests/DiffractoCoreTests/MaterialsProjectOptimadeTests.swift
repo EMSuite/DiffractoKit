@@ -135,6 +135,39 @@ struct MaterialsProjectOptimadeTests {
         #expect([cell.alphaDeg, cell.betaDeg, cell.gammaDeg].allSatisfy { abs($0 - 90) < 1e-9 })
     }
 
+    /// A functional whose stability is null is dropped; the row and the search still decode.
+    @Test func aNullStabilityIsDropped() throws {
+        let row = #"{"id":"mp-7","type":"structures","attributes":{"nsites":1,"chemical_formula_reduced":"Al","_mp_stability":{"r2scan":null,"gga_gga+u":{"energy_above_hull":0.1}}}}"#
+        let answer = try Route.decodeSearch(Self.searchBody(rows: row, dataAvailable: 154_387, more: false))
+        guard case .rows(let rows, _) = answer else {
+            Issue.record("expected rows, got \(answer)")
+            return
+        }
+        #expect(rows.first?.energyAboveHull == ["gga_gga+u": 0.1])
+    }
+
+    static func chiralEntry(_ rows: String) -> Data {
+        Data("""
+        {"data":{"id":"mp-999","type":"structures","attributes":{
+         "lattice_vectors":\(rows),
+         "cartesian_site_positions":[[0.0,0.0,0.0],[1.3,0.4,0.2],[0.3,1.7,0.5],[0.6,0.5,2.1]],
+         "species_at_sites":["Al","Si","Mg","Fe"],
+         "species":[{"name":"Al","chemical_symbols":["Al"],"concentration":[1.0]},
+                    {"name":"Si","chemical_symbols":["Si"],"concentration":[1.0]},
+                    {"name":"Mg","chemical_symbols":["Mg"],"concentration":[1.0]},
+                    {"name":"Fe","chemical_symbols":["Fe"],"concentration":[1.0]}]}},"meta":{}}
+        """.utf8)
+    }
+
+    /// A left-handed basis (a and b swapped) is the same crystal: the structure is the right-handed one, not its mirror
+    /// image (four different atoms at general positions in P1 have no mirror).
+    @Test func aLeftHandedBasisIsNotMirrored() throws {
+        let right = try Route.structure(from: Route.decodeEntry(Self.chiralEntry("[[5.1,0.0,0.0],[1.2,6.3,0.0],[0.4,0.9,7.2]]")))
+        let left = try Route.structure(from: Route.decodeEntry(Self.chiralEntry("[[1.2,6.3,0.0],[5.1,0.0,0.0],[0.4,0.9,7.2]]")))
+        #expect(left == right)
+        #expect(right.structure.sites.count == 4)
+    }
+
     @Test func anEntryThatCannotBeUsedIsRefused() throws {
         let entry = try Route.decodeEntry(Self.aluminiumEntry)
         func edited(_ species: [String], _ symbols: [String]) -> MaterialsProjectOptimade.Entry {
