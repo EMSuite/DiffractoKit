@@ -28,6 +28,9 @@ Live:
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
   table bit for bit (`XRayScatteringFactors`).
+- Electron powder rings (`PowderPattern.electron`) from the held ring list with relative intensities, a drawn profile
+  of any powder pattern (`profile(width:range:step:)`), and the overlapped and diagnostic peaks of several shown phases
+  (`PowderPattern.marks`).
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`
   finds the centre of a pattern with one), radial profile and spot refinement.

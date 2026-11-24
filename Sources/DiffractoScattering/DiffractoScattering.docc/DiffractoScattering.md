@@ -43,3 +43,6 @@ The model is kinematic: no dynamical diffraction, no thermal factor beyond what 
 - ``PowderPattern``
 - ``XRayRadiation``
 - ``PowderPatternError``
+- ``PowderResolution``
+- ``PowderPeakMark``
+- ``PowderPeakReference``
