@@ -127,8 +127,16 @@ struct SpaceGroupTypeTests {
 
     /// A relaxed cell can read a lower group than its source states: both stay readable, neither replaces the other.
     /// The primitive cell of fcc strained 2 % along c, as the Materials Project serves a primitive cell, stated 225.
+    /// The parameters are computed, not typed: rounded to seven digits they are no longer tetragonal at the kit's
+    /// metric tolerance (1e-9) and read C2/m.
     @Test func aStatedNumberAndTheDetectedTypeAreBothKept() {
-        let cell = UnitCell(a: 2.856851, b: 2.856851, c: 2.828427, alphaDeg: 60.32859, betaDeg: 60.32859, gammaDeg: 59.34283)
+        let a = 4.0, c = 4.08
+        let rows = [SIMD3(0, a / 2, c / 2), SIMD3(a / 2, 0, c / 2), SIMD3(a / 2, a / 2, 0)]
+        func angle(_ i: Int, _ j: Int) -> Double {
+            acos(simd_dot(rows[i], rows[j]) / (simd_length(rows[i]) * simd_length(rows[j]))) * 180 / .pi
+        }
+        let cell = UnitCell(a: simd_length(rows[0]), b: simd_length(rows[1]), c: simd_length(rows[2]),
+                            alphaDeg: angle(1, 2), betaDeg: angle(0, 2), gammaDeg: angle(0, 1))
         let structure = CrystalStructure.detectingSymmetry(cell: cell, sites: [AtomSite(z: 13, fractional: .zero)],
                                                            spaceGroupNumber: 225, name: "relaxed")
         #expect(structure.spaceGroupNumber == 225)
