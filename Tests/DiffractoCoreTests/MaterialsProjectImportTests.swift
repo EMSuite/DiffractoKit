@@ -104,12 +104,18 @@ struct MaterialsProjectImportTests {
         #expect(throws: MaterialsProjectImport.Failure.malformed("Site 0 of mp-9 has an unrecognized element symbol \"Xx\".")) {
             _ = try MaterialsProjectImport.structure(from: MaterialsProjectDocument(materialID: "mp-9", structure: MaterialsProjectStructure(lattice: lattice, sites: [unknown])))
         }
-        // A centred primitive cell whose stated system does not fit is refused, not guessed.
+        // A centred primitive cell whose stated system does not fit is read from its atoms, as spglib reads it (#218):
+        // the fcc primitive cell stated hexagonal is cubic F, a = 2.9 √2.
         let primitive = MaterialsProjectLattice(a: 2.9, b: 2.9, c: 2.9, alpha: 60, beta: 60, gamma: 60)
         let site = MaterialsProjectSite(species: [MaterialsProjectSpecies(element: "Al", occu: 1)], abc: [0, 0, 0])
         let doc = MaterialsProjectDocument(materialID: "mp-9", structure: MaterialsProjectStructure(lattice: primitive, sites: [site]),
                                            symmetry: MaterialsProjectSymmetry(crystalSystem: "hexagonal", symbol: "Fm-3m", number: 225))
-        #expect(throws: MaterialsProjectImport.Failure.self) { _ = try MaterialsProjectImport.structure(from: doc) }
+        let read = try MaterialsProjectImport.structure(from: doc)
+        #expect(read.structure.crystalSystem == .cubic)
+        #expect(read.structure.laueClass == .mThreeBarM)
+        #expect(read.structure.sites.count == 4)
+        #expect(abs(read.structure.cell.a - 2.9 * 2.0.squareRoot()) <= 1e-6 * 4.1)
+        #expect(read.cell == .conventional(centring: "F"))
     }
 
     @Test func expectationVerdicts() {

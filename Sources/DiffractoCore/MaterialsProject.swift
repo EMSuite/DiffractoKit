@@ -295,9 +295,10 @@ public enum MaterialsProjectImport {
 
     /// The structure of one fetched document, converted to the conventional cell when MP served a centred primitive
     /// cell (`CellStandardisation`), with the symmetry detected from the atoms. Structural absence, an unusable
-    /// coordinate or an unknown element throws `Failure.malformed`; a conversion that fails a guard is read instead as
-    /// the keyless route reads an entry (`MaterialsProjectOptimade.structure(from:)`) and kept when it shows the stated
-    /// crystal system; otherwise it throws `Failure.nonStandardCell`. A number that is not finite (a coordinate, an occupancy, the lattice) throws
+    /// coordinate or an unknown element throws `Failure.malformed`; a conversion that fails a guard (a primitive cell
+    /// that is not the ITA one, or a stated group higher than the atoms hold) is read instead as the keyless route reads
+    /// an entry (`MaterialsProjectOptimade.structure(from:)`), its symmetry found from the atoms; only a cell that route
+    /// cannot read either throws `Failure.nonStandardCell`. A number that is not finite (a coordinate, an occupancy, the lattice) throws
     /// `Failure.malformed`; occupancy out of range and atoms too close are left to `CrystalStructure.validationIssues`.
     public static func structure(from doc: MaterialsProjectDocument) throws -> ImportedStructure {
         guard let served = doc.structure else { throw Failure.malformed("\(doc.materialID) has no structure block.") }
@@ -344,13 +345,15 @@ public enum MaterialsProjectImport {
             result = try CellStandardisation.standardise(
                 latticeRows: rows, sites: atomSites, symbol: doc.symmetry?.symbol, crystalSystem: doc.symmetry?.crystalSystem)
         } catch let failure as CellStandardisation.Failure {
-            // The fixed change of basis expects the ITA primitive cell; the Materials Project serves pymatgen's, which
-            // for a C-centred monoclinic lattice can differ (mp-1079297). The keyless route finds the conventional cell
-            // from the lattice itself (pinned against pymatgen, P48): the same atoms are read that way, and kept only
-            // when they show the crystal system the document states (a stated system the atoms do not fit is refused).
-            if let read = try? MaterialsProjectOptimade.structure(from: entry(of: doc, rows: rows, sites: rawSites)),
-               let stated = doc.symmetry?.crystalSystem?.lowercased(),
-               read.structure.crystalSystem?.rawValue == stated {
+            // The fixed change of basis expects the ITA primitive cell and the stated group; neither always holds. The
+            // Materials Project serves pymatgen's primitive cell, which for a C-centred monoclinic lattice can differ
+            // (mp-1079297), and states its group at symprec 0.1 Å, which can be higher than the served atoms hold
+            // (mp-85 In: stated Fm-3m, atoms I4/mmm; mp-623511 Sn: stated I4/mmm, atoms Immm; mp-77 S: stated Fddd,
+            // atoms P1 below 0.1 Å; spglib 2.8.0 at symprec 1e-3), or states no crystal system to check against. The
+            // symmetry is then found from the atoms themselves, as spglib does: the keyless route's reading (the
+            // conventional cell from the lattice, pinned against pymatgen, P48), at its tolerances. The stated group
+            // stays in the document's `symmetry` (DiffractoKit #218).
+            if let read = try? MaterialsProjectOptimade.structure(from: entry(of: doc, rows: rows, sites: rawSites)) {
                 return read
             }
             throw Failure.nonStandardCell("\(doc.materialID): \(failure.message) Import a conventional CIF for this phase instead.")

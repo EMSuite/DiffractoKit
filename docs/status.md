@@ -27,7 +27,7 @@ Live:
 - A Materials Project search with the user's own key: `MaterialsProjectImport.searchRequest` asks the main API by
   elements, chemical system or formula, most stable first, deprecated and GNoME entries left out; `decodeSearch` reads
   the rows (stability, calculated-only and deprecated flags, the stated space group) and `databaseVersion(from:)` the
-  database version. The kit holds no key; checked on 20 answers recorded with the owner's key (#151).
+  database version. The kit holds no key; checked on 20 answers recorded with the owner's key (#151). An entry whose stated group is higher than its atoms hold (In mp-85, Sn mp-623511, S mp-77) imports with the symmetry its atoms show, as spglib finds it (#218).
 - Material ids in both forms: the main API serves emmet-core's alphabetical ids (`mp-aaaaaafe`); both routes accept
   them and give every id in the form people know (`MaterialsProjectImport.displayMaterialID`: `mp-134`) (#203).
 - Lattice edits within the crystal system: `CrystalStructure.editingLattice` sets the free parameters (cubic a;
