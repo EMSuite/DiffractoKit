@@ -27,17 +27,18 @@ versions of the reference.
 ## Regenerating fixtures
 
 Every fixture generator lives under `tools/pins/<subject>/`, and each script's header names the command that runs it. They
-run in three Python 3.12 virtual environments outside the repository, beside the checkout under `../References/python/`,
+run in four Python 3.12 virtual environments outside the repository, beside the checkout under `../References/python/`,
 one per oracle, each built from its requirements file:
 
 | Venv | Requirements | Runs |
 |---|---|---|
-| `../References/python/pymatgen` | `tools/pins/requirements/pymatgen.txt` (pymatgen-core 2026.10.16, spglib 2.8.0, NumPy 2.5.4, SciPy 1.18.1) | every generator except the two below |
+| `../References/python/pymatgen` | `tools/pins/requirements/pymatgen.txt` (pymatgen-core 2026.10.16, spglib 2.8.0, NumPy 2.5.4, SciPy 1.18.1) | every generator except the three below |
 | `../References/python/orix` | `tools/pins/requirements/orix.txt` (orix 0.15.0) | `tools/pins/orix` |
 | `../References/python/py4dstem` | `tools/pins/requirements/py4dstem.txt` (py4DSTEM f050d207) | `tools/pins/acom-matcher`, and the py4DSTEM halves the pymatgen scripts of `phase-vectors` and `orientation-symmetry` start themselves |
+| `../References/python/ase` | `tools/pins/requirements/ase.txt` (ASE 3.29.0) | `tools/pins/atom-models` |
 
 ```sh
-for oracle in pymatgen orix py4dstem; do
+for oracle in pymatgen orix py4dstem ase; do
   python3.12 -m venv ../References/python/$oracle
   ../References/python/$oracle/bin/pip install -r tools/pins/requirements/$oracle.txt
 done
