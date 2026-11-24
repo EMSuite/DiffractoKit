@@ -1,7 +1,7 @@
 //
 //  StereographicProjection.swift
 //  Role: the stereographic projection of the upper hemisphere (z toward the electron source) onto the plane, orix 0.15.0's
-//        `StereographicProjection()` (pole −1, the projection point at [0 0 −1]) and its inverse (pin P46):
+//        `StereographicProjection()` (pole −1, the projection point at [0 0 −1]) and its inverse (pin P50):
 //          kept when z (of the vector as given) > −1e-9; (X, Y) = (x, y) / (z + 1) of the unit vector;
 //          inverse (x, y, z) = (2X, 2Y, 1 − X² − Y²) / (1 + X² + Y²).
 //        In the pattern frame of a `CrystalOrientation` the beam (+z) is the centre and the primitive circle (radius 1) is

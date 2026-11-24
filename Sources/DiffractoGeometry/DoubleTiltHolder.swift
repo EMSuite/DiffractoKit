@@ -11,7 +11,7 @@
 //    tilt) onto the beam are α = asin t_y, β = atan2(−t_x, t_z).
 //  Published tools for the same job: ALPHABETA (Cautaerts et al., J. Microsc. 2019, doi 10.1111/jmi.12774), τompas (Xie
 //  and Zhang, J. Appl. Cryst. 2020), pycotem (Mompiou and Xie), KSpaceNavigator (Duden et al.), CrysTBox. None exposes a
-//  callable function at a pinned version; the kit is held on planted cases (pin P47).
+//  callable function at a pinned version; the kit is held on planted cases (pin P51).
 //  Signs and axis directions differ between holders and microscopes; nothing is assumed: tilts are given only with a
 //  calibrated axis angle.
 //

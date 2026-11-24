@@ -2,10 +2,10 @@
 //  TiltPlannerPinsTests.swift
 //  Role: the tilt planner's kit pieces (S12) against their references:
 //    orix-stereographic-pins.json  tools/pins/orix/stereographic-pins.py: orix 0.15.0 StereographicProjection() and its inverse
-//                                  on 1010 directions and 1003 points (pin P46), np.allclose defaults (rtol 1e-5, atol 1e-8),
+//                                  on 1010 directions and 1003 points (pin P50), np.allclose defaults (rtol 1e-5, atol 1e-8),
 //                                  which hemisphere exact;
 //    tilt-planner-planted.json     tools/pins/tilt-planner/planted.py: planted holder tilts, moves and two-pattern
-//                                  calibrations in NumPy (pin P47). Tilts and moves at 1e-9 (a closed form); the calibrated
+//                                  calibrations in NumPy (pin P51). Tilts and moves at 1e-9 (a closed form); the calibrated
 //                                  axis within 1.5° at the 95th percentile for tilt changes from 10° with 0.2° error per
 //                                  pattern, the half turn of the second pattern named right in every trial.
 //

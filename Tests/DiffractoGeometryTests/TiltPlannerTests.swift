@@ -1,7 +1,7 @@
 //
 //  TiltPlannerTests.swift
 //  The stereographic projection, the zone-axis map and the double-tilt holder (S12) on closed forms, round trips and
-//  refusals. orix's numbers and the planted calibrations are pins P46 and P47 (DiffractoKitParityTests/Geometry/
+//  refusals. orix's numbers and the planted calibrations are pins P50 and P51 (DiffractoKitParityTests/Geometry/
 //  TiltPlannerPinsTests.swift).
 //
 
