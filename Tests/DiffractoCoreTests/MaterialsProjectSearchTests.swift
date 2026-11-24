@@ -154,6 +154,13 @@ struct MaterialsProjectSearchTests {
         let summaries: [String]
     }
 
+    /// Recorded summaries the keyed route refuses, as designed: a centred primitive cell whose stated system does not
+    /// fit is refused, not guessed. The Materials Project states each group at its symprec 0.1; at the kit's tolerance
+    /// (lengths 1e-3 relative, angles 1e-2°) these cells are lower: mp-623511 (Sn, stated I4/mmm) has a = 3.453 and
+    /// b = 3.551; mp-77 (S, stated Fddd) has α = 89.966°; mp-85 (In, stated Fm-3m) is body-centred tetragonal. The
+    /// keyless route, which states no symmetry, reads them by their lattice (DiffractoKit #218).
+    static let refusedSummaries: Set<String> = ["mp-623511", "mp-77", "mp-85"]
+
     static func manifest() throws -> Manifest {
         try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: directory.appendingPathComponent("manifest.json")))
     }
@@ -188,8 +195,23 @@ struct MaterialsProjectSearchTests {
             let response = try Route.decode(Data(contentsOf: Self.directory.appendingPathComponent("summary-\(id).json")))
             let document = try Route.firstDocument(in: response)
             #expect(document.materialID == id)
-            _ = try Route.structure(from: document)
+            if Self.refusedSummaries.contains(id) {
+                // The case and the id, not the sentence: a rewording of the message keeps the behaviour pinned.
+                do {
+                    _ = try Route.structure(from: document)
+                    Issue.record("\(id) was read; the keyed route refuses it (#218)")
+                } catch {
+                    guard case .nonStandardCell(let text)? = error as? Route.Failure else {
+                        Issue.record("\(id): expected nonStandardCell, got \(error)")
+                        continue
+                    }
+                    #expect(text.hasPrefix("\(id):"), "\(text)")
+                }
+            } else {
+                _ = try Route.structure(from: document)
+            }
         }
+        #expect(Self.refusedSummaries.isSubset(of: manifest.summaries))
     }
 
     /// No recorded Materials Project answer holds a key: no header name, and no 32-character run of letters and digits

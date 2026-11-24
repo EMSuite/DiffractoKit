@@ -203,6 +203,14 @@ info.json, search-*.json and entry-*.json, recorded byte for byte on
 SHA-256 in manifest.json. They are Materials Project data, licensed CC BY 4.0
 (https://creativecommons.org/licenses/by/4.0/). Changes: none.
 
+Tests/DiffractoCoreTests/Fixtures/mp-keyed/ holds answers of the Materials
+Project's main API (https://api.materialsproject.org, database 2026.09.28):
+heartbeat.json, search-*.json and summary-*.json, recorded byte for byte on
+2026-11-24 by tools/materials-project/record-keyed.py with the owner's own key,
+which no file holds; manifest.json lists each URL and SHA-256. They are
+Materials Project data, licensed CC BY 4.0
+(https://creativecommons.org/licenses/by/4.0/). Changes: none.
+
     Source: The Materials Project, https://materialsproject.org
     A. Jain et al., "Commentary: The Materials Project: A materials genome
     approach to accelerating materials innovation", APL Materials 1, 011002
@@ -247,4 +255,4 @@ code or test data of those packages is copied into them:
 No fixture is taken from the test data of pymatgen, orix or py4DSTEM.
 
 Materials Project records (mp-import/input-*.json) and recorded answers
-(mp-optimade/): CC BY 4.0, credited in the section above.
+(mp-optimade/, mp-keyed/): CC BY 4.0, credited in the section above.
