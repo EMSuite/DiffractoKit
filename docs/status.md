@@ -48,6 +48,8 @@ Live:
   axis calibrated from two indexed patterns at two tilts, which also settles the half turn of one spot pattern.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
   its routes (`DoubleDiffraction`).
+- Double diffraction between a precipitate and its matrix on the two drawn patterns, each position with its routes,
+  weighted by the relative intensities and cut at 0.1 (`SpotPattern.doubleDiffraction(with:routeWeightCut:)`).
 - The tilt of an indexed pattern off its zone axis, refined on the spot intensities (`ZoneAxisSolver.refineTilts`), with
   the look-alike tilts that agree as well returned beside the best.
 - The full orientation of one spot pattern (`PatternOrientation.index`): template matches and zone-axis solutions each
