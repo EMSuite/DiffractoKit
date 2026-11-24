@@ -136,7 +136,8 @@ public enum TwoBeamThicknessError: Error, Equatable, Sendable, CustomStringConve
     case invalidThicknessRange
     /// The voltage is not a finite positive number of volts.
     case invalidVoltage(Double)
-    /// The phase has no structure factor for this reflection (an element without a form factor), or it is zero.
+    /// The phase has no structure factor for this reflection (an element without a form factor), or |F| is at most the
+    /// kinematic cut `StructureFactors.defaultCut` (a forbidden reflection, whose |F| is rounding).
     case noStructureFactor(MillerIndex)
     /// The fit predicts fewer than two minima on a side of the Bragg position inside the profile: too thin a specimen or
     /// too short a profile for the fringes to fix the thickness.
@@ -242,11 +243,13 @@ public enum TwoBeamThickness {
     // MARK: The extinction distance of a phase
 
     /// The two-beam extinction distance ξ_g = π V cos θ_B / (λ γ |F_g|) of a reflection (Å), with the kit's electron
-    /// structure factor F (Å⁻², which carries the 1/V), the relativistic wavelength λ and mass factor γ at `volts`.
+    /// structure factor F (Å⁻², which carries the 1/V; refused at or below the kinematic cut), the relativistic wavelength
+    /// λ and mass factor γ at `volts`.
     public static func extinctionDistance(of hkl: MillerIndex, in structure: CrystalStructure,
                                           volts: Double) throws(TwoBeamThicknessError) -> Double {
         guard volts.isFinite, volts > 0 else { throw .invalidVoltage(volts) }
-        guard let f = StructureFactors.compute(hkl, in: structure), f.magnitude > 0, f.magnitude.isFinite else {
+        guard let f = StructureFactors.compute(hkl, in: structure), f.magnitude > StructureFactors.defaultCut,
+              f.magnitude.isFinite else {
             throw .noStructureFactor(hkl)
         }
         let lambda = ElectronWavelength.angstroms(volts: volts)
