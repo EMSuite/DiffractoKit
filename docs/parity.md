@@ -43,12 +43,13 @@ and are counted apart.
 | py4DSTEM | 7 | 25 | 15 | 47 |
 | orix | 4 | 13 | 16 | 33 |
 | diffsims / pyxem (documentation only) | 0 | 7 | 2 | 9 |
-| **all** | 28 | 69 | 61 | 158 |
+| ASE | 2 | 0 | 0 | 2 |
+| **all** | 30 | 69 | 61 | 160 |
 
 | Plan | rows | held | partly | not held |
 |---|---|---|---|---|
 | study | 104 | 25 | 60 | 19 |
-| useful | 25 | 2 | 7 | 16 |
+| useful | 27 | 4 | 7 | 16 |
 | not planned | 29 | 0 | 0 | 29 |
 
 "Held" is the only state that means a test compares the kit with that package's own output; every "partly" row names its check. The plan table counts the same rows by plan; its `study` line is the TEM study's path.
@@ -114,6 +115,7 @@ and are counted apart.
 | P54 | **the held ring list and planted truth** (no Python package marks overlaps): `PowderPattern.electron` against `kinematicReflections` (P4); `profile` against its closed form (unit-area Gaussians, FWHM); `marks` on planted lists (Al and Au rings 0.7 % apart at 1 % and 0.5 %) and on Al + Mg2Si + Si with Cu Kα at 0.1°, the design's numbers from pymatgen 2026.9.24 peak lists | in the tests | `PowderRingsTests` | ring position, d and Σ\|F\|² exact, members and orbits exact; profile 1e-12 relative, half maximum at ± FWHM/2 within 1e-9, area within 1e-6; marks exact (Al 1 of 5 overlapped, diagnostic 38.5057°; Mg2Si 1 of 11, 40.1598°; Si 0 of 6, 28.4660°; positions at 1e-7 as P49) |
 | P55 | **closed rule** (no Python package computes double diffraction between two crystals; Gjønnes and Moodie 1965): `SpotPattern.doubleDiffraction(with:routeWeightCut:)` against a brute-force sum of the two spot lists, and recorded on py4DSTEM f050d207 (0.14.19) `generate_diffraction_pattern` spot patterns (P42's reference) for beta'', planted theta' and T1 in their first variant on [001], [110] and [112] Al at 200 kV, k_max 1.5, cut 0.1 | `tools/pins/double-diffraction/pins.py` -> `double-diffraction-pins.json` | `PairDoubleDiffractionTests` | positions and routes equal the brute force exactly; recorded positions 320, 76, 42 (beta''), 128, 152, 36 (theta'), 224, 264, 132 (T1) exact and their routes as sets (none within 1e-3 of the cut), weights 1e-4 relative (py4DSTEM's complex64 F, P42's 5e-5) |
 
+| P56 | ASE 3.29.0 `ase.io.read` (default index -1) on 25 atom-model files: ASE's own test inputs verbatim (`test_extxyz.py`, `test_poscar.py`, `test_vasp_poscar.py`, `testdata/vasp/POSCAR_example_1`, `doc/ase/io/172_ext.xyz`), exports by ASE's own `extxyz`, `xyz` and `vasp` writers (Si, Mg hcp, H2O without a cell, a three-frame Cu trajectory, SrTiO3 Direct and Cartesian, Al with a vacancy and selective dynamics, GaAs primitive), and VESTA's and atomsk's layouts written by hand (their real exports are #212) | `tools/pins/atom-models/pins.py` -> `Tests/DiffractoCoreTests/Fixtures/atom-models/` and `atom-models-pins.json` (ase 3.29.0, numpy 2.5.5) | `AtomModelTests` | elements, counts, pbc and frame counts exact; positions and cells the file states exact; converted ones (Direct coordinates, a scale factor) rtol 1e-7 (assert_allclose's float64 default, as ASE's reader tests); the VASP 4 file is refused by name (`noElementLine`) |
 pyxem, diffsims and orix are **not pinned clones** here; py4DSTEM is held as its scattering table file (P5) and, for the vector
 matching and phase mapping of DiffractoOrientation, as a pinned f050d207 environment the pins run (P14, P18). The remaining unexecuted Python APIs below are a checklist, not an additional parity claim. P18 byte-checks the installed crystal.py, crystal_ACOM.py, crystal_viz.py and utils.py against the pinned clone before execution.
 
@@ -389,6 +391,13 @@ Single-pattern and calibration helpers the apps asked for that no Python package
 | pyxem `calibrate` (pixel size, camera length, beam energy, ellipticity) | `RingCalibration`, `EllipseCalibration`, `EllipseTransform` | **partly** | study | not on disk | the quantities are held (P8, P10, P11); not compared with pyxem |
 | diffsims `VectorLibraryGenerator.get_vector_library`, `DiffractionVectorLibrary` (vector pairs by lengths and angle); pyxem vector indexation of one pattern | `ZoneAxisSolver` (`solve(_:clicked:top:)`, `ZoneAxisSolution`, `ZoneAxisCandidate`): pairs read in 3-D (zero layer, Ewald sphere, higher layers), every candidate scored on all spots against the kinematic pattern, scale and in-plane turn fitted, ties and refusals | **partly** | study | not on disk | Method: indexing by lattice-vector pairs (Williams & Carter, Transmission Electron Microscopy, 2nd ed. (2009), ch. 18). P43: planted truth (py4DSTEM patterns at known orientations, 1070 patterns, none wrong) and the published austenite example; diffsims and pyxem are not run |
 | pyxem `DiffractionVectors`, `vector_matching`, `IndexationGenerator`, `OrientationMap`, `index_dataset_with_template_rotation`, `get_orientation` | `PhaseVectorMatcher` (vector matching after Thronsen et al. 2024), `OrientationResult` | not held | not planned (a different vector-matching method; the kit's matchers are checked against the apps and planted truth) | not on disk |  |
+
+## 4. ASE 3.29.0 (`ase.io`; source walked from site-packages/ase; executed for P56)
+
+| Python function or option group | DiffractoKit symbol | State | Plan | Upstream tolerance (test file) | How checked |
+|---|---|---|---|---|---|
+| `ase.io.read(..., format='extxyz')` (`read_xyz`, `key_val_str_to_dict`, `parse_properties`; plain XYZ too) | `AtomModel.read(bytes:fileName:)`, `read(bytes:format:)` with `.extendedXYZ` | **held** | useful | `np.testing.assert_allclose` defaults (`ase/test/fio/test_extxyz.py`) | P56: `Lattice` (also with commas), `Properties` with extra columns, `pbc` as T/F/True/false or numbers, `Z` over species, capitalised species, VEC lines, a blank comment, several frames (the last is read and the count reported, a blank header line ends the file); refusals by name (`AtomModelError`); 2 400 seeded mutations of the corpus and 2 000 random files never crash; a million atoms read in under 2 s. Departures: the dummy X and a number written as nan, inf, `1_000` or in hex are refused (ASE reads them) |
+| `ase.io.read(..., format='vasp')` (`read_vasp`, `parse_poscar_scaling_factor`) | `AtomModel.read` with `.poscar` | **held** | useful | `np.testing.assert_allclose` defaults (`ase/test/fio/vasp/test_vasp_poscar.py`) | P56: one scale factor, a negative one as the volume, three positive ones; Direct and Cartesian (C or K); selective dynamics ignored; POTCAR labels (`Na_pv/6a2f546d`); a `!` comment on the counts line. Departures, refused by name: a VASP 4 file without the element line (`noElementLine`; ASE reads the elements from a POTCAR or OUTCAR beside it), a cell of zero volume (`degenerateCell`); what follows the positions (velocities) is not read |
 
 ## What this checklist does not say
 
