@@ -89,7 +89,8 @@ extension MaterialsProjectImport {
 
     /// What a search answered.
     public enum SearchAnswer: Sendable, Equatable {
-        /// Matching rows, the most stable first (lowest energy above the hull, a row without one last, then the id);
+        /// Matching rows, the most stable first (lowest energy above the hull, a row without one last, then the id's
+        /// number); each id in the form people know (`displayMaterialID`);
         /// `more`: the server holds more matches than were returned (narrow the search).
         case rows([SearchRow], more: Bool)
         /// No entry matches.
@@ -97,7 +98,7 @@ extension MaterialsProjectImport {
     }
 
     /// Decodes a search answer. The server sorts; the rows are sorted again here so that equal energies come in the
-    /// order of their ids. An `errors` entry throws `Failure.apiError`; a body that is not the summary envelope throws
+    /// order of their ids' numbers. An `errors` entry throws `Failure.apiError`; a body that is not the summary envelope throws
     /// `Failure.malformed`.
     public static func decodeSearch(_ data: Data) throws(Failure) -> SearchAnswer {
         let envelope: SearchEnvelope
@@ -112,14 +113,16 @@ extension MaterialsProjectImport {
             throw .malformed("the search answer is not the documented summary response.")
         }
         let rows = data.map { item in
-            SearchRow(materialID: item.materialID, formula: item.formulaPretty, siteCount: item.nsites,
+            SearchRow(materialID: displayMaterialID(item.materialID) ?? item.materialID, formula: item.formulaPretty, siteCount: item.nsites,
                       energyAboveHull: item.energyAboveHull, isStable: item.isStable, theoretical: item.theoretical,
                       deprecated: item.deprecated, symmetry: item.symmetry)
         }
         guard !rows.isEmpty else { return .noResults }
         let sorted = rows.sorted { lhs, rhs in
             let l = lhs.energyAboveHull ?? .infinity, r = rhs.energyAboveHull ?? .infinity
-            return l != r ? l < r : lhs.materialID < rhs.materialID
+            if l != r { return l < r }
+            let ln = materialNumber(lhs.materialID) ?? .max, rn = materialNumber(rhs.materialID) ?? .max
+            return ln != rn ? ln < rn : lhs.materialID < rhs.materialID
         }
         return .rows(sorted, more: (envelope.meta?.totalDoc ?? sorted.count) > sorted.count)
     }

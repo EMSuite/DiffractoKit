@@ -28,6 +28,8 @@ Live:
   elements, chemical system or formula, most stable first, deprecated and GNoME entries left out; `decodeSearch` reads
   the rows (stability, calculated-only and deprecated flags, the stated space group) and `databaseVersion(from:)` the
   database version. The kit holds no key; the answers recorded with the owner's key are still to come (#151).
+- Material ids in both forms: the main API serves emmet-core's alphabetical ids (`mp-aaaaaafe`); both routes accept
+  them and give every id in the form people know (`MaterialsProjectImport.displayMaterialID`: `mp-134`) (#203).
 - Lattice edits within the crystal system: `CrystalStructure.editingLattice` sets the free parameters (cubic a;
   tetragonal and hexagonal a, c; trigonal a, c in hexagonal axes and a, α in rhombohedral axes; orthorhombic a, b, c;
   monoclinic a, b, c, β; triclinic all six), keeps the fractional sites and refuses an edit that changes the Laue class
@@ -65,6 +67,10 @@ Live:
 - The full orientation of one spot pattern (`PatternOrientation.index`): template matches and zone-axis solutions each
   refined on positions and intensities, the best agreement with the look-alikes that agree as well, and a flag when the
   pattern cannot decide (an alternative, or a tilt the intensities fix poorly).
+- The thickness from the profile across a two-beam CBED disc (`TwoBeamThickness`): the whole profile fitted by the
+  two-beam intensity with the extinction distance inside a window about the phase's structure-factor value, the fringe
+  line as the cross-check, and both thicknesses when two fit equally; profiles with fewer than two minima a side are
+  refused. Checked on closed forms and an abTEM-simulated Si 220 disc (within 3 %), not yet on a measured pattern.
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,

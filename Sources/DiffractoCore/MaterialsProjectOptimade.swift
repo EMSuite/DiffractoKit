@@ -107,8 +107,8 @@ public enum MaterialsProjectOptimade {
 
     /// GET /structures/<id>: one entry with its lattice and sites.
     public static func entryRequest(materialID: String) throws(RequestError) -> URLRequest {
-        guard MaterialsProjectImport.isValidMaterialID(materialID) else { throw .invalidMaterialID(materialID) }
-        return get(path: "structures/\(materialID)", items: [])
+        guard let id = MaterialsProjectImport.displayMaterialID(materialID) else { throw .invalidMaterialID(materialID) }
+        return get(path: "structures/\(id)", items: [])
     }
 
     private static func get(path: String, items: [(String, String)]) -> URLRequest {
@@ -172,7 +172,7 @@ public enum MaterialsProjectOptimade {
     public static func decodeSearch(_ data: Data) throws(AnswerError) -> SearchAnswer {
         let envelope: SearchEnvelope = try decodeEnvelope(data)
         let rows = (envelope.data ?? []).map { item in
-            Row(materialID: item.id, formula: item.attributes?.chemicalFormulaReduced, siteCount: item.attributes?.nsites,
+            Row(materialID: MaterialsProjectImport.displayMaterialID(item.id) ?? item.id, formula: item.attributes?.chemicalFormulaReduced, siteCount: item.attributes?.nsites,
                 energyAboveHull: (item.attributes?.mpStability ?? [:]).compactMapValues { $0?.energyAboveHull })
         }
         if rows.isEmpty {
@@ -215,7 +215,7 @@ public enum MaterialsProjectOptimade {
         let lattice = try vectors(a?.latticeVectors, "lattice vectors")
         guard lattice.count == 3 else { throw .notAnAnswer("\(item.id) has \(lattice.count) lattice vectors, not 3.") }
         return Entry(
-            materialID: item.id, formula: a?.chemicalFormulaReduced, lastModified: a?.lastModified,
+            materialID: MaterialsProjectImport.displayMaterialID(item.id) ?? item.id, formula: a?.chemicalFormulaReduced, lastModified: a?.lastModified,
             latticeVectors: lattice, cartesianPositions: try vectors(a?.cartesianSitePositions, "site positions"),
             speciesAtSites: a?.speciesAtSites ?? [],
             species: (a?.species ?? []).map {

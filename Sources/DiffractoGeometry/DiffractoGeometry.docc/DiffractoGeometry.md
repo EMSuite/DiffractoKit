@@ -50,3 +50,12 @@ used comes back with named refusals, not a number alone. Start with <doc:Calibra
 - ``StereographicProjection``
 - ``ZoneAxisMap``
 - ``DoubleTiltHolder``
+
+### Measuring thickness
+
+- ``TwoBeamThickness``
+- ``TwoBeamProfile``
+- ``TwoBeamThicknessFit``
+- ``TwoBeamThicknessCandidate``
+- ``TwoBeamFringeLine``
+- ``TwoBeamThicknessError``
