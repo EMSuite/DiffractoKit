@@ -1,6 +1,7 @@
-# Status: DiffractoKit 0.18.1 <!-- x-release-please-version -->
+# Status: DiffractoKit 0.19.0 <!-- x-release-please-version -->
 
-DiffractoKit 0.18.1, on ImagoKit `"0.2.0"..<"1.0.0"`.
+DiffractoKit 0.20.0. <!-- x-release-please-version -->
+It builds on ImagoKit `"0.2.0"..<"1.0.0"`.
 
 Live:
 
@@ -11,6 +12,14 @@ Live:
 - The CIFs people have: `?` and `.` values, deuterium and tritium, dummy atoms (left out with a warning), U and B iso,
   Latin-1 and a byte-order mark, DDLm names, a publication block before the structure; mmCIF and mCIF refused by name,
   a number that is not finite refused with a typed error, and a seeded fuzz of the committed CIFs that never crashes (#117).
+- A cell that is singular, or whose volume, occupancy or metric is not a number, is refused by `UnitCell`,
+  `StructureFactors.compute` and the symmetry's metric test instead of computing on an identity inverse or NaN (#147).
+- A structure as stored data: `CrystalStructure.Snapshot` (Codable, with a schema version) rebuilds the same
+  structure, and `CrystalStructure.fingerprint` changes with any cell parameter, any
+  site's element, position, occupancy or displacement, or the symmetry operations (#148).
+- A Materials Project structure with no key: `MaterialsProjectOptimade` searches the keyless OPTIMADE service by
+  elements or formula (most stable first; an empty service is told apart from no results) and reads an entry to its
+  conventional cell, checked against pymatgen on 14 recorded entries, one per Bravais lattice (#150).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
@@ -27,6 +36,11 @@ Live:
   or refused for one row of spots or a poor fit); the half turn about the beam is flagged where the crystal lacks it.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
   its routes (`DoubleDiffraction`).
+- The tilt of an indexed pattern off its zone axis, refined on the spot intensities (`ZoneAxisSolver.refineTilts`), with
+  the look-alike tilts that agree as well returned beside the best.
+- The full orientation of one spot pattern (`PatternOrientation.index`): template matches and zone-axis solutions each
+  refined on positions and intensities, the best agreement with the look-alikes that agree as well, and a flag when the
+  pattern cannot decide (an alternative, or a tilt the intensities fix poorly).
 - The ACOM matcher (CPU reference, Metal option, optional in-plane refinement) and vector-matched phase maps.
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,

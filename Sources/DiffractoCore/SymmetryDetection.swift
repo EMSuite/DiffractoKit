@@ -254,7 +254,8 @@ public enum SymmetryDetection {
             for j in 0..<3 {
                 var value = 0.0
                 for k in 0..<3 { for l in 0..<3 { value += r[k][i] * gm[k][l] * r[l][j] } }
-                if abs(value - gm[i][j]) > 1e-3 * (gm[i][i] * gm[j][j]).squareRoot() { return false }
+                // Written so NaN fails: a NaN metric preserves nothing (`abs(NaN) > x` is false, which passed it).
+                if !(abs(value - gm[i][j]) <= 1e-3 * (gm[i][i] * gm[j][j]).squareRoot()) { return false }
             }
         }
         return true

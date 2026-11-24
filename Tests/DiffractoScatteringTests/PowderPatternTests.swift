@@ -1,7 +1,7 @@
 //
 //  PowderPatternTests.swift
 //  The X-ray powder pattern (PowderPattern.xray) and pymatgen's X-ray form factor (XRayScatteringFactors) on closed forms
-//  and refusals. pymatgen's own numbers are pin P45 (DiffractoKitParityTests/Scattering/PowderXRDPinsTests.swift).
+//  and refusals. pymatgen's own numbers are pin P49 (DiffractoKitParityTests/Scattering/PowderXRDPinsTests.swift).
 //
 
 import DiffractoKitTestSupport

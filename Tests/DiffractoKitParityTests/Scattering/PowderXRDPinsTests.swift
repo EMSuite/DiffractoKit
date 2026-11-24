@@ -1,6 +1,6 @@
 //
 //  PowderXRDPinsTests.swift
-//  The kit against pymatgen's own XRDCalculator (pin P45):
+//  The kit against pymatgen's own XRDCalculator (pin P49):
 //    pymatgen-powder-xrd-pins.json  tools/pins/powder-xrd/pins.py: pymatgen 2026.9.24 (pymatgen-core 2026.10.16)
 //  27 cases: the 19 committed structures and planted Fe and Mg2Si with Cu Kα at 0 to 90° (pymatgen's defaults), Mo Kα,
 //  a 20 to 60° range, 0 to 180°, Debye-Waller factors. Public API only.

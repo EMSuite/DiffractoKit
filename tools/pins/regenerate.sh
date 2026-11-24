@@ -48,6 +48,7 @@ generators=(
   pymatgen:cif-symmetry/hall-pins.py
   pymatgen:presets/pins.py
   pymatgen:mp-import/pins.py
+  pymatgen:mp-optimade/pins.py
   pymatgen:ring-indexing/pins.py
   pymatgen:ring-display/ring-overlay-pins.py
   pymatgen:ring-display/indexing-display-pins.py

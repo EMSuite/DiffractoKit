@@ -2,7 +2,7 @@
 //  PowderPattern.swift
 //  Role: the line pattern of a powder: X-ray peaks as pymatgen's `XRDCalculator.get_pattern` computes them (pymatgen
 //        2026.9.24, pymatgen-core 2026.10.16), ported step for step so the peaks, their 2θ, intensities and hkl labels
-//        agree with pymatgen's (pin P45).
+//        agree with pymatgen's (pin P49).
 //
 //        1. Every reciprocal-lattice point g = h b₁ + k b₂ + l b₃ (no 2π) with |g|² ≤ r_max² + 1e-8 (pymatgen's
 //           `find_points_in_spheres` tolerance), r = 2 sin(2θ/2) / λ at the ends of the 2θ range; the lower end filters

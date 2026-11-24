@@ -4,6 +4,25 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.19.0](https://github.com/EMSuite/DiffractoKit/compare/0.18.1...0.19.0) (2026-11-23)
+
+
+### Features
+
+* double-diffraction spots ([#175](https://github.com/EMSuite/DiffractoKit/issues/175)) ([9bd66bd](https://github.com/EMSuite/DiffractoKit/commit/9bd66bd92198e36e968965182972cf8dcac6f666))
+* find the spots of a diffraction pattern ([#145](https://github.com/EMSuite/DiffractoKit/issues/145)) ([71ecae2](https://github.com/EMSuite/DiffractoKit/commit/71ecae2a5cfbb2e21d8fdf73da92f1ecc8c3d42f))
+* full orientation of one spot pattern (PatternOrientation.index) ([#185](https://github.com/EMSuite/DiffractoKit/issues/185)) ([24cfc82](https://github.com/EMSuite/DiffractoKit/commit/24cfc8290013b7edb61a35445d57dcc5247eee8a))
+* one orientation value (CrystalOrientation) ([#139](https://github.com/EMSuite/DiffractoKit/issues/139)) ([1e651b9](https://github.com/EMSuite/DiffractoKit/commit/1e651b9d90c1beb050fd2f40ac7b7596d2d7dee4))
+* spot pattern of a structure at any orientation, with R in mm ([#173](https://github.com/EMSuite/DiffractoKit/issues/173)) ([47d66f3](https://github.com/EMSuite/DiffractoKit/commit/47d66f3dd074633c5698aef0be8570691849f666))
+* tilt of an indexed pattern refined on the spot intensities ([#183](https://github.com/EMSuite/DiffractoKit/issues/183)) ([3e4c5bd](https://github.com/EMSuite/DiffractoKit/commit/3e4c5bd3650a237bb04fc93f5a841a84ac4333e7))
+* zone axis of one spot pattern (ZoneAxisSolver) ([#176](https://github.com/EMSuite/DiffractoKit/issues/176)) ([2653cfb](https://github.com/EMSuite/DiffractoKit/commit/2653cfbbe3494fe11a661993d57ece9af98cc2cd))
+
+
+### Bug Fixes
+
+* CIF files with unknown values, isotopes, dummy atoms, old encodings and non-finite numbers ([#142](https://github.com/EMSuite/DiffractoKit/issues/142)) ([c849820](https://github.com/EMSuite/DiffractoKit/commit/c849820eb7321a72021b5066542f0406dc65bf6f))
+* the ACOM matcher refuses a NaN excitation error, a non-finite peak and an orientation the reduction refuses ([#137](https://github.com/EMSuite/DiffractoKit/issues/137)) ([a5dcefe](https://github.com/EMSuite/DiffractoKit/commit/a5dcefecf90e59a9dd8c6c590f69867d6af9c0c9))
+
 ## [0.18.1](https://github.com/EMSuite/DiffractoKit/compare/0.18.0...0.18.1) (2026-11-18)
 
 

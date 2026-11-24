@@ -199,14 +199,14 @@ public struct ZoneAxisSolver: Sendable {
     /// λ, Å.
     public let wavelength: Double
 
-    private let hkl: [MillerIndex]
-    private let g: [SIMD3<Double>]
-    private let gLength: [Double]
-    private let intensity: [Double]
+    let hkl: [MillerIndex]
+    let g: [SIMD3<Double>]
+    let gLength: [Double]
+    let intensity: [Double]
     /// One member of each orbit under the proper rotations (the lexicographically largest hkl).
     private let canonical: [Bool]
     /// The crystal's proper rotations in its Cartesian frame.
-    private let rotations: [simd_double3x3]
+    let rotations: [simd_double3x3]
 
     /// The solver for `structure` at `volts` (200 kV is 200_000), with the reflections up to `kMax` Å⁻¹ (they must reach
     /// past the longest measured spot).
@@ -316,14 +316,7 @@ public struct ZoneAxisSolver: Sendable {
                 if merged.count >= max(top, Self.verdictDepth) { break }
             }
         }
-        let out = merged.compactMap { s, twin -> ZoneAxisCandidate? in
-            guard let o = try? CrystalOrientation(matrix: s.matrix) else { return nil }
-            let zone = o.nearestZoneAxis(cell: structure.cell, maxIndex: settings.maxIndex)
-            return ZoneAxisCandidate(orientation: o, zoneAxis: zone.map { ZoneAxis($0.uvw.x, $0.uvw.y, $0.uvw.z) } ?? ZoneAxis(0, 0, 1),
-                                     zoneAxisAngle: zone?.angle ?? .nan, scale: s.scale, agreement: s.agreement,
-                                     recall: s.recall, precision: s.precision, matched: s.matched, rmsDistance: s.rms,
-                                     assignments: s.assignments.map { $0.map { hkl[$0] } }, halfTurnAmbiguous: twin)
-        }
+        let out = merged.compactMap { s, twin in candidate(s, halfTurnAmbiguous: twin) }
         guard let best = out.first?.agreement else {
             return ZoneAxisSolution(verdict: .refused(.noCandidate), candidates: [])
         }
@@ -333,6 +326,27 @@ public struct ZoneAxisSolver: Sendable {
         let tied = out.prefix { $0.agreement >= best - settings.tieMargin }.count
         let shown = Array(out.prefix(max(top, tied, 1)))
         return ZoneAxisSolution(verdict: tied > 1 ? .tie(count: tied) : .solved, candidates: shown)
+    }
+
+    /// `orientation` at `scale` with its in-plane turn and scale fitted to `spots` (Å⁻¹, as `solve` takes them): the scoring
+    /// step of `solve` for an orientation found elsewhere (a template match, a refined tilt). Nil when fewer than two spots
+    /// sit on a predicted spot. The scale stays within the settings' window of 1 (plus 0.005); `halfTurnAmbiguous` is false
+    /// (only `solve` compares the half turn).
+    public func fit(_ orientation: CrystalOrientation, scale: Double = 1, spots: [SIMD2<Double>], clicked: Bool = false)
+        -> ZoneAxisCandidate? {
+        let q = spots.filter { $0.x.isFinite && $0.y.isFinite && simd_length($0) > 0 }
+        guard q.count >= 2, scale.isFinite, scale > 0,
+              let s = score(orientation.matrix, q, q.map { simd_length($0) }, scale: scale, clicked: clicked) else { return nil }
+        return candidate(s, halfTurnAmbiguous: false)
+    }
+
+    private func candidate(_ s: Scored, halfTurnAmbiguous: Bool) -> ZoneAxisCandidate? {
+        guard let o = try? CrystalOrientation(matrix: s.matrix) else { return nil }
+        let zone = o.nearestZoneAxis(cell: structure.cell, maxIndex: settings.maxIndex)
+        return ZoneAxisCandidate(orientation: o, zoneAxis: zone.map { ZoneAxis($0.uvw.x, $0.uvw.y, $0.uvw.z) } ?? ZoneAxis(0, 0, 1),
+                                 zoneAxisAngle: zone?.angle ?? .nan, scale: s.scale, agreement: s.agreement,
+                                 recall: s.recall, precision: s.precision, matched: s.matched, rmsDistance: s.rms,
+                                 assignments: s.assignments.map { $0.map { hkl[$0] } }, halfTurnAmbiguous: halfTurnAmbiguous)
     }
 
     /// Orientations within this angle (radians) are one (0.2°).

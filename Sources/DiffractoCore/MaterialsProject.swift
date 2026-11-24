@@ -232,7 +232,7 @@ public enum MaterialsProjectImport {
         return request
     }
 
-    private static func isValidMaterialID(_ id: String) -> Bool {
+    static func isValidMaterialID(_ id: String) -> Bool {
         guard id.hasPrefix("mp-") else { return false }
         let digits = id.dropFirst(3)
         return !digits.isEmpty && digits.allSatisfy { $0.isASCII && $0.isNumber }

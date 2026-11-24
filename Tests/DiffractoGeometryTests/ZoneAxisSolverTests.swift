@@ -96,6 +96,19 @@ import DiffractoScattering
         #expect(abs(best.scale - 1) <= 0.03)
     }
 
+    @Test func fitTurnsAndScalesAnOrientationFoundElsewhereOntoTheSpots() throws {
+        let truth = try CrystalOrientation(zoneAxis: SIMD3(1, 1, 1), inPlaneAngle: 0.5, cell: Self.aluminium.cell)
+        let spots = try Self.planted(Self.aluminium, truth).map { $0 * 1.005 }
+        let solver = try ZoneAxisSolver(structure: Self.aluminium, volts: 200_000, kMax: 1.6)
+        // 0.2° off in plane and the calibration 0.5 % off (within the tolerance of the innermost spots): one fit brings both back
+        let fitted = try #require(solver.fit(truth.rotatedInPlane(by: 0.2 * Self.degree), spots: spots))
+        #expect(solver.angle(between: fitted.orientation, and: truth, includingHalfTurn: false) <= 1e-3 * Self.degree)
+        #expect(abs(fitted.scale - 1.005) <= 1e-6)
+        #expect(fitted.matched == spots.count && !fitted.halfTurnAmbiguous)
+        #expect(solver.fit(truth, scale: 0, spots: spots) == nil)
+        #expect(solver.fit(truth, spots: [spots[0]]) == nil)
+    }
+
     @Test func oneRowAndTooFewSpotsAreRefused() throws {
         let solver = try ZoneAxisSolver(structure: Self.aluminium, volts: 200_000, kMax: 1.6)
         let g = SIMD2(2.0 / 4.0495, 0).rotated(0.4)
