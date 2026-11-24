@@ -137,4 +137,24 @@ struct MaterialsProjectImportTests {
         #expect(MaterialsProjectImport.parseFormula("AlAl2") == ["Al": 3])
         for bad in ["", "al", "Al0", "Al-2", "(AlCu)2", "Al 2", "2Al", "É"] { #expect(MaterialsProjectImport.parseFormula(bad) == nil, "\(bad)") }
     }
+
+    /// mp-1079297 (Si, C2/m) as the main API served it on 2026-11-24 (#151, the id put back in its legacy form):
+    /// pymatgen's primitive cell, which the fixed C-centring matrix does not take to a conventional monoclinic cell. It
+    /// is read as the keyless route reads it, to the conventional cell pymatgen gives for the same atoms (P48).
+    static let monoclinicSilicon = Data(#"""
+{"data":[{"formula_pretty":"Si","symmetry":{"crystal_system":"Monoclinic","symbol":"C2/m","hall":"-C 2y","number":12,"point_group":"2/m","symprec":0.1,"angle_tolerance":5.0,"version":"2.7.0"},"material_id":"mp-1079297","deprecated":false,"last_updated":"2021-07-15T02:29:39.366000","structure":{"@module":"pymatgen.core.structure","@class":"Structure","charge":0.0,"lattice":{"matrix":[[-0.0,3.84593083,0.0],[-0.37362086,0.0,6.32197728],[6.90216228,-1.92296642,-0.40892854]],"pbc":[true,true,true],"a":3.84593083,"b":6.333007916927259,"c":7.176689107292369,"alpha":96.52403067130003,"beta":105.54208897884945,"gamma":90.0,"volume":167.23079840226276},"properties":{},"sites":[{"species":[{"element":"Si","occu":1.0}],"abc":[0.05552936,0.87396351,0.11105773],"properties":{},"label":"Si","xyz":[0.4400074766936057,1.7921227421920184e-06,5.479762778384439]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.94447064,0.12603649,0.88894227],"properties":{},"label":"Si","xyz":[6.088533943306394,1.9229626178772574,0.4332859616155613]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.55899985,0.65339544,0.11799771],"properties":{},"label":"Si","xyz":[0.5703171768755004,1.9229691231134771,4.08249849526196]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.44100015,0.34660456,0.88200229],"properties":{},"label":"Si","xyz":[5.9582242431245,-4.713113477446404e-06,1.83055024473804]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.21274317,0.05730781,0.42548434],"properties":{},"label":"Si","xyz":[2.9153505690217787,3.4183190682939696e-06,0.1883059828374932]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.78725683,0.94269219,0.57451566],"properties":{},"label":"Si","xyz":[3.613190850978221,1.9229609916809316,5.724742757162507]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.72710984,0.58557765,0.45421767],"properties":{},"label":"Si","xyz":[2.9163000435937088,1.9229688236717255,3.5162660303404896]},{"species":[{"element":"Si","occu":1.0}],"abc":[0.27289016,0.41442235,0.54578233],"properties":{},"label":"Si","xyz":[3.612241376406291,-4.413671725876489e-06,2.39678270965951]}]}}]}
+"""#.utf8)
+
+    @Test func aPrimitiveCellTheFixedMatrixCannotConvertIsReadFromTheLattice() throws {
+        let doc = try MaterialsProjectImport.firstDocument(in: MaterialsProjectImport.decode(Self.monoclinicSilicon))
+        let imported = try MaterialsProjectImport.structure(from: doc)
+        #expect(imported.cell == .conventional(centring: "C"))
+        let cell = imported.structure.cell
+        // pymatgen 2026.9.24 SpacegroupAnalyzer(symprec=1e-3).get_conventional_standard_structure of the same entry.
+        let expected = [13.828530896705164, 3.84593083, 6.333007916927258, 90.0, 96.77278162787648, 90.0]
+        let got = [cell.a, cell.b, cell.c, cell.alphaDeg, cell.betaDeg, cell.gammaDeg]
+        for (g, e) in zip(got, expected) { #expect(abs(g - e) <= 1e-6 * e, "\(got)") }
+        #expect(imported.structure.sites.count == 16)
+        #expect(imported.structure.laueClass?.rawValue == "2/m")
+    }
 }
