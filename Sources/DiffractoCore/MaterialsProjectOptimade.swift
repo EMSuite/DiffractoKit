@@ -62,19 +62,25 @@ public enum MaterialsProjectOptimade {
     public static func filter(for query: Query) throws(RequestError) -> String {
         switch query {
         case .elements(let raw, let only):
-            var symbols: [String] = []
-            for symbol in raw {
-                let trimmed = symbol.trimmingCharacters(in: .whitespaces)
-                guard Element.atomicNumber(forSymbol: trimmed) != nil,
-                      trimmed == Element.normalizedSymbol(fromCIF: trimmed) else { throw .unknownElement(symbol) }
-                if !symbols.contains(trimmed) { symbols.append(trimmed) }
-            }
-            guard !symbols.isEmpty else { throw .noElements }
-            let list = symbols.sorted().map { "\"\($0)\"" }.joined(separator: ",")
+            let symbols = try elementSymbols(raw)
+            let list = symbols.map { "\"\($0)\"" }.joined(separator: ",")
             return "elements HAS ALL \(list)" + (only ? " AND nelements=\(symbols.count)" : "")
         case .formula(let text):
             return "chemical_formula_reduced=\"\(try reducedFormula(text))\""
         }
+    }
+
+    /// The element symbols of a query, checked, without repeats, in alphabetical order (both routes use them).
+    static func elementSymbols(_ raw: [String]) throws(RequestError) -> [String] {
+        var symbols: [String] = []
+        for symbol in raw {
+            let trimmed = symbol.trimmingCharacters(in: .whitespaces)
+            guard Element.atomicNumber(forSymbol: trimmed) != nil,
+                  trimmed == Element.normalizedSymbol(fromCIF: trimmed) else { throw .unknownElement(symbol) }
+            if !symbols.contains(trimmed) { symbols.append(trimmed) }
+        }
+        guard !symbols.isEmpty else { throw .noElements }
+        return symbols.sorted()
     }
 
     /// The formula as OPTIMADE's `chemical_formula_reduced` holds it.
