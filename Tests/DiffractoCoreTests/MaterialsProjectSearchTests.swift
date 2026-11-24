@@ -200,7 +200,7 @@ struct MaterialsProjectSearchTests {
                     _ = try Route.structure(from: document)
                     Issue.record("\(id) was read; the keyed route refuses it (#218)")
                 } catch {
-                    guard case .nonStandardCell(let text) = error else {
+                    guard case .nonStandardCell(let text)? = error as? Route.Failure else {
                         Issue.record("\(id): expected nonStandardCell, got \(error)")
                         continue
                     }
