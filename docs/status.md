@@ -55,6 +55,9 @@ Live:
   tilts and turns in the lab frame, the nearest zone axis and the angle to it, orix quaternions in and out.
 - Orientation symmetry and IPF keys, misorientation between two groups, `Orientation` from Euler angles with `dot`,
   `dotOuter` and `distanceMatrix`, orientation-relationship variants (beta'' in Al: 12), orientation-map planes.
+- Variant orientations of a relationship stated as two pairs (`OrientationRelationship.variantOrientations`): each
+  variant's orientation, label, drawn spot pattern and group of look-alikes in the view, and the second pair's misfit
+  (beta'', theta' and T1 in Al: 12, 3 and 4).
 
 Since 0.10.0: 0.11.0 (2026-10-30) dropped the unused public API; 0.12.0 (2026-11-01) added the items above, made the ACOM
 Metal path 1.9 to 3.2 times faster and the ring profile fit stop runs that cannot improve, and retired the apps-parity dumps.

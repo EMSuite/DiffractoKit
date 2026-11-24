@@ -44,3 +44,12 @@ the orix key; `.orix` is orix's TSL key for all eleven classes. `.py4DSTEM` expe
 sector (the original pole for 2/m), and reproduces the pinned full-mask beam key at Float precision. Python's
 direction-family reduction is ``CrystalOrientationSymmetry/py4DSTEMDirectionFamily(_:)``; it returns three families rather than
 one rotation. ``CrystalOrientationSymmetry/disorientation(from:to:)`` is the symmetry-reduced angle between two orientations.
+
+## Precipitate variants
+
+State an orientation relationship the way a paper does, two parallel pairs (``OrientationRelationship``, the first
+exact). ``OrientationRelationship/variantOrientations(first:second:precipitate:matrix:matrixOrientation:volts:kMax:settings:grouping:)``
+returns every variant at a matrix orientation as a ``VariantOrientation``: its orientation, the matrix vector its first pair
+lies along, its drawn spot pattern and its group of variants that draw the same spots in this view
+(``VariantGroupingSettings``; ``OrientationRelationship/groups(of:grouping:)`` regroups patterns after a change of cut).
+``OrientationRelationship/secondPairMisfit(first:second:precipitate:matrix:)`` says how far the second pair is from parallel.
