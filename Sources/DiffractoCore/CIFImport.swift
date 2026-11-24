@@ -141,6 +141,14 @@ public enum CIFImportWarning: Sendable, Equatable, CustomStringConvertible {
     /// Sites of a dummy atom (`X`, `Q`, `Du`, `Lp`: a lone pair, a centroid, a placeholder) were left out: they scatter
     /// nothing. `labels` are their `_atom_site_label`s in file order.
     case dummyAtomsSkipped(labels: [String])
+    /// The file lists no operations and names its group by Hermann–Mauguin `symbol`: the sites were expanded with the
+    /// group's operations in the setting `hallSymbol` (the one pymatgen-core 2026.10.16 `CifParser` uses for the symbol,
+    /// or for a short symbol pymatgen does not read, the setting of its IT number).
+    case operationsFromSpaceGroupSymbol(symbol: String, hallSymbol: String)
+    /// The file lists no operations and names its group by IT `number` alone: the sites were expanded in the setting
+    /// `hallSymbol` pymatgen's `SpaceGroup.from_int_number` gives. A cell written in another setting of the group is
+    /// refused when the operations do not map it onto itself, but an origin choice cannot be told from the cell.
+    case operationsFromSpaceGroupNumber(number: Int, hallSymbol: String)
 
     public var description: String {
         switch self {
@@ -149,6 +157,13 @@ public enum CIFImportWarning: Sendable, Equatable, CustomStringConvertible {
                 + "(\(hallOrder) operations); the loop was used."
         case let .dummyAtomsSkipped(labels):
             return "\(labels.count) dummy atom site(s) (\(labels.joined(separator: ", "))) scatter nothing and were left out."
+        case let .operationsFromSpaceGroupSymbol(symbol, hallSymbol):
+            return "The file lists no symmetry operations; the sites were expanded with the operations of \(symbol) "
+                + "in the setting \(hallSymbol) (Hall symbol)."
+        case let .operationsFromSpaceGroupNumber(number, hallSymbol):
+            return "The file names space group No. \(number) but lists no operations and no symbol the kit reads; the "
+                + "sites were expanded in the standard setting \(hallSymbol) (Hall symbol). Check that the file is written in "
+                + "that setting and origin."
         }
     }
 }
@@ -170,7 +185,8 @@ public struct CIFDocument: Sendable, Equatable {
     /// The coarsest rounding half-step over every written fractional coordinate (0 when all are exact).
     public let coarsestHalfStep: Double
     /// Whether the file carried expanding operations (`structure.fileOperations`): a symmetry-operation loop, or, with no
-    /// loop, a Hall symbol read to its group. The structure's operations are detected from the expanded cell either way.
+    /// loop, a Hall symbol read to its group, or a Hermann–Mauguin symbol or IT number read from the kit's table
+    /// (`warnings` then says which). The structure's operations are detected from the expanded cell either way.
     public let hadSymmetryOperations: Bool
     /// What the import read past (``CIFImportWarning``), in the order found; empty for a file with nothing to report.
     public let warnings: [CIFImportWarning]
@@ -593,11 +609,27 @@ public enum CIFImport {
         // A loop, even one holding only the identity, is what the file lists and wins over the symbol (as in pymatgen).
         let expandsWithHall = !haveSymmetryLoop && (hallOperations?.count ?? 0) > 1
         if expandsWithHall, let hallOperations { ops = hallOperations }
+        // No loop and no Hall symbol: the group's operations from its Hermann–Mauguin symbol or IT number, in the setting
+        // pymatgen-core 2026.10.16 `CifParser` takes (`SpaceGroupTable`, generated from pymatgen and spglib).
+        var tableWarning: CIFImportWarning?
+        if !haveSymmetryLoop, !expandsWithHall,
+           let found = SpaceGroupTable.setting(symbols: declaredHermannMauguinSymbols(cellValues), number: spaceGroupNumber),
+           let tableOperations = try? HallSymbol.operations(found.hallSymbol), tableOperations.count > 1 {
+            ops = tableOperations
+            if let symbol = found.symbol {
+                tableWarning = CIFImportWarning.operationsFromSpaceGroupSymbol(symbol: symbol, hallSymbol: found.hallSymbol)
+            } else if let spaceGroupNumber {
+                tableWarning = CIFImportWarning.operationsFromSpaceGroupNumber(number: spaceGroupNumber,
+                                                                              hallSymbol: found.hallSymbol)
+            }
+        }
+        let expandsWithTable = tableWarning != nil
         // A loop beside a readable Hall symbol of another group is used all the same (pymatgen reads no Hall symbol and
         // uses the loop), but the reader is told. Equal groups: the same order and every listed operation in the Hall
         // group, translations mod 1 to 1e-3 (the finest genuine translation is 1/12; a written 0.3333 is 1/3).
         var warnings: [CIFImportWarning] = []
         if !dummyLabels.isEmpty { warnings.append(.dummyAtomsSkipped(labels: dummyLabels)) }
+        if let tableWarning { warnings.append(tableWarning) }
         if fileListsOperations, let hallSymbol, let hallOperations {
             let loopOrder = SymmetryOperation.distinctCount(ops)
             let hallOrder = SymmetryOperation.distinctCount(hallOperations)
@@ -612,7 +644,7 @@ public enum CIFImport {
 
         let sites: [AtomSite]
         let operations: [SymmetryOperation]?
-        if fileListsOperations || expandsWithHall {
+        if fileListsOperations || expandsWithHall || expandsWithTable {
             // A file that names its space group must list every operation of it (in the setting its cell is written
             // in). Fewer builds a smaller structure (rock salt without its F-centring is CsCl, still cubic m-3m).
             // The judgement of a monoclinic centred cell (conventional or primitive) also reads the listed rotations:
@@ -662,9 +694,10 @@ public enum CIFImport {
         } else {
             // No expanding operations. Taking the listed sites as the complete cell is legitimate only when the file
             // itself says they are — P1, or no space-group declaration at all. A file that declares a non-P1 group
-            // and omits its operations is an asymmetric unit with no way to expand it. (py4DSTEM hands CIF parsing to
-            // pymatgen, which can derive the operations from the symbol; this importer carries no space-group tables,
-            // so the honest alternative is refusing. A readable Hall symbol needs no table and was used above.)
+            // and omits its operations is an asymmetric unit, expanded above from its Hall symbol, Hermann–Mauguin
+            // symbol or IT number when the kit knows it. What is left is refused: a loop holding only the identity
+            // beside a non-P1 group (pymatgen uses the loop and builds the asymmetric unit as the cell), or a symbol
+            // neither pymatgen nor spglib names in a setting the kit holds (`SpaceGroupTable`'s eight left out).
             if let declared = declaredNonP1SpaceGroup(cellValues) {
                 throw .missingSymmetryOperations(spaceGroup: declared)
             }
@@ -974,6 +1007,16 @@ public enum CIFImport {
                !raw.isEmpty, raw != "?", raw != "." { return raw }
         }
         return nil
+    }
+
+    /// Every Hermann–Mauguin symbol the file states under a tag pymatgen-core 2026.10.16 `CifParser.get_symops` reads, in
+    /// its order (`_full` and `_ref`, which it does not read, are left out here too).
+    private static func declaredHermannMauguinSymbols(_ cellValues: [String: String]) -> [String] {
+        ["_symmetry_space_group_name_h-m", "_symmetry_space_group_name_h_m", "_space_group_name_h-m_alt"].compactMap { tag in
+            guard let raw = cellValues[tag]?.trimmingCharacters(in: .whitespaces),
+                  !raw.isEmpty, raw != "?", raw != "." else { return nil }
+            return raw
+        }
     }
 
     /// The Hall symbol the file states (`_space_group_name_Hall`, or the older `_symmetry_space_group_name_Hall`); nil when
