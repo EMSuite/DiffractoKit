@@ -1,6 +1,6 @@
 # ``DiffractoScattering``
 
-Electron scattering factors, kinematic structure factors, and the rings that survive an intensity cut.
+Electron and X-ray scattering factors, kinematic structure factors, the rings that survive an intensity cut, and powder X-ray patterns.
 
 ## Overview
 
@@ -23,6 +23,7 @@ The model is kinematic: no dynamical diffraction, no thermal factor beyond what 
 ### Scattering factors
 
 - ``ElectronScatteringFactors``
+- ``XRayScatteringFactors``
 - ``FormFactor``
 
 ### Structure factors
@@ -36,3 +37,9 @@ The model is kinematic: no dynamical diffraction, no thermal factor beyond what 
 - ``KinematicReflection``
 - ``KinematicFamily``
 - ``KinematicError``
+
+### Powder patterns
+
+- ``PowderPattern``
+- ``XRayRadiation``
+- ``PowderPatternError``
