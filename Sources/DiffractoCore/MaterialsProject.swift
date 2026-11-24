@@ -295,8 +295,9 @@ public enum MaterialsProjectImport {
 
     /// The structure of one fetched document, converted to the conventional cell when MP served a centred primitive
     /// cell (`CellStandardisation`), with the symmetry detected from the atoms. Structural absence, an unusable
-    /// coordinate or an unknown element throws `Failure.malformed`; a conversion that fails a guard throws
-    /// `Failure.nonStandardCell`. A number that is not finite (a coordinate, an occupancy, the lattice) throws
+    /// coordinate or an unknown element throws `Failure.malformed`; a conversion that fails a guard is read instead as
+    /// the keyless route reads an entry (`MaterialsProjectOptimade.structure(from:)`) and kept when it shows the stated
+    /// crystal system; otherwise it throws `Failure.nonStandardCell`. A number that is not finite (a coordinate, an occupancy, the lattice) throws
     /// `Failure.malformed`; occupancy out of range and atoms too close are left to `CrystalStructure.validationIssues`.
     public static func structure(from doc: MaterialsProjectDocument) throws -> ImportedStructure {
         guard let served = doc.structure else { throw Failure.malformed("\(doc.materialID) has no structure block.") }
@@ -343,6 +344,15 @@ public enum MaterialsProjectImport {
             result = try CellStandardisation.standardise(
                 latticeRows: rows, sites: atomSites, symbol: doc.symmetry?.symbol, crystalSystem: doc.symmetry?.crystalSystem)
         } catch let failure as CellStandardisation.Failure {
+            // The fixed change of basis expects the ITA primitive cell; the Materials Project serves pymatgen's, which
+            // for a C-centred monoclinic lattice can differ (mp-1079297). The keyless route finds the conventional cell
+            // from the lattice itself (pinned against pymatgen, P48): the same atoms are read that way, and kept only
+            // when they show the crystal system the document states (a stated system the atoms do not fit is refused).
+            if let read = try? MaterialsProjectOptimade.structure(from: entry(of: doc, rows: rows, sites: rawSites)),
+               let stated = doc.symmetry?.crystalSystem?.lowercased(),
+               read.structure.crystalSystem?.rawValue == stated {
+                return read
+            }
             throw Failure.nonStandardCell("\(doc.materialID): \(failure.message) Import a conventional CIF for this phase instead.")
         }
         let cell: UnitCell
@@ -361,6 +371,25 @@ public enum MaterialsProjectImport {
         // MP coordinates are full precision (half-step 0): a trigonal cell in hexagonal axes is not read as 6/mmm, nor Pa-3 as m-3m.
         let structure = CrystalStructure.detectingSymmetry(cell: cell, sites: result.sites, name: doc.materialID)
         return ImportedStructure(structure: structure, cell: result.outcome)
+    }
+
+    /// The document as a keyless-route entry: the same lattice rows, each site's Cartesian position and its species
+    /// with their occupancies (the site labels are not carried).
+    static func entry(of doc: MaterialsProjectDocument, rows: [SIMD3<Double>],
+                      sites: [MaterialsProjectSite]) -> MaterialsProjectOptimade.Entry {
+        var positions: [SIMD3<Double>] = [], names: [String] = [], species: [MaterialsProjectOptimade.Species] = []
+        for (index, site) in sites.enumerated() {
+            let abc = site.abc ?? [0, 0, 0]
+            positions.append(abc[0] * rows[0] + abc[1] * rows[1] + abc[2] * rows[2])
+            names.append("site\(index)")
+            let list = site.species ?? []
+            species.append(MaterialsProjectOptimade.Species(
+                name: "site\(index)", chemicalSymbols: list.map { Element.normalizedSymbol(fromCIF: $0.element) },
+                concentration: list.map(\.occu)))
+        }
+        return MaterialsProjectOptimade.Entry(materialID: doc.materialID, formula: doc.formulaPretty,
+                                              lastModified: doc.lastUpdated, latticeVectors: rows,
+                                              cartesianPositions: positions, speciesAtSites: names, species: species)
     }
 
     /// Grades a fetched document against what the user expected.
