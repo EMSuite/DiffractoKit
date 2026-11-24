@@ -157,8 +157,9 @@ extension CrystalStructure {
             }
         }
         guard rebuilt.laueClass == laueClass else { throw .symmetryChanged(from: laueClass, to: rebuilt.laueClass) }
-        // A centred file cell can hold fewer rotations than its lattice's conventional cell (a hexagonal crystal in an
-        // orthohexagonal C cell reads mmm there, 6/mmm in the conventional cell): the conventional class must hold too.
+        // The class of the conventional setting must hold too. The conventional cell is read from the metric alone, so a
+        // centring that only the atoms show is not seen: a hexagonal crystal in an orthohexagonal C cell reads mmm in
+        // both, and an edit of a alone is an edit within mmm (CI, 24 Nov).
         let before = conventionalSetting?.laueClass, after = rebuilt.conventionalSetting?.laueClass
         guard before == after else { throw .symmetryChanged(from: before, to: after) }
         return rebuilt

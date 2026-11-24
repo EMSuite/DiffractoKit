@@ -214,21 +214,22 @@ struct LatticeEditTests {
         #expect(scaled.cell.alphaDeg == primitive.cell.alphaDeg)
     }
 
-    /// A hexagonal crystal in an orthohexagonal C cell reads mmm in that cell and 6/mmm in its conventional cell. An
-    /// edit of a alone keeps mmm in the file cell but breaks the hexagonal lattice: refused by the conventional class.
-    @Test func anEditThatBreaksTheConventionalCellsClassIsRefused() throws {
+    /// A hexagonal crystal in an orthohexagonal C cell. The conventional cell is read from the metric, which is oP for this
+    /// cell (the C centring is in the atoms only), so the file and the conventional setting both read mmm and an edit of a
+    /// alone is an edit within mmm: allowed, b and c kept (the known limit in docs/parity.md).
+    @Test func anOrthohexagonalCellIsEditedWithinMmm() throws {
         let a = 3.2094
         let orthohexagonal = CrystalPresets.structure(a: a, b: a * 3.0.squareRoot(), c: 5.2108, sites: [
             AtomSite(z: 12, fractional: [0, 0, 0]), AtomSite(z: 12, fractional: [0.5, 0.5, 0]),
             AtomSite(z: 12, fractional: [0.5, 1.0 / 6.0, 0.5]), AtomSite(z: 12, fractional: [0, 2.0 / 3.0, 0.5]),
         ])
         #expect(orthohexagonal.laueClass == .mmm)
-        #expect(orthohexagonal.conventionalSetting?.laueClass == .sixOverMmm)
-        #expect(throws: LatticeEditError.symmetryChanged(from: .sixOverMmm, to: .mmm)) {
-            try orthohexagonal.editingLattice([.a: 3.3])
-        }
-        // c stays free in both cells.
-        #expect(try orthohexagonal.editingLattice([.c: 5.3]).conventionalSetting?.laueClass == .sixOverMmm)
+        #expect(orthohexagonal.conventionalSetting?.laueClass == .mmm)
+        #expect(orthohexagonal.freeLatticeParameters == [.a, .b, .c])
+        let edited = try orthohexagonal.editingLattice([.a: 3.3])
+        #expect(edited.laueClass == .mmm)
+        #expect(edited.cell.a == 3.3)
+        #expect(edited.cell.b == orthohexagonal.cell.b && edited.cell.c == orthohexagonal.cell.c)
     }
 
     /// A structure whose symmetry was not read has no crystal system to edit within.
