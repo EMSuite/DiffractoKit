@@ -84,9 +84,9 @@ struct StructureSnapshotTests {
 
     @Test func everyCommittedStructureSurvivesEncodeAndDecodeBitForBit() throws {
         let committed = try Self.committedStructures()
-        // 36 committed CIFs; the four edge cases refused by design (mmCIF, magnetic, a NaN coordinate, three structures
-        // with no block named) do not read.
-        #expect(committed.count == 32, "\(committed.count) committed structures read")
+        // 64 committed CIFs; the four edge cases refused by design (mmCIF, magnetic, a NaN coordinate, three structures
+        // with no block named) do not read. 28 of them are the kit's own CIFExport output (cif-export/written/).
+        #expect(committed.count == 60, "\(committed.count) committed structures read")
         for (name, structure) in committed + Self.presets {
             try Self.expectRoundTrip(structure, name)
         }
