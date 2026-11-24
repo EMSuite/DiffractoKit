@@ -90,6 +90,58 @@ public struct CrystalStructure: Sendable, Equatable {
     /// (`SymmetryDetection.Tolerance`). The operations are then the identity alone, `validationIssues` reports it
     /// (`invalid_symmetry_tolerance`) and `isUsable` is false. nil for every structure that was detected or given.
     public let symmetryRefusal: String?
+    /// What the symmetry detection was given besides the cell and the sites (the written half-step, the tolerances, the
+    /// policy, the conventional route), so that `Snapshot` rebuilds the same structure; nil when the operations were given
+    /// and for `ConventionalSetting.structure`.
+    public let detectionSettings: DetectionSettings?
+
+    /// The inputs of `detectingSymmetry` besides the cell, the sites, the file's operations, the IT number and the name,
+    /// as the detection reads them: a metric tolerance or a policy value that is NaN, negative or infinite where the
+    /// detection takes it as 0 is stored as 0, so two reads that the detection cannot tell apart have equal settings.
+    /// The `search` is not among them: both searches return identical operations bit for bit. Equality compares the bits
+    /// of each number (every NaN as one, a negative zero as zero), so a structure always equals itself.
+    public struct DetectionSettings: Sendable, Equatable {
+        public let coarsestHalfStep: Double
+        public let metricLengthTolerance: Double
+        public let metricAngleToleranceDeg: Double
+        public let tolerance: SymmetryDetection.Tolerance
+        public let conventional: Bool
+        public let policy: SymmetryDetection.Policy
+
+        public init(coarsestHalfStep: Double = 0,
+                    metricLengthTolerance: Double = SymmetryDetection.defaultMetricLengthTolerance,
+                    metricAngleToleranceDeg: Double = SymmetryDetection.defaultMetricAngleToleranceDeg,
+                    tolerance: SymmetryDetection.Tolerance = .default, conventional: Bool = true,
+                    policy: SymmetryDetection.Policy = .default) {
+            func asRead(_ v: Double) -> Double { v.isFinite && v > 0 ? v : 0 }
+            self.coarsestHalfStep = coarsestHalfStep
+            self.metricLengthTolerance = asRead(metricLengthTolerance)
+            self.metricAngleToleranceDeg = asRead(metricAngleToleranceDeg)
+            self.tolerance = tolerance
+            self.conventional = conventional
+            self.policy = SymmetryDetection.Policy(
+                occupancyTolerance: policy.effectiveOccupancyTolerance, translationGrid: policy.translationGrid,
+                gridSnapFactor: policy.effectiveGridSnapFactor, precisionLimitFactor: policy.effectivePrecisionLimitFactor)
+        }
+
+        public static func == (lhs: DetectionSettings, rhs: DetectionSettings) -> Bool {
+            func bits(_ v: Double) -> UInt64 { v.isNaN ? Double.nan.bitPattern : (v == 0 ? 0 : v).bitPattern }
+            func toleranceBits(_ t: SymmetryDetection.Tolerance) -> (Int, UInt64) {
+                switch t {
+                case .fractional(let v): (0, bits(v))
+                case .cartesian(let v): (1, bits(v))
+                }
+            }
+            let l = [lhs.coarsestHalfStep, lhs.metricLengthTolerance, lhs.metricAngleToleranceDeg,
+                     lhs.policy.occupancyTolerance, lhs.policy.translationGrid, lhs.policy.gridSnapFactor,
+                     lhs.policy.precisionLimitFactor].map(bits)
+            let r = [rhs.coarsestHalfStep, rhs.metricLengthTolerance, rhs.metricAngleToleranceDeg,
+                     rhs.policy.occupancyTolerance, rhs.policy.translationGrid, rhs.policy.gridSnapFactor,
+                     rhs.policy.precisionLimitFactor].map(bits)
+            return l == r && toleranceBits(lhs.tolerance) == toleranceBits(rhs.tolerance)
+                && lhs.conventional == rhs.conventional
+        }
+    }
 
     /// A structure whose operations are given as they are (a cell built in code with a known group); nothing is
     /// checked against the sites. A CIF goes through `CIFImport`, which detects.
@@ -110,6 +162,7 @@ public struct CrystalStructure: Sendable, Equatable {
         self.unresolvedRotations = []
         self.translationUncertainty = 1e-9
         self.symmetryRefusal = nil
+        self.detectionSettings = nil
     }
 
     /// A structure whose operations are detected from its sites: a P1 file, a cell built in
@@ -137,12 +190,16 @@ public struct CrystalStructure: Sendable, Equatable {
         search: SymmetryDetection.Search = .cellList,
         policy: SymmetryDetection.Policy = .default
     ) -> CrystalStructure {
+        let settings = DetectionSettings(
+            coarsestHalfStep: coarsestHalfStep, metricLengthTolerance: metricLengthTolerance,
+            metricAngleToleranceDeg: metricAngleToleranceDeg, tolerance: tolerance, conventional: conventional,
+            policy: policy)
         if conventional {
             return detectingInConventionalCell(
                 cell: cell, sites: sites, fileOperations: fileOperations, spaceGroupNumber: spaceGroupNumber, name: name,
                 coarsestHalfStep: coarsestHalfStep, metricLengthTolerance: metricLengthTolerance,
                 metricAngleToleranceDeg: metricAngleToleranceDeg, tolerance: tolerance, search: search,
-                policy: policy)
+                policy: policy, settings: settings)
         }
         let detection = SymmetryDetection.detect(
             sites: sites, cell: cell, coarsestHalfStep: coarsestHalfStep,
@@ -150,12 +207,12 @@ public struct CrystalStructure: Sendable, Equatable {
             metricLengthTolerance: metricLengthTolerance, metricAngleToleranceDeg: metricAngleToleranceDeg,
             tolerance: tolerance, search: search, policy: policy)
         return CrystalStructure(cell: cell, sites: sites, detection: detection, fileOperations: fileOperations,
-                                spaceGroupNumber: spaceGroupNumber, name: name)
+                                spaceGroupNumber: spaceGroupNumber, name: name, settings: settings)
     }
 
     init(cell: UnitCell, sites: [AtomSite], detection: SymmetryDetection.Result,
          fileOperations: [SymmetryOperation]?, spaceGroupNumber: Int?, name: String?,
-         setting: Setting = .file, conventionalSetting: ConventionalSetting? = nil) {
+         setting: Setting = .file, conventionalSetting: ConventionalSetting? = nil, settings: DetectionSettings?) {
         self.cell = cell
         self.sites = sites
         self.setting = setting
@@ -173,6 +230,7 @@ public struct CrystalStructure: Sendable, Equatable {
         self.unresolvedRotations = detection.unresolvedRotations
         self.translationUncertainty = detection.translationUncertainty
         self.symmetryRefusal = detection.refusal
+        self.detectionSettings = settings
     }
 
     public var crystalSystem: CrystalSystem? { laueClass?.crystalSystem }

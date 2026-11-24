@@ -84,6 +84,7 @@ extension CrystalStructure {
         self.unresolvedRotations = []
         self.translationUncertainty = translationUncertainty
         self.symmetryRefusal = nil
+        self.detectionSettings = nil
     }
 
     /// `detectingSymmetry(conventional: true)`.
@@ -91,13 +92,13 @@ extension CrystalStructure {
         cell: UnitCell, sites: [AtomSite], fileOperations: [SymmetryOperation]?, spaceGroupNumber: Int?, name: String?,
         coarsestHalfStep: Double, metricLengthTolerance: Double, metricAngleToleranceDeg: Double,
         tolerance: SymmetryDetection.Tolerance, search: SymmetryDetection.Search,
-        policy: SymmetryDetection.Policy = .default
+        policy: SymmetryDetection.Policy = .default, settings: DetectionSettings?
     ) -> CrystalStructure {
         // An unusable position tolerance is refused before anything is built from it (the file's cell is checked here, the
         // conventional cell's by `detect`): the identity alone, with the reason.
         if let reason = tolerance.refusal(for: cell) ?? SymmetryDetection.siteRefusal(sites) {
             return refusedStructure(cell: cell, sites: sites, fileOperations: fileOperations, spaceGroupNumber: spaceGroupNumber,
-                                    name: name, reason: reason)
+                                    name: name, reason: reason, settings: settings)
         }
         let conventional = cell.conventionalCell(tolerance: metricLengthTolerance)
         let p = conventional.transformation
@@ -114,7 +115,8 @@ extension CrystalStructure {
                 laueClass: PointSymmetry.laueGroup(of: detection.operations).laueClass,
                 translationUncertainty: detection.translationUncertainty)
             return CrystalStructure(cell: cell, sites: sites, detection: detection, fileOperations: fileOperations,
-                                    spaceGroupNumber: spaceGroupNumber, name: name, conventionalSetting: setting)
+                                    spaceGroupNumber: spaceGroupNumber, name: name, conventionalSetting: setting,
+                                    settings: settings)
         }
 
         // The sites in the conventional cell: x' = P⁻¹ x, each lattice centring added as an image, duplicates merged.
@@ -151,7 +153,7 @@ extension CrystalStructure {
             tolerance: tolerance, search: search, policy: policy)
         if let reason = detection.refusal {
             return refusedStructure(cell: cell, sites: sites, fileOperations: fileOperations, spaceGroupNumber: spaceGroupNumber,
-                                    name: name, reason: reason)
+                                    name: name, reason: reason, settings: settings)
         }
 
         // Back to the file's cell: the centring translations become lattice translations and fall out as duplicates.
@@ -173,18 +175,20 @@ extension CrystalStructure {
             conventionalCell: conventional, sites: convSites, operations: detection.operations, laueGroup: convGroup,
             laueClass: convGroup.laueClass, translationUncertainty: detection.translationUncertainty)
         return CrystalStructure(cell: cell, sites: sites, detection: fileDetection, fileOperations: fileOperations,
-                                spaceGroupNumber: spaceGroupNumber, name: name, conventionalSetting: setting)
+                                spaceGroupNumber: spaceGroupNumber, name: name, conventionalSetting: setting,
+                                    settings: settings)
     }
 
     /// The structure of a detection that was refused (an unusable position tolerance): the identity alone, in the file's
     /// cell, with the reason (`symmetryRefusal`).
     static func refusedStructure(cell: UnitCell, sites: [AtomSite], fileOperations: [SymmetryOperation]?,
-                                 spaceGroupNumber: Int?, name: String?, reason: String) -> CrystalStructure {
+                                 spaceGroupNumber: Int?, name: String?, reason: String,
+                                 settings: DetectionSettings?) -> CrystalStructure {
         let detection = SymmetryDetection.Result(
             candidates: PointSymmetry(rotations: [.identity]), operations: [.identity], unresolvedRotations: [],
             translationUncertainty: 1e-9, refusal: reason)
         return CrystalStructure(cell: cell, sites: sites, detection: detection, fileOperations: fileOperations,
-                                spaceGroupNumber: spaceGroupNumber, name: name)
+                                spaceGroupNumber: spaceGroupNumber, name: name, settings: settings)
     }
 
     /// The identity first, then by rotation and translation: the order `SymmetryDetection` returns.

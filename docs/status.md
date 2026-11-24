@@ -13,6 +13,9 @@ Live:
   a number that is not finite refused with a typed error, and a seeded fuzz of the committed CIFs that never crashes (#117).
 - A cell that is singular, or whose volume, occupancy or metric is not a number, is refused by `UnitCell`,
   `StructureFactors.compute` and the symmetry's metric test instead of computing on an identity inverse or NaN (#147).
+- A structure as stored data: `CrystalStructure.Snapshot` (Codable, with a schema version) rebuilds the same
+  structure, and `CrystalStructure.fingerprint` changes with any cell parameter, any
+  site's element, position, occupancy or displacement, or the symmetry operations (#148).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`

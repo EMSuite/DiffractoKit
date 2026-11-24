@@ -39,15 +39,15 @@ and are counted apart.
 
 | Package | held | partly | not held | rows |
 |---|---|---|---|---|
-| pymatgen | 15 | 18 | 32 | 65 |
+| pymatgen | 15 | 19 | 32 | 66 |
 | py4DSTEM | 7 | 25 | 15 | 47 |
 | orix | 3 | 13 | 17 | 33 |
 | diffsims / pyxem (documentation only) | 0 | 7 | 2 | 9 |
-| **all** | 25 | 63 | 66 | 154 |
+| **all** | 25 | 64 | 66 | 155 |
 
 | Plan | rows | held | partly | not held |
 |---|---|---|---|---|
-| study | 100 | 24 | 53 | 23 |
+| study | 101 | 24 | 54 | 23 |
 | useful | 24 | 0 | 8 | 16 |
 | not planned | 30 | 0 | 0 | 30 |
 
@@ -140,6 +140,7 @@ matching and phase mapping of DiffractoOrientation, as a pinned f050d207 environ
 | `Structure.volume` | `CrystalStructure.cell.volume` | **held** | study | tests not shipped; assert_allclose defaults | P2 |
 | `Structure.composition` / `formula` | `CrystalStructure.formula` ("Mg10 Si12", cell content) | **partly** | useful | tests not shipped; assert_allclose defaults | `CrystalStructure` tests; not compared with pymatgen's string |
 | site properties for scattering: isotropic Debye-Waller (B or U) per species or site (`TEMCalculator(debye_waller_factors=...)`) | none (`AtomSite` has no displacement parameter) | not held | study | tests not shipped; assert_allclose defaults | ROADMAP item 4: the diffsims-like kinematic pattern API with Debye-Waller |
+| `Structure.as_dict` / `from_dict` (a structure as JSON and back) | `CrystalStructure.Snapshot` (Codable, schema version 1; `structure()` rebuilds it by the same detection with the same settings), `CrystalStructure.fingerprint` (SHA-256 of the cell, the sites and the operations, translations on a 1e-6 grid; not the name, labels or detection settings) | **partly** | study | tests not shipped; I/O exact | `StructureSnapshotTests`: every committed CIF that reads and the presets survive JSON bit for bit (a negative zero is stored as zero) and rebuild to an equal structure with the same fingerprint; the fingerprint changes with one ulp of any cell or site value. Not compared with pymatgen's dict, a different format by design (#148) |
 | `Structure.get_primitive_structure`, `get_reduced_structure("niggli")` | none for a structure (`UnitCell.niggliReduced` reduces the cell only; `ConventionalSetting` goes from any cell to the conventional one) | not held | useful | tests not shipped; assert_allclose defaults | not planned yet |
 | `Structure.density`, `get_neighbors`, `get_all_neighbors`, `get_distance`, `make_supercell`, `get_sorted_structure`, `interpolate`, `get_symmetric_neighbor_list` and the rest | none | not held | not planned (not diffraction) | tests not shipped; assert_allclose defaults |  |
 
