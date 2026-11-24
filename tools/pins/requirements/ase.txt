@@ -1,0 +1,3 @@
+# The ASE oracle of the atom-model readers (tools/pins/atom-models). Venv: ../References/python/ase (see CONTRIBUTING.md).
+ase==3.29.0
+numpy==2.5.5

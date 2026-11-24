@@ -158,9 +158,7 @@ struct MaterialsProjectSearchTests {
     /// fit is refused, not guessed. mp-623511 (Sn) is stated I4/mmm at the Materials Project's symprec 0.1, but its
     /// conventional cell has a = 3.453 and b = 3.551 (2.8 % apart), so it is body-centred orthorhombic at the kit's
     /// tolerance; the keyless route, which states no symmetry, reads it as oI (DiffractoKit #218).
-    static let refusedSummaries = [
-        "mp-623511": "mp-623511: converting as I-centred did not give a conventional tetragonal cell (a=3.551094, b=3.453078, c=4.676684, α=90.0°, β=90.0°, γ=90.0°). Import a conventional CIF for this phase instead.",
-    ]
+    static let refusedSummaries: Set<String> = ["mp-623511"]
 
     static func manifest() throws -> Manifest {
         try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: directory.appendingPathComponent("manifest.json")))
@@ -196,13 +194,23 @@ struct MaterialsProjectSearchTests {
             let response = try Route.decode(Data(contentsOf: Self.directory.appendingPathComponent("summary-\(id).json")))
             let document = try Route.firstDocument(in: response)
             #expect(document.materialID == id)
-            if let refusal = Self.refusedSummaries[id] {
-                #expect(throws: Route.Failure.nonStandardCell(refusal)) { try Route.structure(from: document) }
+            if Self.refusedSummaries.contains(id) {
+                // The case and the id, not the sentence: a rewording of the message keeps the behaviour pinned.
+                do {
+                    _ = try Route.structure(from: document)
+                    Issue.record("\(id) was read; the keyed route refuses it (#218)")
+                } catch {
+                    guard case .nonStandardCell(let text) = error else {
+                        Issue.record("\(id): expected nonStandardCell, got \(error)")
+                        continue
+                    }
+                    #expect(text.hasPrefix("\(id):"), "\(text)")
+                }
             } else {
                 _ = try Route.structure(from: document)
             }
         }
-        #expect(Set(Self.refusedSummaries.keys).isSubset(of: manifest.summaries))
+        #expect(Self.refusedSummaries.isSubset(of: manifest.summaries))
     }
 
     /// No recorded Materials Project answer holds a key: no header name, and no 32-character run of letters and digits

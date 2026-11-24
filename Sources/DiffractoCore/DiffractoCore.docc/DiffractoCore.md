@@ -28,6 +28,11 @@ It uses `Foundation` and `simd` only. Start with <doc:FromACIFToRings>.
 - ``CIFImportError``
 - ``CIFImportWarning``
 
+### Reading an atom model (extended XYZ, POSCAR)
+
+- ``AtomModel``
+- ``AtomModelError``
+
 ### Cells, sites and elements
 
 - ``UnitCell``

@@ -15,6 +15,7 @@ Live:
 - The CIFs people have: `?` and `.` values, deuterium and tritium, dummy atoms (left out with a warning), U and B iso,
   Latin-1 and a byte-order mark, DDLm names, a publication block before the structure; mmCIF and mCIF refused by name,
   a number that is not finite refused with a typed error, and a seeded fuzz of the committed CIFs that never crashes (#117).
+- Atom models built elsewhere (ASE, atomsk, VESTA, an MD run): extended XYZ and VASP 5 POSCAR read as `AtomModel` (atomic numbers, Cartesian positions in Å, the cell, periodicity, the frame count), equal to ASE 3.29.0's `ase.io.read` on a corpus of 25 files; a POSCAR without its element line is refused by name, and a million atoms read in under 2 s (#169).
 - A cell that is singular, or whose volume, occupancy or metric is not a number, is refused by `UnitCell`,
   `StructureFactors.compute` and the symmetry's metric test instead of computing on an identity inverse or NaN (#147).
 - A structure as stored data: `CrystalStructure.Snapshot` (Codable, with a schema version) rebuilds the same
@@ -34,6 +35,8 @@ Live:
   monoclinic a, b, c, β; triclinic all six), keeps the fractional sites and refuses an edit that changes the Laue class
   (#149).
 - A CIF of several structures: `CIFImport.blocks(in:)` lists its `data_` blocks and `read(_:block:)` reads one by name (#157).
+- A structure written as CIF (`CIFExport.text(of:options:)`): its operation loop and one site per orbit, numbers to the bit,
+  read back before it returns and written in P1 with every site, saying why, when the read-back differs (#168).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
