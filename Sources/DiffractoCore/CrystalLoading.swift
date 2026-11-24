@@ -59,13 +59,27 @@ public enum CrystalLoading {
     }
 
     /// Reads a CIF. Throws `Refusal` (size first, then encoding), then the importer's `CIFImportError` unchanged.
-    /// `fileName` supplies the fallback display name (its last component without extension).
-    public static func load(bytes: Data, fileName: String) throws -> LoadedCrystal {
+    /// `fileName` supplies the fallback display name (its last component without extension). `block` names the `data_`
+    /// block to read in a file of several structures (`CIFImport.read(_:block:)`); nil reads the file's one structure.
+    public static func load(bytes: Data, fileName: String, block: String? = nil) throws -> LoadedCrystal {
         guard bytes.count <= maximumBytes else { throw Refusal.tooLarge(bytes: bytes.count) }
         guard let text = text(of: bytes) else { throw Refusal.notUTF8 }
         let base = URL(fileURLWithPath: fileName).deletingPathExtension().lastPathComponent
-        let document = try CIFImport.read(text, fileBaseName: base)
+        let document: CIFDocument
+        if let block {
+            document = try CIFImport.read(text, block: block, fileBaseName: base)
+        } else {
+            document = try CIFImport.read(text, fileBaseName: base)
+        }
         return LoadedCrystal(document: document, sha256: fingerprint(of: bytes), byteCount: bytes.count)
+    }
+
+    /// The `data_` blocks of a CIF's bytes (`CIFImport.blocks(in:)`), behind the same size and encoding refusals as
+    /// `load`: a file of several structures lists them here, and `load(bytes:fileName:block:)` reads one.
+    public static func blocks(bytes: Data) throws -> [CIFImport.Block] {
+        guard bytes.count <= maximumBytes else { throw Refusal.tooLarge(bytes: bytes.count) }
+        guard let text = text(of: bytes) else { throw Refusal.notUTF8 }
+        return try CIFImport.blocks(in: text)
     }
 
     /// The text of a CIF's bytes: UTF-8 (a byte-order mark dropped), else Windows-1252, else ISO 8859-1 (Latin-1, which
