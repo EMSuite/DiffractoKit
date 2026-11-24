@@ -40,10 +40,13 @@ public enum StructureFactors {
     public static let defaultCut = 1e-4
 
     /// F(hkl) for `structure`, with the electron form factor unless another is given. nil when a site's element has
-    /// no form factor.
+    /// no form factor, and nil (refused, never a NaN or infinite F) when the cell's volume is not a finite positive number
+    /// or g, a coordinate or an occupancy is not finite.
     public static func compute(_ hkl: MillerIndex, in structure: CrystalStructure,
                                formFactor: FormFactor = ElectronScatteringFactors.f) -> StructureFactor? {
-        compute(hkl, g: structure.cell.gVector(hkl), sites: structure.sites, volume: structure.cell.volume,
+        guard structure.sites.allSatisfy({ $0.occupancy.isFinite && $0.fractional.x.isFinite && $0.fractional.y.isFinite
+                                           && $0.fractional.z.isFinite }) else { return nil }
+        return compute(hkl, g: structure.cell.gVector(hkl), sites: structure.sites, volume: structure.cell.volume,
                 formFactor: formFactor)
     }
 
@@ -51,6 +54,9 @@ public enum StructureFactors {
     /// Re += f·occ·cos, Im += f·occ·sin; then ÷ V.
     static func compute(_ hkl: MillerIndex, g: SIMD3<Double>, sites: [AtomSite], volume: Double,
                         formFactor: FormFactor) -> StructureFactor? {
+        // Refused on every path. The sites are checked by the callers (`kinematicReflections` validates the structure,
+        // `compute(_:in:)` checks them), once per structure rather than once per reflection.
+        guard volume.isFinite, volume > 0, g.x.isFinite, g.y.isFinite, g.z.isFinite else { return nil }
         let gLen = length(g)
         let gSq = gLen * gLen
         var re = 0.0, im = 0.0

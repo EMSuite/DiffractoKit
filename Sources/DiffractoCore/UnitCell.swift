@@ -26,7 +26,10 @@ public struct UnitCell: Sendable, Equatable {
     public let reciprocalLattice: [SIMD3<Double>]
     /// G = A Aᵀ (Å²).
     public let metricTensor: [SIMD3<Double>]
-    /// G* = G⁻¹ (Å⁻²): |g|² = (h k l) G* (h k l)ᵀ.
+    /// G* = G⁻¹ (Å⁻²): |g|² = (h k l) G* (h k l)ᵀ. NaN in every entry (and so in `reciprocalLattice`, `gVector`, `d`
+    /// and `gLength`) when the metric is singular: V below `degenerateVolumeFraction` · a b c (or not a finite positive
+    /// number), the cell `issues` calls `degenerateVolume`; also for a cell edge outside about 1e-51 Å to 1e51 Å, where det G leaves Double's
+    /// range. A singular cell has no reciprocal lattice, so no number is made up for one (`interplanarAngleDeg` is NaN too).
     public let reciprocalMetricTensor: [SIMD3<Double>]
     /// |det A| (Å³).
     public let volume: Double
@@ -51,10 +54,22 @@ public struct UnitCell: Sendable, Equatable {
             SIMD3<Double>(c * cos(beta), -c * f / sin(gamma), vol / (a * b * sin(gamma))),
         ]
         self.realLattice = real
-        self.volume = abs(UnitCell.determinant(real))
+        let volume = abs(UnitCell.determinant(real))
+        self.volume = volume
         let metric = UnitCell.gram(real)
         self.metricTensor = metric
-        let metricInverse = UnitCell.invert3x3(metric) ?? UnitCell.identity3
+        // Relative to the cell, as `issues` judges the volume: det G = V², so a cell flatter than V = 1e-6 · a b c has
+        // no inverse here (an absolute 1e-15 on det G read a valid 1e-5 Å cell as singular, and the identity that
+        // stood in for the inverse gave plausible wrong d and g).
+        // (Compared on V; the inverse itself still needs det G = V² within Double's range, a cell edge from about 1e-51 Å
+        // to 1e51 Å; outside it the reciprocal values are NaN too, and `ReflectionList.checkBounds` refuses the cell.)
+        let metricInverse: [SIMD3<Double>]
+        if volume.isFinite, volume > 0, !(volume < UnitCell.degenerateVolumeFraction * a * b * c),
+           let inverse = UnitCell.invert3x3(metric, singularBelow: 0) {
+            metricInverse = inverse
+        } else {
+            metricInverse = UnitCell.notANumber3
+        }
         self.reciprocalMetricTensor = metricInverse
         self.reciprocalLattice = UnitCell.matMul(metricInverse, real)
     }
@@ -118,6 +133,8 @@ public struct UnitCell: Sendable, Equatable {
     public func interplanarAngleDeg(_ p: MillerIndex, _ q: MillerIndex) -> Double {
         let gp = gVector(p), gq = gVector(q)
         let cosine = dot(gp, gq) / (length(gp) * length(gq))
+        // NaN for a degenerate cell (no reciprocal lattice): clamping NaN would give 180° (max(-1, NaN) is -1).
+        guard cosine.isFinite else { return .nan }
         return acos(min(1, max(-1, cosine))) * 180 / .pi
     }
 
@@ -146,7 +163,7 @@ public struct UnitCell: Sendable, Equatable {
         }
         // A cell flatter than V = 1e-6 · a b c is coplanar up to rounding (α = β = γ = 120° gives V ≈ 3e-6 Å³ for 5 Å
         // edges, and structure factors of 1e6): refused.
-        if !volume.isFinite || volume <= 0 || volume < 1e-6 * a * b * c { out.append(.degenerateVolume) }
+        if !volume.isFinite || volume <= 0 || volume < UnitCell.degenerateVolumeFraction * a * b * c { out.append(.degenerateVolume) }
         return out
     }
 
@@ -203,6 +220,11 @@ public struct UnitCell: Sendable, Equatable {
     // MARK: - Small linear-algebra helpers (row-vector matrices), as the reference implementations'
 
     static let identity3: [SIMD3<Double>] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    static let notANumber3: [SIMD3<Double>] = [SIMD3(repeating: .nan), SIMD3(repeating: .nan), SIMD3(repeating: .nan)]
+
+    /// A cell whose volume is below this fraction of a b c is degenerate (`Issue.degenerateVolume`) and its metric
+    /// singular (`reciprocalMetricTensor`): 1e-6.
+    public static let degenerateVolumeFraction = 1e-6
 
     static func gram(_ m: [SIMD3<Double>]) -> [SIMD3<Double>] {
         [
@@ -225,9 +247,10 @@ public struct UnitCell: Sendable, Equatable {
       + m[0].z * (m[1].x * m[2].y - m[1].y * m[2].x)
     }
 
-    static func invert3x3(_ m: [SIMD3<Double>]) -> [SIMD3<Double>]? {
+    /// The inverse, or nil when the determinant is not finite or its magnitude is at most `singularBelow` (absolute).
+    static func invert3x3(_ m: [SIMD3<Double>], singularBelow: Double = 1e-15) -> [SIMD3<Double>]? {
         let det = determinant(m)
-        guard det.isFinite, abs(det) > 1e-15 else { return nil }
+        guard det.isFinite, abs(det) > singularBelow else { return nil }
         let inv = 1 / det
         return [
             SIMD3((m[1].y * m[2].z - m[1].z * m[2].y) * inv,

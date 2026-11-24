@@ -177,7 +177,10 @@ public struct ReflectionList: Sendable, Equatable {
     /// the policy's bounds. Nothing is enumerated.
     package static func checkBounds(cell: UnitCell, kMax: Double, policy: Policy) throws(ReflectionListError) {
         guard kMax.isFinite, kMax > 0, kMax <= policy.maximumKMax else { throw .invalidKMax(kMax) }
-        guard cell.isValid else { throw .cellTooLargeOrInvalid(estimatedReflections: .infinity) }
+        // A valid cell whose reciprocal metric left Double's range (an edge beyond about 1e51 Å or below 1e-51 Å) is NaN
+        // there (`UnitCell.reciprocalMetricTensor`): it has no reflections to list.
+        guard cell.isValid, cell.reciprocalMetricTensor.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite })
+        else { throw .cellTooLargeOrInvalid(estimatedReflections: .infinity) }
         let estimate = 4.0 / 3.0 * Double.pi * kMax * kMax * kMax * cell.volume
         let box = cell.realLattice.map { 2 * (kMax * length($0)).rounded(.up) + 1 }.reduce(1, *)
         guard estimate.isFinite, box.isFinite, estimate <= Double(policy.maximumReflections),
