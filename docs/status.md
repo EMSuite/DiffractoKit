@@ -39,6 +39,10 @@ Live:
 - The zone axis and full orientation of one measured spot pattern (`ZoneAxisSolver`): lattice-vector pairs scored on every
   spot against the kinematic pattern, the scale and in-plane turn fitted, every spot's hkl, and a verdict (solved, a tie,
   or refused for one row of spots or a poor fit); the half turn about the beam is flagged where the crystal lacks it.
+- The tilt planner's kit half: the stereographic projection (orix's), the zone-axis map of an orientation (`ZoneAxisMap`:
+  poles to index 3 and the traces of the lowest plane families with their Bragg angles) and a double-tilt holder
+  (`DoubleTiltHolder`): the α and β that bring a zone axis onto the beam, whether the holder reaches them, and the tilt
+  axis calibrated from two indexed patterns at two tilts, which also settles the half turn of one spot pattern.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
   its routes (`DoubleDiffraction`).
 - The tilt of an indexed pattern off its zone axis, refined on the spot intensities (`ZoneAxisSolver.refineTilts`), with
