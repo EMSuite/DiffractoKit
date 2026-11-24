@@ -44,3 +44,9 @@ used comes back with named refusals, not a number alone. Start with <doc:Calibra
 ### Beam directions
 
 - ``ZoneAxis``
+
+### Planning tilts
+
+- ``StereographicProjection``
+- ``ZoneAxisMap``
+- ``DoubleTiltHolder``
