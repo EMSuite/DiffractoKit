@@ -5,182 +5,182 @@
    "bytes": 1047,
    "file": "info.json",
    "note": "the service's info",
-   "sha256": "b995d66a49c5522f4c41506191feb1836cbbcc117c31504f25db0504fc94f924",
+   "sha256": "ccf2db40c445d4f1d43d3e1f2091ae982a1cd1d4efd709f1df65582653ecaedd",
    "url": "https://optimade.materialsproject.org/v1/info"
   },
   {
    "bytes": 864,
    "file": "search-none.json",
    "note": "a formula with no entry: the service answers, with no rows",
-   "sha256": "1ba7dc344724cf037e8948cc4d5be9847d37742109a2a967fa4b0a0d0326f567",
+   "sha256": "54acf09d7aad856d86151c3f3d729a22f16ceabb02b17489e285bbbdd63327b5",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Xe3Kr5%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 6364,
    "file": "search-Al.json",
    "note": "the search for Al",
-   "sha256": "f8f322be6e38d656bddc80e3fae1563df0b958d4bafe3428384f0ed180dfe0eb",
+   "sha256": "e2d571645594a00c8ff0f60bb01a93eeae064f807b5be1f34d4d7a0694abdf3d",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Al%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 2175,
    "file": "entry-mp-134.json",
    "note": "Al, cF (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "4c7bb874ed3c08a9bdfc52cf10c9d875fe328c7f9886bd660ba500cb227458fc",
+   "sha256": "3a1ae03f1d20fed662753b4372511e7c52166336249e1efff28dced322d421a1",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-134"
   },
   {
    "bytes": 2443,
    "file": "entry-mp-1183144.json",
    "note": "Al, hP (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "e48c3748783ce5d22142877f3fc59d07e46cf446585608308e020070f87baa63",
+   "sha256": "14430bc5bfb5d19f1a79a1bd73222e964aa194aced9d5c1ba8116764fb510016",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-1183144"
   },
   {
    "bytes": 2323,
    "file": "entry-mp-998860.json",
    "note": "Al, cI (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "b405c2f7ba160191229dae80fd0f0a51dd7cf0abb5e34d1ba3e1758e5ec438ce",
+   "sha256": "cbcdaf46865c0d097dcc28e389c6cc198ede7cc2bbcebfb479f42e7034cdf7b9",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-998860"
   },
   {
    "bytes": 8368,
    "file": "entry-mp-1245129.json",
    "note": "Al, aP (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "16fac5e438a7908066f4726833526ba0982e08614cf341153f4d82774268b32f",
+   "sha256": "28ee8be5d05e36536a6668acd273724280ea10fc3070b00645cddc150d2f96ee",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-1245129"
   },
   {
    "bytes": 5851,
    "file": "search-Mg.json",
    "note": "the search for Mg",
-   "sha256": "19434ef4cb4bafe502663f601a1b15ecd4bb8d6f8a4aaf47c1f1309b127fbebb",
+   "sha256": "27d7cbfb37bcddd0c103f90368484f3235c1aa5b27f572f33630f76bda8d18ad",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Mg%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 2745,
    "file": "entry-mp-1094122.json",
    "note": "Mg, hR (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "a2ee6b6d98f39dfecc83d7b93fd130762613c0dfd7e988a18bcf806b2e9d1d86",
+   "sha256": "908a259d14541823140b8daa22fc5ad657cd1307c5e6d61a72119d0c93ed93c3",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-1094122"
   },
   {
    "bytes": 24183,
    "file": "search-Si.json",
    "note": "the search for Si",
-   "sha256": "e67f4fa0d21dfc7af4a11a6846c4862ecce8229eb515075951f52c94c5606d44",
+   "sha256": "c49ee86230e0d2b0fa788f7ea3b66aa753b8097eed24ad8ed56e3916bb5b7151",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Si%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 4717,
    "file": "entry-mp-971662.json",
    "note": "Si, cP (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "9ebbcf5599a7a8051d08360569120fa88da81c62a98e0ff21577e1ec26960ff1",
+   "sha256": "edbace1df836d91a754d6a111133ede3cf25e7e29b08d1a04033e9b82c544a51",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-971662"
   },
   {
    "bytes": 2803,
    "file": "entry-mp-1079297.json",
    "note": "Si, mC (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "080f0ac6d159311f3491eb434ecda8bd907b48ab557d4ac30f39f7c7804e1667",
+   "sha256": "0c8cba3d6daf7e6c17a90085d1693708d4ba141e2db57dbc7cdf26ba5f6bc8bd",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-1079297"
   },
   {
    "bytes": 5581,
    "file": "search-In.json",
    "note": "the search for In",
-   "sha256": "beb47d1dc6a1a3405edf81d508f9973cbb567345d20a5ac9ed5dc759e72f1e43",
+   "sha256": "182527fe03d9769fef24a90be7d9b8dc31bbe1259252c56b2e9fa302819108ef",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22In%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 2233,
    "file": "entry-mp-85.json",
    "note": "In, tI (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "ab37fd31d8bd32c3cfcfb3ee57f6d04d1d39dae6b51ebe1fdcc1dd6444690600",
+   "sha256": "82b483be2a4f6c092a2b91b0f09ddd25002f607ba87377ce19e95902695abebb",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-85"
   },
   {
    "bytes": 6320,
    "file": "search-Sn.json",
    "note": "the search for Sn",
-   "sha256": "2203f326a8876e11e01925f8c68fad0da19ab30fecce94f72ca694404477c305",
+   "sha256": "5e8dd3235ccbd579273e7b70c2c83ebc9a39b486564e37bb590e82a1b5f9fc13",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Sn%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 2128,
    "file": "entry-mp-623511.json",
    "note": "Sn, oI (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "876e7fc1c19ee200a8cde3f99d53a8c6ce5fabe21fa668db7127c0e23e51b8fd",
+   "sha256": "fcfb0b297ccd5c9c154f65d78f02cd61a2c07b0b5b0808edbc2baa51c21342a8",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-623511"
   },
   {
    "bytes": 25912,
    "file": "search-O2Ti.json",
    "note": "the search for O2Ti",
-   "sha256": "992521b491808544db20f2959fd9e7586aa5739c21b0fd91d557eaf015518ca6",
+   "sha256": "17bc0d67508899eb3384bb1a5a1ae2b6583d2c0911311d9ef983cf7af4a2899e",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22O2Ti%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 3897,
    "file": "entry-mp-1840.json",
    "note": "O2Ti, oP (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "8ff3be5356e803b043c7e0c4ea1e8cb8a28c7dcc02aeb8d2ec118049d72281e8",
+   "sha256": "17e3621577e26e0409be9f94e2015ab8f0efd5d534f73b817c8b45ff3b3530f9",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-1840"
   },
   {
    "bytes": 7146,
    "file": "search-Bi.json",
    "note": "the search for Bi",
-   "sha256": "37bb4ab7d8183beeb13f5671fdcdb7533bde1adf002af8b8435ecf6a2dc4a0b6",
+   "sha256": "640e34165da28d93c633a5fe6c447431fb7f57b233ce408005e0f11916ccef3f",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Bi%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 2411,
    "file": "entry-mp-567597.json",
    "note": "Bi, mP (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "e429d69b6e6f323a9aa4a40ed9326b58c733c431ecb8c9e9b1b1304e304cf121",
+   "sha256": "4ad683e967ba63966301c6174967a7a848792538894e4b787211865338c907b7",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-567597"
   },
   {
    "bytes": 6226,
    "file": "search-Ga.json",
    "note": "the search for Ga",
-   "sha256": "22b5f94427d3663de7fcd875540eabba2f849d0bacacd2e473e62453a0ded893",
+   "sha256": "3b84f70d87ee0ffdf313ef4ca79c618ebd03c0b44c6aecb1ccebed216e45952e",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22Ga%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 2420,
    "file": "entry-mp-142.json",
    "note": "Ga, oC (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "b6333471a09c90f933b0c1e57d280b223ac5a2a8448c9d5112ea65f6aea27f9c",
+   "sha256": "c1d9f497604b69fa3b88037e6252abf2c0d2ffd0e61d2504211a92a4dcc9a0c3",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-142"
   },
   {
    "bytes": 8474,
    "file": "search-U.json",
    "note": "the search for U",
-   "sha256": "287060e2fe62feb698f11489d036af1816af2922346ec9bab7652cd4c2fd6cb5",
+   "sha256": "1a28393f0108f2161fc80e852598ea28a827f9970f8d3595213a6875487c377b",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22U%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 3850,
    "file": "entry-mp-43.json",
    "note": "U, tP (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "e9c6444b011780d2798726136e1cd4efa799fd38ca4486fff33501d447598508",
+   "sha256": "a1a66a93fb3cd08242ab52dba0417b156464c7753630bac70dee6c052b5dff6a",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-43"
   },
   {
    "bytes": 19571,
    "file": "search-S.json",
    "note": "the search for S",
-   "sha256": "4a58b69c75a36d4d8a51ef7dd0ebeb176cf89b26b1ec994c2c6bed0b31b72e01",
+   "sha256": "b32bd279edec59825858d2156d630aabc62011d2705836c87a7da0a3a0bd0a27",
    "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22S%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability&page_limit=500"
   },
   {
    "bytes": 4200,
    "file": "entry-mp-77.json",
    "note": "S, oF (spglib, the same at symprec 1e-4, 1e-3 and 1e-2)",
-   "sha256": "61e923e3decd8a6b8fcb16c83c5078708f8f0d0c778188f94e90a368c48ce3f3",
+   "sha256": "6a3f5ebead4a2a627a61b0c4e01e98f3ba14bd0c67b76f3a1357bbfd950a5045",
    "url": "https://optimade.materialsproject.org/v1/structures/mp-77"
   }
  ],
