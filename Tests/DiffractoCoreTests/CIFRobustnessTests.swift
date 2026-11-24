@@ -278,6 +278,15 @@ struct CIFRobustnessTests {
         #expect(CIFImportError.magneticCIF.description.contains("mCIF"))
         // A DDLm small-molecule CIF with `_atom_site.label` is no mmCIF.
         #expect(try Self.read("two_blocks_ddlm").structure.sites.count == 4)
+        // Nor is one that lists Cartesian coordinates beside its fractional ones (`_atom_site.Cartn_x` is core DDLm too, #225).
+        let cartesian = Self.gold.replacingOccurrences(of: "_atom_site_", with: "_atom_site.")
+            .replacingOccurrences(of: "_atom_site.fract_z\n", with: "_atom_site.fract_z\n_atom_site.Cartn_x\n")
+            .replacingOccurrences(of: "Au1 Au 0 0 0", with: "Au1 Au 0 0 0 0")
+            .replacingOccurrences(of: "Au2 Au 0.5 0.5 0", with: "Au2 Au 0.5 0.5 0 2.0391")
+            .replacingOccurrences(of: "Au3 Au 0.5 0 0.5", with: "Au3 Au 0.5 0 0.5 2.0391")
+            .replacingOccurrences(of: "Au4 Au 0 0.5 0.5", with: "Au4 Au 0 0.5 0.5 0")
+        #expect(cartesian.contains("_atom_site.Cartn_x"))
+        #expect(try CIFImport.read(cartesian).structure.sites.count == 4)
     }
 
     @Test func theNewErrorsShowTheirText() {
