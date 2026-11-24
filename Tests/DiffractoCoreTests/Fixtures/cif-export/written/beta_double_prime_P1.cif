@@ -1,0 +1,35 @@
+data_Mg10_Si12
+_audit_creation_method DiffractoKit
+_chemical_formula_sum 'Mg10 Si12'
+_cell_length_a 15.16
+_cell_length_b 4.05
+_cell_length_c 6.74
+_cell_angle_alpha 90.0
+_cell_angle_beta 105.3
+_cell_angle_gamma 90.0
+_space_group_name_H-M_alt C2/m
+_space_group_IT_number 12
+loop_
+_space_group_symop_operation_xyz
+'x,y,z'
+'x+1/2,y+1/2,z'
+'-x,-y,-z'
+'-x+1/2,-y+1/2,-z'
+'-x,y,-z'
+'-x+1/2,y+1/2,-z'
+'x,-y,z'
+'x+1/2,-y+1/2,z'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Mg1 Mg 0.0 0.0 0.0 1.0 0.006332573977646111
+Mg2 Mg 0.3459 0.0 0.089 1.0 0.012665147955292222
+Mg3 Mg 0.43 0.0 0.652 1.0 0.010132118364233778
+Si1 Si 0.0565 0.0 0.649 1.0 0.013931662750821446
+Si2 Si 0.1885 0.0 0.224 1.0 0.006332573977646111
+Si3 Si 0.2171 0.0 0.617 1.0 0.031662869888230555
