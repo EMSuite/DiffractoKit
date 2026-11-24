@@ -154,12 +154,16 @@ struct MaterialsProjectSearchTests {
         let summaries: [String]
     }
 
-    /// Recorded summaries the keyed route refuses, as designed: a centred primitive cell whose stated system does not
-    /// fit is refused, not guessed. The Materials Project states each group at its symprec 0.1; at the kit's tolerance
-    /// (lengths 1e-3 relative, angles 1e-2°) these cells are lower: mp-623511 (Sn, stated I4/mmm) has a = 3.453 and
-    /// b = 3.551; mp-77 (S, stated Fddd) has α = 89.966°; mp-85 (In, stated Fm-3m) is body-centred tetragonal. The
-    /// keyless route, which states no symmetry, reads them by their lattice (DiffractoKit #218).
-    static let refusedSummaries: Set<String> = ["mp-623511", "mp-77", "mp-85"]
+    /// Recorded summaries whose stated group (found by the Materials Project at symprec 0.1 Å, angle tolerance 5°) the
+    /// fixed conversion cannot reach; the import reads the symmetry from the atoms, loosened through `symprecSteps`
+    /// until the stated crystal system and centring show: Bravais lattice, Laue class, conventional site count, volume
+    /// (Å³) and the spglib-equivalent symprec kept. spglib 2.8.0 at its default angle tolerance reads In I4/mmm and Sn
+    /// Immm at every step and S P1 at 0.01 Å, Fddd at 0.1 (DiffractoKit #218).
+    static let readFromTheAtoms: [String: (bravais: String, laue: String, sites: Int, volume: Double, symprec: Double)] = [
+        "mp-85": ("tI", "4/mmm", 2, 52.785029461107186, 5e-4),       // In, stated Fm-3m, which no step reaches
+        "mp-623511": ("oI", "mmm", 2, 57.34645590476849, 5e-4),     // Sn, stated I4/mmm, which no step reaches
+        "mp-77": ("oF", "mmm", 128, 4 * 887.5956414230242, 0.1),     // S, stated Fddd, reached at 0.1
+    ]
 
     static func manifest() throws -> Manifest {
         try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: directory.appendingPathComponent("manifest.json")))
@@ -195,23 +199,18 @@ struct MaterialsProjectSearchTests {
             let response = try Route.decode(Data(contentsOf: Self.directory.appendingPathComponent("summary-\(id).json")))
             let document = try Route.firstDocument(in: response)
             #expect(document.materialID == id)
-            if Self.refusedSummaries.contains(id) {
-                // The case and the id, not the sentence: a rewording of the message keeps the behaviour pinned.
-                do {
-                    _ = try Route.structure(from: document)
-                    Issue.record("\(id) was read; the keyed route refuses it (#218)")
-                } catch {
-                    guard case .nonStandardCell(let text)? = error as? Route.Failure else {
-                        Issue.record("\(id): expected nonStandardCell, got \(error)")
-                        continue
-                    }
-                    #expect(text.hasPrefix("\(id):"), "\(text)")
-                }
-            } else {
-                _ = try Route.structure(from: document)
+            let imported = try Route.structure(from: document)
+            if let want = Self.readFromTheAtoms[id] {
+                let structure = imported.structure
+                #expect(MaterialsProjectRecordingTests.bravais(of: structure) == want.bravais, "\(id) Bravais lattice")
+                #expect(structure.laueClass?.rawValue == want.laue, "\(id) Laue class")
+                #expect(structure.sites.count == want.sites, "\(id) site count")
+                // A cell idealised to its family at 0.1 Å keeps the volume to about 2e-7 (S: α = 89.966° made 90°).
+                #expect(abs(structure.cell.volume - want.volume) <= 1e-6 * want.volume, "\(id) volume \(structure.cell.volume)")
+                #expect(imported.symprec == want.symprec, "\(id) symprec \(String(describing: imported.symprec))")
             }
         }
-        #expect(Self.refusedSummaries.isSubset(of: manifest.summaries))
+        #expect(Set(Self.readFromTheAtoms.keys).isSubset(of: manifest.summaries))
     }
 
     /// No recorded Materials Project answer holds a key: no header name, and no 32-character run of letters and digits

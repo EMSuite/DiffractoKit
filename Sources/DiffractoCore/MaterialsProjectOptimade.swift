@@ -234,6 +234,18 @@ public enum MaterialsProjectOptimade {
     /// lattice centring; the symmetry is then detected there. Refused (`MaterialsProjectImport.Failure.malformed`):
     /// a number that is not finite, a site without a species, an unknown element, a lattice that cannot be reduced.
     public static func structure(from entry: Entry) throws(MaterialsProjectImport.Failure) -> MaterialsProjectImport.ImportedStructure {
+        try structure(from: entry, symprec: nil)
+    }
+
+    /// The entry read as `structure(from:)` reads it, at a looser spglib-equivalent `symprec` (Å) when one is given:
+    /// sites at `.cartesian(2 symprec)` (the kit's Cartesian tolerance keeps an operation up to about half its value,
+    /// `SymmetryDetection.Tolerance`), and the lattice found with operations that move the metric by up to
+    /// `symprec / |a|max` relative (the angle through which the longest served vector turns when its end moves
+    /// `symprec`), never below `metricLengthTolerance`. The symmetry is then detected in the conventional cell, whose
+    /// parameters are idealised to that lattice, at `metricLengthTolerance`: a looser metric there would let near-equal
+    /// axes take a holohedry their lengths do not have (DiffractoKit #218).
+    static func structure(from entry: Entry, symprec: Double?) throws(MaterialsProjectImport.Failure)
+        -> MaterialsProjectImport.ImportedStructure {
         let id = entry.materialID
         var rows = entry.latticeVectors
         guard rows.count == 3, rows.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }) else {
@@ -277,6 +289,10 @@ public enum MaterialsProjectOptimade {
         func angle(_ u: SIMD3<Double>, _ v: SIMD3<Double>) -> Double {
             acos(min(1, max(-1, dot(u, v) / (length(u) * length(v))))) * 180 / .pi
         }
+        let longest = rows.map { length($0) }.max() ?? 1
+        let metricLengthTolerance = symprec.map { max(Self.metricLengthTolerance, $0 / longest) } ?? Self.metricLengthTolerance
+        let positionTolerance: SymmetryDetection.Tolerance = symprec.map { SymmetryDetection.Tolerance.cartesian(2 * $0) }
+            ?? Self.positionTolerance
         let served = UnitCell(a: length(rows[0]), b: length(rows[1]), c: length(rows[2]),
                               alphaDeg: angle(rows[1], rows[2]), betaDeg: angle(rows[0], rows[2]),
                               gammaDeg: angle(rows[0], rows[1]))
@@ -293,14 +309,19 @@ public enum MaterialsProjectOptimade {
                                             conventional.bravais)
             : conventional.cell
         let structure = CrystalStructure.detectingSymmetry(cell: cell, sites: conventional.sites, name: id,
-                                                           metricLengthTolerance: metricLengthTolerance,
+                                                           metricLengthTolerance: Self.metricLengthTolerance,
                                                            tolerance: positionTolerance)
         // A P lattice that was only reduced or relabelled is no conversion from a centred primitive cell.
         let centring = conventional.bravais.centring
         let outcome: CellStandardisation.Outcome = conventional.transformation == .identity || centring == "P"
             ? .asServed : .conventional(centring: centring)
-        return MaterialsProjectImport.ImportedStructure(structure: structure, cell: outcome)
+        return MaterialsProjectImport.ImportedStructure(structure: structure, cell: outcome,
+                                                        symprec: symprec ?? defaultSymprec)
     }
+
+    /// The spglib-equivalent symprec (Å) of `positionTolerance` (`.cartesian(1e-3)`, about spglib's 5e-4), recorded
+    /// with a structure read at it.
+    static let defaultSymprec = 5e-4
 
     // MARK: Envelopes
 
