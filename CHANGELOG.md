@@ -4,6 +4,20 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.20.0](https://github.com/EMSuite/DiffractoKit/compare/0.19.0...0.20.0) (2026-11-24)
+
+
+### Features
+
+* a Codable structure snapshot and a content fingerprint ([#188](https://github.com/EMSuite/DiffractoKit/issues/188)) ([850bb1b](https://github.com/EMSuite/DiffractoKit/commit/850bb1b38dcea259bee306b85acb393f226871ea))
+* find and read Materials Project structures without a key (OPTIMADE) ([#189](https://github.com/EMSuite/DiffractoKit/issues/189)) ([a3c5d55](https://github.com/EMSuite/DiffractoKit/commit/a3c5d55ce186f30b0f23b4df5d7b2c1c6ea8e089))
+* X-ray scattering factors and powder XRD ([#184](https://github.com/EMSuite/DiffractoKit/issues/184)) ([1e6c5b7](https://github.com/EMSuite/DiffractoKit/commit/1e6c5b700bc479ef2ed38954a37c7d7d41ab29bc))
+
+
+### Bug Fixes
+
+* a singular cell, a NaN volume or occupancy and a NaN metric are refused ([#174](https://github.com/EMSuite/DiffractoKit/issues/174)) ([1fed672](https://github.com/EMSuite/DiffractoKit/commit/1fed6729bc9d25d3dab79cf320dcf137e387aab1))
+
 ## [0.19.0](https://github.com/EMSuite/DiffractoKit/compare/0.18.1...0.19.0) (2026-11-23)
 
 
