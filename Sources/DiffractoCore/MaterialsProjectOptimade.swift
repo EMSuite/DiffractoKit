@@ -24,6 +24,10 @@ public enum MaterialsProjectOptimade {
     /// 1e-6 / |a|; with |a| ≥ 1 Å that is at most 1e-6. The tolerance is ten times that. It is still far below any
     /// real departure from a lattice's symmetry that a calculated cell shows.
     public static let metricLengthTolerance = 1e-5
+    /// Sites are the same within 1e-3 Å (Cartesian): a thousand times the server's rounding, the scale of spglib's
+    /// symprec for calculated structures. The kit's default, 5e-3 of each cell edge (0.04 Å on a 7.8 Å edge), finds a
+    /// pseudo-translation in Bi P2_1/m (mp-567597) and reads it C-centred.
+    public static let positionTolerance: SymmetryDetection.Tolerance = .cartesian(1e-3)
 
     /// What a search asks for.
     public enum Query: Sendable, Equatable {
@@ -268,12 +272,20 @@ public enum MaterialsProjectOptimade {
                               alphaDeg: angle(rows[1], rows[2]), betaDeg: angle(rows[0], rows[2]),
                               gammaDeg: angle(rows[0], rows[1]))
         let read = CrystalStructure.detectingSymmetry(cell: served, sites: sites, name: id,
-                                                      metricLengthTolerance: metricLengthTolerance)
+                                                      metricLengthTolerance: metricLengthTolerance,
+                                                      tolerance: positionTolerance)
         guard let conventional = read.conventionalSetting, conventional.reductionConverged else {
             throw .malformed("\(id)'s lattice could not be reduced to find its conventional cell.")
         }
-        let structure = CrystalStructure.detectingSymmetry(cell: conventional.cell, sites: conventional.sites, name: id,
-                                                           metricLengthTolerance: metricLengthTolerance)
+        // A cell that needed no transformation comes back as served (γ = 119.999989 for mp-1094122); idealise it to its
+        // lattice too, or the next read, whose family test works at 1e-9, would call a hexagonal cell monoclinic.
+        let cell = conventional.transformation == .identity
+            ? ConventionalCell.idealised(rows.map { r in SIMD3(dot(r, rows[0]), dot(r, rows[1]), dot(r, rows[2])) },
+                                         conventional.bravais)
+            : conventional.cell
+        let structure = CrystalStructure.detectingSymmetry(cell: cell, sites: conventional.sites, name: id,
+                                                           metricLengthTolerance: metricLengthTolerance,
+                                                           tolerance: positionTolerance)
         // A P lattice that was only reduced or relabelled is no conversion from a centred primitive cell.
         let centring = conventional.bravais.centring
         let outcome: CellStandardisation.Outcome = conventional.transformation == .identity || centring == "P"
