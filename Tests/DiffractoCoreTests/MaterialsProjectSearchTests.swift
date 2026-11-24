@@ -155,10 +155,11 @@ struct MaterialsProjectSearchTests {
     }
 
     /// Recorded summaries the keyed route refuses, as designed: a centred primitive cell whose stated system does not
-    /// fit is refused, not guessed. mp-623511 (Sn) is stated I4/mmm at the Materials Project's symprec 0.1, but its
-    /// conventional cell has a = 3.453 and b = 3.551 (2.8 % apart), so it is body-centred orthorhombic at the kit's
-    /// tolerance; the keyless route, which states no symmetry, reads it as oI (DiffractoKit #218).
-    static let refusedSummaries: Set<String> = ["mp-623511"]
+    /// fit is refused, not guessed. The Materials Project states each group at its symprec 0.1; at the kit's tolerance
+    /// (lengths 1e-3 relative, angles 1e-2°) these cells are lower: mp-623511 (Sn, stated I4/mmm) has a = 3.453 and
+    /// b = 3.551; mp-77 (S, stated Fddd) has α = 89.966°; mp-85 (In, stated Fm-3m) is body-centred tetragonal. The
+    /// keyless route, which states no symmetry, reads them by their lattice (DiffractoKit #218).
+    static let refusedSummaries: Set<String> = ["mp-623511", "mp-77", "mp-85"]
 
     static func manifest() throws -> Manifest {
         try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: directory.appendingPathComponent("manifest.json")))
