@@ -174,17 +174,22 @@ public struct DoubleTiltHolder: Sendable, Codable, Equatable {
     /// W acts on fractional coordinates, so on the Cartesian frame it is A W A⁻¹ (A: columns a₁, a₂, a₃), as the zone-axis
     /// solver takes it. A rotation the cell does not carry (not orthogonal within 1e-6) is skipped.
     public static func properRotations(of structure: CrystalStructure) -> [simd_double3x3] {
+        cartesianProperRotations(of: structure).map(\.cartesian)
+    }
+
+    /// The same, each with the integer matrix W it comes from (the zone-axis solver keeps both; one copy of the loop, #226).
+    static func cartesianProperRotations(of structure: CrystalStructure) -> [(cartesian: simd_double3x3, integer: IntegerMatrix)] {
         let lattice = structure.cell.realLattice
         guard lattice.count == 3 else { return [] }
         let a = simd_double3x3(columns: (lattice[0], lattice[1], lattice[2]))
         let inverse = a.inverse
-        var out: [simd_double3x3] = []
+        var out: [(cartesian: simd_double3x3, integer: IntegerMatrix)] = []
         for w in structure.laueGroup.properRotations {
             let wm = simd_double3x3(rows: w.rows.map { SIMD3<Double>(Double($0.x), Double($0.y), Double($0.z)) })
             let c = a * wm * inverse
             let e = c * c.transpose - matrix_identity_double3x3
             let err = [e.columns.0, e.columns.1, e.columns.2].map { simd_reduce_max(simd_abs($0)) }.max() ?? 1
-            if err <= 1e-6 { out.append(c) }
+            if err <= 1e-6 { out.append((c, w)) }
         }
         return out
     }

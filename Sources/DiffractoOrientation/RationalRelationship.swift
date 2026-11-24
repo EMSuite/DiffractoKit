@@ -79,7 +79,7 @@ extension PhaseVectorMatcher {
         let identity = matrix_identity_double3x3
         let orthonormal = (0..<3).allSatisfy { c in (0..<3).allSatisfy { r in abs(gram[c][r] - identity[c][r]) < 1e-6 } }
         guard orthonormal, relation.determinant > 0 else { return RationalRelationshipSearch(candidates: []) }
-        func gcd(_ a: Int, _ b: Int) -> Int { b == 0 ? abs(a) : gcd(b, a % b) }
+        let gcd = IntegerMath.gcd
         // One of every +/- pair of coprime index triples.
         var triples: [SIMD3<Int>] = []
         // A lattice vector of a pair weighs at most the index sum less the three other vectors' least.
