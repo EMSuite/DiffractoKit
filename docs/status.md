@@ -20,6 +20,10 @@ Live:
 - A Materials Project structure with no key: `MaterialsProjectOptimade` searches the keyless OPTIMADE service by
   elements or formula (most stable first; an empty service is told apart from no results) and reads an entry to its
   conventional cell, checked against pymatgen on 14 recorded entries, one per Bravais lattice (#150).
+- Lattice edits within the crystal system: `CrystalStructure.editingLattice` sets the free parameters (cubic a;
+  tetragonal and hexagonal a, c; trigonal a, c in hexagonal axes and a, α in rhombohedral axes; orthorhombic a, b, c;
+  monoclinic a, b, c, β; triclinic all six), keeps the fractional sites and refuses an edit that changes the Laue class
+  (#149).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
