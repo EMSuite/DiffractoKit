@@ -58,6 +58,9 @@ Live:
 - Variant orientations of a relationship stated as two pairs (`OrientationRelationship.variantOrientations`): each
   variant's orientation, label, drawn spot pattern and group of look-alikes in the view, and the second pair's misfit
   (beta'', theta' and T1 in Al: 12, 3 and 4).
+- The phase finder (`PhaseFinder`): candidate phases ranked on one ring or spot pattern by the numbers ring indexing and
+  the zone-axis solver already compute, with ties where the pattern cannot tell phases apart; ranked evidence, never a
+  verdict.
 
 Since 0.10.0: 0.11.0 (2026-10-30) dropped the unused public API; 0.12.0 (2026-11-01) added the items above, made the ACOM
 Metal path 1.9 to 3.2 times faster and the ring profile fit stop runs that cannot improve, and retired the apps-parity dumps.
