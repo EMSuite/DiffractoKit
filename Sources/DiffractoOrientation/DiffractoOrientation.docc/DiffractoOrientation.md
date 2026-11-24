@@ -53,3 +53,11 @@ returns every variant at a matrix orientation as a ``VariantOrientation``: its o
 lies along, its drawn spot pattern and its group of variants that draw the same spots in this view
 (``VariantGroupingSettings``; ``OrientationRelationship/groups(of:grouping:)`` regroups patterns after a change of cut).
 ``OrientationRelationship/secondPairMisfit(first:second:precipitate:matrix:)`` says how far the second pair is from parallel.
+
+## Finding the phase
+
+``PhaseFinder`` ranks candidate structures on one pattern: ``PhaseFinder/rank(rings:candidates:settings:)`` on measured ring
+positions (a scale fitted inside the zone-axis solver's window, rings explained and strong rings seen, their F1), and
+``PhaseFinder/rank(spots:candidates:volts:kMax:solverSettings:)`` with the zone-axis solver per candidate. Candidates the
+pattern cannot tell apart share a tie (``PhaseFinder/RingScore/tie``); with a free scale Al and Au always do. The ranking is
+evidence: it says which phases explain the pattern, not which phase is there.
