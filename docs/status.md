@@ -16,6 +16,9 @@ Live:
 - A structure as stored data: `CrystalStructure.Snapshot` (Codable, with a schema version) rebuilds the same
   structure, and `CrystalStructure.fingerprint` changes with any cell parameter, any
   site's element, position, occupancy or displacement, or the symmetry operations (#148).
+- A Materials Project structure with no key: `MaterialsProjectOptimade` searches the keyless OPTIMADE service by
+  elements or formula (most stable first; an empty service is told apart from no results) and reads an entry to its
+  conventional cell, checked against pymatgen on 14 recorded entries, one per Bravais lattice (#150).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Pattern geometry: ring and ellipse fits, calibration, zone axes, indexing; the ring-sequence assignment of a known crystal,
   Δq from several rings, and the single-pattern beam centre (`PatternCentre.find` refuses a blocked beam; `FriedelCentre`

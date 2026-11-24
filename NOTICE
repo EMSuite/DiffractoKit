@@ -140,6 +140,13 @@ credited as Materials Project data, licensed CC BY 4.0
 (https://creativecommons.org/licenses/by/4.0/). Changes: none to the recorded
 response; the other two were written by hand in its format.
 
+Tests/DiffractoCoreTests/Fixtures/mp-optimade/ holds answers of the Materials
+Project's keyless OPTIMADE service (https://optimade.materialsproject.org):
+info.json, search-*.json and entry-*.json, recorded byte for byte on
+2026-11-24 by tools/materials-project/record.py, which lists each URL and
+SHA-256 in manifest.json. They are Materials Project data, licensed CC BY 4.0
+(https://creativecommons.org/licenses/by/4.0/). Changes: none.
+
     Source: The Materials Project, https://materialsproject.org
     A. Jain et al., "Commentary: The Materials Project: A materials genome
     approach to accelerating materials innovation", APL Materials 1, 011002
@@ -183,5 +190,5 @@ code or test data of those packages is copied into them:
     structure-factor phase sum.
 No fixture is taken from the test data of pymatgen, orix or py4DSTEM.
 
-Materials Project records (mp-import/input-*.json): CC BY 4.0, credited in
-the section above.
+Materials Project records (mp-import/input-*.json) and recorded answers
+(mp-optimade/): CC BY 4.0, credited in the section above.
