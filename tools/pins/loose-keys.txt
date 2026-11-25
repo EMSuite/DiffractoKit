@@ -1,0 +1,4 @@
+# Numbers a generator's own method fixes no better than compare.py's float-noise bounds, each compared at its own rtol
+# wherever the key occurs in that file: `<file name>:<key> <rtol>`, with the reason. Each bound stays inside the tolerance
+# the Swift test holds the number to.
+scipy-ellipse-sweep-pins.json:optimumTheta 1e-7   # the axis angle of a near-circle: the least_squares optimum's 1e-11 relative spread in A, B, C, amplified by about 1/eps on eps 1 % and 3 %; moves 1.4e-9 to 4.9e-9 relative Mac to Linux; the test holds 1e-6 rad (#141)

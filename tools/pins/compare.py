@@ -27,6 +27,10 @@ noise). An array that tools/pins/float32-arrays.txt names (a float32 computation
 reason) is held at float32 bounds, rtol 1e-6 and atol 1e-7 of its largest magnitude (about ten float32
 roundings).
 
+A number that a generator's own method fixes no better than the bounds above (an ill-conditioned output of an optimiser) is
+named in tools/pins/loose-keys.txt as `<file name>:<key> <rtol>`, each line with its reason, and compared at that rtol
+wherever the key occurs in that file.
+
 A generator's passed self-check line ("ok  <check>: <measured> <= <bound>") compares by its words only: the measured residual
 moves with the platform, the verdict and the bound do not.
 """
@@ -76,7 +80,8 @@ def compare_text(a, b, rtol, atol, where, out):
             return
 
 
-def compare_json(a, b, rtol, atol, where, out):
+def compare_json(a, b, rtol, atol, where, out, loose=None):
+    """`loose`: key -> rtol for the keys of this file named in loose-keys.txt."""
     if len(out) > 20:
         return
     if isinstance(a, bool) or isinstance(b, bool) or a is None or b is None:
@@ -95,14 +100,14 @@ def compare_json(a, b, rtol, atol, where, out):
             out.append(f"{where}: length {len(a)} vs {len(b)}")
             return
         for i, (x, y) in enumerate(zip(a, b)):
-            compare_json(x, y, rtol, atol, f"{where}[{i}]", out)
+            compare_json(x, y, rtol, atol, f"{where}[{i}]", out, loose)
     elif isinstance(a, dict) and isinstance(b, dict):
         ka, kb = set(a) - VOLATILE, set(b) - VOLATILE
         if ka != kb:
             out.append(f"{where}: keys {sorted(ka ^ kb)[:6]} on one side only")
             return
         for k in sorted(ka):
-            compare_json(a[k], b[k], rtol, atol, f"{where}.{k}", out)
+            compare_json(a[k], b[k], (loose or {}).get(k, rtol), atol, f"{where}.{k}", out, loose)
     else:
         out.append(f"{where}: {type(a).__name__} vs {type(b).__name__}")
 
@@ -133,6 +138,16 @@ def listed(name):
         return []
     with open(path) as f:
         return [line.split("#", 1)[0].strip() for line in f if line.split("#", 1)[0].strip()]
+
+
+def loose_keys():
+    """tools/pins/loose-keys.txt: `<file name>:<key> <rtol>` per line, each with its reason after a #, as {file name: {key: rtol}}."""
+    out = {}
+    for line in listed("loose-keys.txt"):
+        name_key, bound = line.rsplit(None, 1)
+        name, key = name_key.split(":", 1)
+        out.setdefault(name, {})[key] = float(bound)
+    return out
 
 
 def float32_arrays():
@@ -179,7 +194,7 @@ def judge(path, rtol, atol):
         new = f.read()
     if path.endswith(".json"):
         try:
-            compare_json(json.loads(new), json.loads(old), rtol, atol, path, out)
+            compare_json(json.loads(new), json.loads(old), rtol, atol, path, out, loose_keys().get(os.path.basename(path)))
         except ValueError as error:
             out.append(f"{path}: does not parse ({error})")
     elif path.endswith(".bin"):

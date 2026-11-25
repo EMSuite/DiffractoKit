@@ -12,7 +12,11 @@ reads (radius > inner and <= outer about the start centre, finite pixels), and s
 
 under two parameter scalings that must agree (centre 1e-5 px, ABC 1e-7 relative). The optimum is converted to (a, b, theta)
 by NumPy's symmetric eigensolver (py4DSTEM's convention, a along the smaller eigenvalue's axis, theta in [0, pi)) and written,
-with the plant, the start, the pixels' FNV-1a hash and the pixel and bin counts, to Tests/DiffractoGeometryTests/Fixtures/scipy-ellipse-sweep-pins.json. The
+with the plant, the start, the pixels' FNV-1a hash and the pixel and bin counts, to Tests/DiffractoGeometryTests/Fixtures/scipy-ellipse-sweep-pins.json
+(#141: theta is written 0 on a circle, eps 0, where it is undefined and the test does not read it; the two scalings' spread
+is checked and printed, not written, since it is rounding that moves freely between machines; on eps 1 % and 3 % theta
+carries the optimum's 1e-11 relative spread in A, B and C amplified by about 1/eps, so tools/pins/loose-keys.txt compares it
+at 1e-7 relative, ten times inside the test's 1e-6 rad). The
 Swift test (EllipseCalibrationTests, testCleanSweepEqualsSciPysOptimum) fits the same rings with the kit's fit1D and holds it to
 the registered bands: centre 1e-5 px, a and b 1e-7 relative, theta 1e-6 rad. This is the port of the sweep of mac4DSTEM
 tools/ellipse-calibration-test/reference.py (sweep_optimum, axes_of), on the kit's own rings.
@@ -136,13 +140,14 @@ def main():
         sol, spread_abc, spread_centre = optimum(x, y, v, sx, sy, inner, outer)
         spreads.append((spread_abc, spread_centre))
         a, b, theta = axes_of(*sol[2:])
+        if p["eps"] == 0:
+            theta = 0.0  # a circle has no axis: the optimum's angle is rounding (it moves by 5e-4 rad between machines)
         rings.append({
             "name": p["name"], "size": size, "radius": p["radius"], "eps": p["eps"], "thetaDegrees": p["thetaDegrees"],
             "gap": p["gap"], "seed": p["seed"], "startQX": sx, "startQY": sy, "innerRadius": inner, "outerRadius": outer,
             "pixelHash": fnv(pixels), "sampleCount": int(v.size), "occupiedBins": bins,
             "optimumCenterQX": float(sol[0]), "optimumCenterQY": float(sol[1]),
             "optimumA": a, "optimumB": b, "optimumTheta": theta,
-            "scipySpreadABC": spread_abc, "scipySpreadCentre": spread_centre,
         })
     json.dump({"scipy": __import__("scipy").__version__, "numpy": np.__version__, "rings": rings}, open(OUT, "w"), indent=1)
     print("sweep.py: %d rings -> %s (scipy scaling spread at most %.2g relative in ABC, %.2g px in the centre)"
