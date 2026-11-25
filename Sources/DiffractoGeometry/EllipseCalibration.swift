@@ -770,7 +770,10 @@ public enum EllipseCalibration {
         let doubleFloorBound = policy.ringWidthFloor + policy.ringWidthFloorTolerance
         func bounded(_ input: [Double]) -> [Double] {
             var p = input
-            p[0] = min(intensityLimit, max(0, p[0]))
+            // I0 is free in sign, as in py4DSTEM's unbounded `leastsq`: a central Gaussian below zero is a background that
+            // rises outward across the annulus (the Au {111} ring of pyxem's cross-grating pattern, I0 -1.18; held at 0 the
+            // radius read 0.17 % small, DiffractoKit#242). Only its size is bounded, as I1's.
+            p[0] = min(intensityLimit, max(-intensityLimit, p[0]))
             p[1] = min(intensityLimit, max(0, p[1]))
             p[2] = min(sigmaLimit, max(0.25, p[2]))
             for index in 3...4 { p[index] = min(sigmaLimit, max(ringSigmaFloor, p[index])) }
