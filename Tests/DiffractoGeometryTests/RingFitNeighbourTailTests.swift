@@ -10,6 +10,11 @@ import Testing
 /// have refuted the cause: a bias that stays with the neighbour removed, or that does not shrink with the annulus edge. The profile model (one
 /// asymmetric Gaussian on a smooth background) has no term for a second ring, so it absorbs the tail. Not changed: a number that agrees with the
 /// model's definition; an annulus that ends before the neighbour's tail (the rule below) removes the bias.
+/// MOVED (DiffractoKit#242): the numbers above were the kit's with I0 held at >= 0. With I0 free in sign from an I0-at-zero optimum, as
+/// py4DSTEM's unbounded `leastsq`, the model takes part of the tail as a negative central Gaussian: the bias for 29 to 35, 36, 37 and 38 is
+/// +3e-5, -0.008, -0.013 and +0.023 px (py4DSTEM f050d207 on the same patterns: -1e-4, -0.007, -0.011, +0.043), and -0.004, -0.007,
+/// -0.013 px at amplitudes 550, 1100, 2200 (py4DSTEM -0.003, -0.006, -0.011). Measured on a NumPy transcription of the kit's fit, which
+/// reproduces the CI numbers of both versions. The cause stands; the sizes move toward the reference's.
 struct RingFitNeighbourTailTests {
     static let r111 = 3.0.squareRoot() / (4.0782 * 0.0125)
     static let r200 = 4.0.squareRoot() / (4.0782 * 0.0125)
@@ -49,13 +54,14 @@ struct RingFitNeighbourTailTests {
         let p = Self.pattern(rings: [(Self.r111, 3000), (Self.r200, 2200)])
         let bias = try [35.0, 36.0, 37.0, 38.0].map { try Self.radius(p, 29, $0) - Self.r111 }
         #expect(abs(bias[0]) < 1e-4)                                 // the annulus ends before the tail: exact
-        #expect(bias[1] < 0 && bias[2] < bias[1] && bias[3] < bias[2])     // monotone in how much tail is inside
-        #expect(abs(bias[2] + 0.041) < 0.002, Comment(rawValue: "demo annulus bias \(bias[2])"))      // the macTEM case: -0.035 px with 1 % noise
+        #expect(bias[1] < 0 && bias[2] < bias[1], Comment(rawValue: "biases \(bias)"))    // grows with the tail inside; at 38 it turns positive, as py4DSTEM's
+        #expect(abs(bias[2] + 0.0107) < 0.004, Comment(rawValue: "demo annulus bias \(bias[2])"))     // py4DSTEM -0.0107; the kit -0.013
         let amplitudes = try [0.0, 550.0, 1100.0, 2200.0].map { amp -> Double in
             try Self.radius(Self.pattern(rings: [(Self.r111, 3000), (Self.r200, amp)]), 29, 37) - Self.r111
         }
         #expect(abs(amplitudes[0]) < 1e-6)
-        #expect(abs(amplitudes[2] / amplitudes[1] - 2) < 0.1 && abs(amplitudes[3] / amplitudes[2] - 2) < 0.1)    // linear in the neighbour's amplitude
+        #expect(amplitudes[1] < 0 && amplitudes[2] < amplitudes[1] && amplitudes[3] < amplitudes[2],
+                Comment(rawValue: "by amplitude \(amplitudes)"))    // grows with the neighbour's amplitude (py4DSTEM: -0.003, -0.006, -0.011)
         // the other ring: the {200} annulus 36 to 43 has no {111} tail inside, so it is exact
         #expect(abs(try Self.radius(p, 36, 43) - Self.r200) < 0.02)
     }
@@ -83,7 +89,8 @@ struct RingFitNeighbourTailTests {
             #expect(abs(try Self.radius(single, inner, outer) - R) < 1e-6, Comment(rawValue: "single ring R \(R)"))
             let bias = try Self.radius(Self.pattern(rings: [(R, 3000), (r200, 2200)], n: n), inner, outer) - R
             if sigmasOfGap < 5 {
-                #expect(abs(bias) > 0.01, Comment(rawValue: "R \(R): \(bias)"))
+                // 0.005 since DiffractoKit#242 (the kit -0.007 at R 17, +0.013 at R 34; py4DSTEM -0.106, +0.016)
+                #expect(abs(bias) > 0.005, Comment(rawValue: "R \(R): \(bias)"))
             } else {
                 #expect(abs(bias) < 1e-3, Comment(rawValue: "R \(R): \(bias)"))
             }
