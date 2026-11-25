@@ -349,6 +349,9 @@ struct AtomModelTests {
         #expect(model?.count == n)
         #expect(model?.countsByAtomicNumber == [14: n / 4, 8: n / 4, 13: n / 4, 38: n / 4])
         #expect(model?.positions[1] == SIMD3<Double>(-0.763239, 4.073175, 12.12345678))
-        #expect(elapsed < .seconds(2), "\(elapsed)")
+        // A wall-clock bound measures the shared CI runner's load, so it is checked only in the opt-in benchmark run.
+        if ProcessInfo.processInfo.environment["DIFFRACTOKIT_BENCHMARK"] != nil {
+            #expect(elapsed < .seconds(2), "\(elapsed)")
+        }
     }
 }
