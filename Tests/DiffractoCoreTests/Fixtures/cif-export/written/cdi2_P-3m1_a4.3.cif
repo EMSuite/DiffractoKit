@@ -1,4 +1,5 @@
-# Written in P1 with every site: the symmetric text did not read back to the structure (the expanded sites are not the structure's to the bit).
+# Symmetry kept within pymatgen's reading tolerance (1e-4): coordinates near 1/3 and 2/3 are written as
+# those fractions, and the sites read back within 1e-4 of the structure's.
 data_cdi2
 _audit_creation_method DiffractoKit
 _chemical_name_common cdi2
@@ -9,11 +10,22 @@ _cell_length_c 6.86
 _cell_angle_alpha 90.0
 _cell_angle_beta 90.0
 _cell_angle_gamma 120.0
-_space_group_name_H-M_alt 'P 1'
-_space_group_IT_number 1
+_space_group_name_H-M_alt P-3m1
+_space_group_IT_number 164
 loop_
 _space_group_symop_operation_xyz
 'x,y,z'
+'-x,-x+y,-z'
+'-x,-y,-z'
+'-x+y,-x,z'
+'-x+y,y,z'
+'-y,-x,z'
+'-y,x-y,z'
+'y,-x+y,-z'
+'y,x,-z'
+'x-y,-y,-z'
+'x-y,x,-z'
+'x,x-y,z'
 loop_
 _atom_site_label
 _atom_site_type_symbol
@@ -22,5 +34,4 @@ _atom_site_fract_y
 _atom_site_fract_z
 _atom_site_occupancy
 Cd1 Cd 0.0 0.0 0.0 1.0
-I1 I 0.3333333 0.6666667 0.249 1.0
-I2 I 0.6666667 0.3333333 0.751 1.0
+I1 I 0.3333333333333333 0.6666666666666666 0.249 1.0
