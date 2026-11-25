@@ -64,11 +64,19 @@ public struct PowderPattern: Sendable, Equatable {
         public let d: Double
         /// 2θ in degrees, or q in Å⁻¹ (``PowderPattern/axis``).
         public let position: Double
-        /// Relative intensity: the strongest peak of the pattern is 100.
+        /// Relative intensity: the strongest peak of the pattern is 100. For electron rings the scaled Σ|F|² per ring
+        /// (multiplicity × |F|²); see `profileIntensity` for the height in a measured profile.
         public let intensity: Double
-        /// The intensity before scaling: 2 Σ|F|² LP over the merged reflections (electrons², LP included), what
-        /// pymatgen returns with `scaled=False`. Comparable between patterns computed the same way.
+        /// The intensity before scaling. X-rays: 2 Σ|F|² LP over the merged reflections (electrons², LP included), what
+        /// pymatgen returns with `scaled=False`. Electron rings (`electron(structure:wavelengthAngstroms:)`): Σ|F|² over the
+        /// ring's members (multiplicity × |F|², Å⁻⁴), diffsims' ring intensity. Comparable between patterns computed the same way.
         public let absoluteIntensity: Double
+        /// Electron rings only: the ring's height in the azimuthally averaged profile of a polycrystalline film, Σ|F|² · d²
+        /// scaled so the strongest ring is 100 (kinematic, no Debye-Waller factor). The integrated ring carries m|F|²d and the
+        /// profile divides it by the circumference 2π/d (Vainshtein, Structure Analysis by Electron Diffraction, 1964, ch. 2),
+        /// so this is the number to set against a measured profile: Au 220 is 26 against 111's 100 here, 68 in `intensity`.
+        /// Nil for an X-ray pattern, whose `intensity` already carries its Lorentz-polarisation factor.
+        public var profileIntensity: Double? = nil
 
         /// Σ multiplicity over the families.
         public var multiplicity: Int { families.reduce(0) { $0 + $1.multiplicity } }

@@ -41,7 +41,8 @@ Live:
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
   table bit for bit (`XRayScatteringFactors`).
-- Electron powder rings (`PowderPattern.electron`) from the held ring list with relative intensities, a drawn profile
+- Electron powder rings (`PowderPattern.electron`) from the held ring list with relative intensities: each ring's Σ|F|²
+  (multiplicity × |F|²) and its height in an azimuthally averaged profile, Σ|F|² · d² (`profileIntensity`), a drawn profile
   of any powder pattern (`profile(width:range:step:)`), and the overlapped and diagnostic peaks of several shown phases
   (`PowderPattern.marks`).
 - Bonds for a crystal view by VESTA's cut-offs, as pymatgen's `CutOffDictNN.from_preset("vesta_2019")` gives them
