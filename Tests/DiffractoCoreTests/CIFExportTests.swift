@@ -2,11 +2,13 @@
 //  CIFExportTests.swift
 //  A crystal structure written as CIF (`CIFExport`, DK1). Pin C2: every structure of the corpus (P2's 19, six with an
 //  edited lattice, three Materials Project imports) written and read back by `CIFImport` has the structure's cell and its
-//  expanded sites, as a multiset, equal to the bit. The test reads back itself, so a writer whose own read-back check were
-//  wrong would still be caught. Symmetry is kept for the files whose loop built their sites; the two planted structures
-//  whose operations do not expand their sites exactly fall back to P1 and say so. Pin C1 (pymatgen reads the same text)
-//  is `CIFExportPymatgenTests` in the parity target.
-//  Red before: `CIFExport` did not exist.
+//  expanded sites, as a multiset, equal to the bit, or, where the file says it kept the symmetry within pymatgen's reading
+//  tolerance, within 1e-4 modulo 1 and with the structure's content fingerprint. The test reads back itself, so a writer
+//  whose own read-back check were wrong would still be caught. Every structure of the corpus keeps its symmetry; the
+//  seven hexagonal ones with sites at 1/3 and 2/3 do so within the tolerance (#220). The planted structures whose
+//  operations do not expand their sites fall back to P1 and say so. Pin C1 (pymatgen reads the same text) is
+//  `CIFExportPymatgenTests` in the parity target.
+//  Red before: `CIFExport` did not exist; the seven hexagonal structures were written in P1 before #220.
 //
 
 import DiffractoKitTestSupport
@@ -35,23 +37,82 @@ struct CIFExportTests {
         #expect(read.sites.map(Key.init).sorted() == original.sites.map(Key.init).sorted(), "\(name) sites")
     }
 
-    @Test func everyStructureOfTheCorpusReadsBackToTheBit() throws {
+    /// The same cell to the bit, and the same sites as a multiset within `tolerance` modulo 1 (element, occupancy and
+    /// displacement equal).
+    private func expectSameStructure(_ read: CrystalStructure, _ original: CrystalStructure, _ name: String, within tolerance: Double) {
+        let a = original.cell, b = read.cell
+        #expect([a.a, a.b, a.c, a.alphaDeg, a.betaDeg, a.gammaDeg] == [b.a, b.b, b.c, b.alphaDeg, b.betaDeg, b.gammaDeg], "\(name) cell")
+        #expect(read.sites.count == original.sites.count, "\(name) site count")
+        var unmatched = Array(original.sites.indices)
+        for site in read.sites {
+            let found = unmatched.firstIndex { i in
+                let mine = original.sites[i]
+                return mine.z == site.z && mine.occupancy == site.occupancy && mine.isotropicDisplacement == site.isotropicDisplacement
+                    && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.fractional[$0]) <= tolerance }
+            }
+            if let found { unmatched.remove(at: found) } else { Issue.record("\(name): \(site.fractional) is not a site") }
+        }
+    }
+
+    static let tolerantNote = "# Symmetry kept within pymatgen's reading tolerance (1e-4)"
+
+    /// The hexagonal structures with sites at 1/3 and 2/3, written in P1 before #220, and their IT numbers.
+    static let hexagonal: [(name: String, number: Int)] = [
+        ("magnesium_P63mmc", 194), ("ws2_2H", 194), ("cdi2_P-3m1", 164), ("ideal_hcp_P1", 194), ("magnesium_P63mmc_c5.3", 194),
+        ("cdi2_P-3m1_a4.3", 164), ("input-magnesiumJSON.json", 194),
+    ]
+
+    @Test func everyStructureOfTheCorpusReadsBackAndKeepsItsSymmetry() throws {
         let corpus = try CIFExportCorpus.structures()
         #expect(corpus.count == 19 + 6 + 3)
         var p1: [String] = []
+        var tolerant: [String] = []
         for (name, structure) in corpus {
             let outcome = try CIFExport.text(of: structure, options: .init(comments: ["corpus \(name)"]))
             let read = try CIFImport.read(outcome.text).structure
-            expectSameStructure(read, structure, name)
             if case .p1 = outcome.symmetry { p1.append(name) }
+            if outcome.text.contains(Self.tolerantNote) {
+                tolerant.append(name)
+                expectSameStructure(read, structure, name, within: 1e-4)
+            } else {
+                expectSameStructure(read, structure, name)
+            }
         }
-        // The files whose own loop built their sites keep their symmetry (the same base sites, the same operations), and so
-        // does silicon's P1 file, whose detected operations map its dyadic sites exactly.
-        for name in ["rocksalt_Fm-3m_192ops", "pyrite_Pa-3", "beta_double_prime", "rocksalt_Fm-3m_a5.7", "silicon_Fd-3m",
-                     "silicon_Fd-3m_a5.5"] {
-            #expect(!p1.contains(name), "\(name) fell back to P1")
+        #expect(p1.isEmpty, "written in P1: \(p1)")
+        // Only the hexagonal structures need the tolerance; every other text reads back to the bit.
+        #expect(Set(tolerant) == Set(Self.hexagonal.map(\.name)), "kept within the tolerance: \(tolerant)")
+    }
+
+    /// #220: the seven keep their space group, and read back to the same cell, sites within pymatgen's 1e-4 and the same
+    /// content fingerprint, so a phase saved as CIF and added again is the same phase.
+    @Test func hexagonalStructuresKeepTheirSymmetryAndTheirFingerprint() throws {
+        let corpus = try CIFExportCorpus.structures()
+        for (name, number) in Self.hexagonal {
+            guard let structure = corpus.first(where: { $0.name == name })?.structure else { Issue.record("\(name) missing"); continue }
+            let outcome = try CIFExport.text(of: structure)
+            guard case let .kept(operations, sites, expanded) = outcome.symmetry else {
+                Issue.record("\(name) in P1: \(outcome.symmetry)"); continue
+            }
+            #expect(operations > 1 && sites < expanded && expanded == structure.sites.count, "\(name): \(outcome.symmetry)")
+            #expect(outcome.text.contains("_space_group_IT_number \(number)\n"), "\(name)")
+            #expect(outcome.text.contains(Self.tolerantNote), "\(name)")
+            #expect(!outcome.text.contains("Written in P1"), "\(name)")
+            let read = try CIFImport.read(outcome.text).structure
+            expectSameStructure(read, structure, name, within: 1e-4)
+            #expect(read.fingerprint == structure.fingerprint, "\(name): fingerprint")
+            #expect(read.operations.count == structure.operations.count, "\(name): operations")
         }
-        print("CIFExport corpus written in P1: \(p1)")
+    }
+
+    /// pymatgen's `frac_tolerance` rule: a coordinate whose ratio to 1/3 or 2/3 is within 1e-4 of 1 is that fraction.
+    @Test func coordinatesNearAThirdAreWrittenAsPymatgenReadsThem() {
+        #expect(CIFExport.exactThird(0.333333) == 1.0 / 3)
+        #expect(CIFExport.exactThird(0.33334) == 1.0 / 3)
+        #expect(CIFExport.exactThird(0.6666667) == 2.0 / 3)
+        #expect(CIFExport.exactThird(0.3332) == 0.3332)
+        #expect(CIFExport.exactThird(0.25) == 0.25)
+        #expect(CIFExport.exactThird(0) == 0)
+        #expect(CIFExport.number(CIFExport.exactThird(0.333333)) == "0.3333333333333333")
     }
 
     @Test func aFileLoopIsWrittenAsItsAsymmetricUnit() throws {
@@ -68,19 +129,38 @@ struct CIFExportTests {
         #expect(outcome.text.hasSuffix("\n"))
     }
 
-    /// A structure built with operations that do not reproduce its sites to the bit: the orbit is found within 1e-6, the
-    /// read-back expands the representative exactly, the bits differ, and the file is P1 with every site and the reason.
-    @Test func aSiteOffItsExactImageFallsBackToP1() throws {
+    /// Gold with one site moved off its exact image by `offset` along x.
+    private func plantedGold(offset: Double) throws -> CrystalStructure {
         let fcc = try CIFImport.read(try Fixtures.text("gold_centring_ops.cif")).structure
         var sites = fcc.sites
-        let moved = sites[1].fractional + SIMD3(1e-9, 0, 0)
+        let moved = sites[1].fractional + SIMD3(offset, 0, 0)
         sites[1] = AtomSite(z: sites[1].z, fractional: moved, occupancy: sites[1].occupancy, label: sites[1].label,
                             isotropicDisplacement: sites[1].isotropicDisplacement)
-        let planted = CrystalStructure(cell: fcc.cell, sites: sites, operations: fcc.operations, spaceGroupNumber: 225, name: "gold")
+        return CrystalStructure(cell: fcc.cell, sites: sites, operations: fcc.operations, spaceGroupNumber: 225, name: "gold")
+    }
+
+    /// A site 1e-9 off its exact image: not to the bit, but within pymatgen's reading tolerance, so the symmetry is kept and
+    /// the file says how; the read-back is the structure within 1e-4 and has its fingerprint.
+    @Test func aSiteJustOffItsExactImageKeepsTheSymmetryWithinTheTolerance() throws {
+        let planted = try plantedGold(offset: 1e-9)
+        let outcome = try CIFExport.text(of: planted)
+        guard case let .kept(_, sites, expanded) = outcome.symmetry else { Issue.record("P1: \(outcome.symmetry)"); return }
+        #expect(sites == 1 && expanded == 4)
+        #expect(outcome.text.contains(Self.tolerantNote))
+        let read = try CIFImport.read(outcome.text).structure
+        expectSameStructure(read, planted, "planted gold", within: 1e-4)
+        #expect(read.fingerprint == planted.fingerprint)
+    }
+
+    /// A site 1e-3 off its exact image, beyond pymatgen's tolerance: its own orbit, whose images the read-back cannot
+    /// place, and the file is P1 with every site and the reason.
+    @Test func aSiteOffItsImageBeyondTheToleranceFallsBackToP1() throws {
+        let planted = try plantedGold(offset: 1e-3)
         let outcome = try CIFExport.text(of: planted)
         guard case let .p1(reason) = outcome.symmetry else { Issue.record("kept: \(outcome.symmetry)"); return }
-        #expect(reason?.contains("to the bit") == true, "\(String(describing: reason))")
+        #expect(reason != nil)
         #expect(outcome.text.contains("# Written in P1 with every site"))
+        #expect(!outcome.text.contains(Self.tolerantNote))
         #expect(outcome.text.contains("_space_group_IT_number 1\n"))
         expectSameStructure(try CIFImport.read(outcome.text).structure, planted, "planted gold")
     }

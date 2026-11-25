@@ -9,8 +9,14 @@
 //        Which operations: the file's own loop when the structure came from one and every listed operation is a symmetry
 //        (`fileOperations`, `fileOperationsAreSymmetries`), else the structure's operations. The file's loop is preferred
 //        because it built the sites: expanding the same base sites with the same operations repeats the import's arithmetic.
+//        When the text to the bit does not read back exactly (a hexagonal site at 1/3 and 2/3 whose image lands one ulp off
+//        the stored site, #220), the writer tries once more with pymatgen's reading tolerance: orbits found within 1e-4,
+//        a coordinate within pymatgen's `frac_tolerance` (1e-4, relative) of 1/3 or 2/3 written as that fraction, as
+//        pymatgen itself rounds it on reading, and the read-back accepted when every site is within 1e-4 (its
+//        `site_tolerance`) of the structure's, modulo 1; the file says so. Only when that fails too is it P1.
 //        Pins: C1 (pymatgen-core 2026.10.16 `CifParser` reads the text to the structure's cell and sites) and C2 (the kit's
-//        own round trip, equal to the bit), suite design "Files, figures and exports".
+//        own round trip, equal to the bit, or within pymatgen's 1e-4 with the same content fingerprint), suite design
+//        "Files, figures and exports".
 //
 
 import Foundation
@@ -62,6 +68,8 @@ public enum CIFExport {
     /// How the symmetry went into the file.
     public enum Symmetry: Sendable, Equatable {
         /// The operation list and one site per orbit: `operations` listed, `sites` written of the structure's `expanded`.
+        /// The text reads back to the structure to the bit, or, when the file says so, within pymatgen's reading tolerance
+        /// (1e-4) with the coordinates near 1/3 and 2/3 written as those fractions.
         case kept(operations: Int, sites: Int, expanded: Int)
         /// Every site in P1: the structure holds no operation but the identity (`reason` nil), or the symmetric text did
         /// not read back to the structure (`reason` says what differed; the file says it too).
@@ -80,21 +88,27 @@ public enum CIFExport {
         let labels = try siteLabels(structure.sites)
         if let written = writtenOperations(of: structure) {
             let operations = written.operations
-            let orbits = orbitRepresentatives(structure.sites, operations: operations)
-            let text = try cifText(structure, options: options, operations: operations, operationsFromFile: written.fromFile,
-                                   sites: orbits.representatives, labels: labels, p1Reason: nil)
-            // Every image reads back with its orbit's label.
-            let expected = orbits.owner.map { labels[$0] }
-            switch readBackDifference(text, structure: structure, labels: expected) {
-            case .none:
-                return Outcome(text: text, symmetry: .kept(operations: operations.count, sites: orbits.representatives.count,
-                                                           expanded: structure.sites.count))
-            case let .some(reason):
-                let p1 = try cifText(structure, options: options, operations: [.identity], operationsFromFile: false,
-                                     sites: Array(structure.sites.indices), labels: labels, p1Reason: reason)
-                if let p1Difference = readBackDifference(p1, structure: structure, labels: labels) { throw .readBackDiffers(p1Difference) }
-                return Outcome(text: p1, symmetry: .p1(reason: reason))
+            // First to the bit; then within pymatgen's reading tolerance, the thirds written as pymatgen reads them.
+            var reason = ""
+            for tolerant in [false, true] {
+                let orbits = orbitRepresentatives(structure.sites, operations: operations,
+                                                  tolerance: tolerant ? readBackTolerance : 1e-6)
+                let text = try cifText(structure, options: options, operations: operations, operationsFromFile: written.fromFile,
+                                       sites: orbits.representatives, labels: labels, p1Reason: nil, exactThirds: tolerant)
+                // Every image reads back with its orbit's label.
+                let expected = orbits.owner.map { labels[$0] }
+                guard let difference = readBackDifference(text, structure: structure, labels: expected,
+                                                          tolerance: tolerant ? readBackTolerance : nil)
+                else {
+                    return Outcome(text: text, symmetry: .kept(operations: operations.count, sites: orbits.representatives.count,
+                                                               expanded: structure.sites.count))
+                }
+                reason = difference
             }
+            let p1 = try cifText(structure, options: options, operations: [.identity], operationsFromFile: false,
+                                 sites: Array(structure.sites.indices), labels: labels, p1Reason: reason)
+            if let p1Difference = readBackDifference(p1, structure: structure, labels: labels) { throw .readBackDiffers(p1Difference) }
+            return Outcome(text: p1, symmetry: .p1(reason: reason))
         }
         let p1 = try cifText(structure, options: options, operations: [.identity], operationsFromFile: false,
                              sites: Array(structure.sites.indices), labels: labels, p1Reason: nil)
@@ -115,13 +129,19 @@ public enum CIFExport {
         return distinct.count > 1 ? (distinct, fromFile) : nil
     }
 
+    /// pymatgen-core 2026.10.16 `CifParser`'s defaults: `site_tolerance` (two sites closer than this, fractional and
+    /// per axis modulo 1, are one) and `frac_tolerance` (a coordinate whose ratio to 1/3 or 2/3 is within this of 1 is read
+    /// as that fraction). The tolerant read-back uses them and nothing stricter (D12).
+    static let readBackTolerance = 1e-4
+
     /// One site of each orbit, the first in the structure's order: a site joins an earlier one's orbit when it has the same
-    /// element, occupancy and displacement and sits within 1e-6 (fractional, per axis, modulo 1) of one of its images. Its
+    /// element, occupancy and displacement and sits within `tolerance` (fractional, per axis, modulo 1) of one of its images. Its
     /// label is not compared: an image takes its representative's label, as in any CIF of an asymmetric unit, so the
     /// Si2 ... Si8 of a P1 file read back as Si1.
     /// The read-back decides whether the choice was right; this only has to be right for the structures it can be.
     /// `owner[j]` is the representative of site j's orbit.
-    static func orbitRepresentatives(_ sites: [AtomSite], operations: [SymmetryOperation]) -> (representatives: [Int], owner: [Int]) {
+    static func orbitRepresentatives(_ sites: [AtomSite], operations: [SymmetryOperation],
+                                     tolerance: Double = 1e-6) -> (representatives: [Int], owner: [Int]) {
         var owner = Array(sites.indices)
         var covered = [Bool](repeating: false, count: sites.count)
         var representatives: [Int] = []
@@ -134,7 +154,7 @@ public enum CIFExport {
                 guard other.z == site.z, other.occupancy == site.occupancy,
                       other.isotropicDisplacement == site.isotropicDisplacement else { continue }
                 if images.contains(where: { image in
-                    (0..<3).allSatisfy { fractionalAxisDelta(image[$0], other.fractional[$0]) <= 1e-6 }
+                    (0..<3).allSatisfy { fractionalAxisDelta(image[$0], other.fractional[$0]) <= tolerance }
                 }) {
                     covered[j] = true
                     owner[j] = i
@@ -145,8 +165,10 @@ public enum CIFExport {
     }
 
     /// What differs between the structure and `text` read back by `CIFImport` (cell, and the expanded sites as a multiset:
-    /// element, coordinates, occupancy, displacement and label, each equal); nil when nothing does.
-    static func readBackDifference(_ text: String, structure: CrystalStructure, labels: [String]) -> String? {
+    /// element, coordinates, occupancy, displacement and label, each equal); nil when nothing does. With a `tolerance`, a
+    /// coordinate may differ by up to it, per axis and modulo 1; everything else is still compared to the bit.
+    static func readBackDifference(_ text: String, structure: CrystalStructure, labels: [String],
+                                   tolerance: Double? = nil) -> String? {
         let read: CrystalStructure
         do { read = try CIFImport.read(text).structure } catch { return "the text does not read (\(error))" }
         let a = structure.cell, b = read.cell
@@ -156,10 +178,30 @@ public enum CIFExport {
         guard read.sites.count == structure.sites.count else {
             return "the operations expand to \(read.sites.count) sites, the structure has \(structure.sites.count)"
         }
-        let written = zip(structure.sites, labels).map { SiteKey($0, label: $1) }.sorted()
-        let back = read.sites.map { SiteKey($0, label: $0.label ?? "") }.sorted()
-        guard written == back else { return "the expanded sites are not the structure's to the bit" }
+        guard let tolerance else {
+            let written = zip(structure.sites, labels).map { SiteKey($0, label: $1) }.sorted()
+            let back = read.sites.map { SiteKey($0, label: $0.label ?? "") }.sorted()
+            guard written == back else { return "the expanded sites are not the structure's to the bit" }
+            return nil
+        }
+        var unmatched = Array(structure.sites.indices)
+        for site in read.sites {
+            let found = unmatched.firstIndex { i in
+                let mine = structure.sites[i]
+                return mine.z == site.z && mine.occupancy == site.occupancy
+                    && mine.isotropicDisplacement == site.isotropicDisplacement && labels[i] == (site.label ?? "")
+                    && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.fractional[$0]) <= tolerance }
+            }
+            guard let found else { return "the expanded sites are not the structure's within \(number(tolerance))" }
+            unmatched.remove(at: found)
+        }
         return nil
+    }
+
+    /// `value`, or 1/3 or 2/3 when pymatgen's `CifParser` would read it as that fraction (`frac_tolerance`, relative).
+    static func exactThird(_ value: Double) -> Double {
+        for third in [1.0 / 3, 2.0 / 3] where abs(value / third - 1) <= readBackTolerance { return third }
+        return value
     }
 
     /// A site as the read-back compares it, ordered for a multiset comparison.
@@ -302,7 +344,7 @@ public enum CIFExport {
 
     private static func cifText(_ structure: CrystalStructure, options: Options, operations: [SymmetryOperation],
                                 operationsFromFile: Bool, sites: [Int], labels: [String],
-                                p1Reason: String?) throws(CIFExportError) -> String {
+                                p1Reason: String?, exactThirds: Bool = false) throws(CIFExportError) -> String {
         var lines: [String] = []
         for comment in options.comments { lines.append(contentsOf: commentLines(comment)) }
         if !options.sourceLines.isEmpty {
@@ -311,6 +353,10 @@ public enum CIFExport {
         }
         if let p1Reason {
             lines.append(contentsOf: commentLines("Written in P1 with every site: the symmetric text did not read back to the structure (\(p1Reason))."))
+        }
+        if exactThirds {
+            lines.append("# Symmetry kept within pymatgen's reading tolerance (1e-4): coordinates near 1/3 and 2/3 are written as")
+            lines.append("# those fractions, and the sites read back within 1e-4 of the structure's.")
         }
         lines.append("data_\(blockName(structure, options: options))")
         if let creator = value(options.creator) { lines.append("_audit_creation_method \(creator)") }
@@ -348,8 +394,9 @@ public enum CIFExport {
         for i in sites {
             let site = structure.sites[i]
             guard let symbol = Element.symbol(forAtomicNumber: site.z) else { throw .unknownElement(z: site.z) }
-            var row = [labels[i], symbol, number(site.fractional.x), number(site.fractional.y), number(site.fractional.z),
-                       number(site.occupancy)]
+            let given = [site.fractional.x, site.fractional.y, site.fractional.z]
+            let position = exactThirds ? given.map(exactThird) : given
+            var row = [labels[i], symbol, number(position[0]), number(position[1]), number(position[2]), number(site.occupancy)]
             if withDisplacement { row.append(site.isotropicDisplacement.map(number) ?? "?") }
             lines.append(row.joined(separator: " "))
         }

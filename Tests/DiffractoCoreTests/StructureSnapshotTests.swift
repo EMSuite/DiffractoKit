@@ -2,8 +2,9 @@
 //  StructureSnapshotTests.swift
 //  Role: the Codable structure snapshot and the content fingerprint (DiffractoKit #148, plan row K1). Every committed
 //        structure survives encode and decode bit for bit and rebuilds to an equal structure with the same fingerprint;
-//        the fingerprint is equal for equal content and changes with any cell or site value; the schema version is
-//        written and a newer one is refused.
+//        the fingerprint is equal for equal content and changes with any cell or site value (a position by a step of its
+//        1e-6 grid; one ulp of a position, as a hexagonal CIF read back gives it, is the same content, #220); the schema
+//        version is written and a newer one is refused.
 //
 
 import DiffractoKitTestSupport
@@ -189,6 +190,16 @@ struct StructureSnapshotTests {
         let positiveZero = CrystalStructure(cell: gold.cell, sites: [AtomSite(z: 79, fractional: [0, 0, 0])],
                                             operations: [.identity])
         #expect(negativeZero.fingerprint == positiveZero.fingerprint)
+
+        // A position one ulp off, as a CIF's operations put the image of a third (1 − 1/3 against 2/3), and a position
+        // across the cell edge (1 − 1e-12 against 0), are the same content (#220).
+        func one(_ x: Double) -> CrystalStructure {
+            CrystalStructure(cell: gold.cell, sites: [AtomSite(z: 79, fractional: [x, 0.25, 0])], operations: [.identity])
+        }
+        #expect((1 - 1.0 / 3) != 2.0 / 3)
+        #expect(one(1 - 1.0 / 3).fingerprint == one(2.0 / 3).fingerprint)
+        #expect(one(0.6666667).fingerprint == one(0.6666667.nextUp).fingerprint)
+        #expect(one(1 - 1e-12).fingerprint == one(0).fingerprint)
         let stored = try JSONDecoder().decode(Snapshot.self, from: Self.encoder().encode(Snapshot(negativeZero)))
         #expect(stored.sites[0].fractional.x.sign == .plus)
     }
@@ -211,7 +222,7 @@ struct StructureSnapshotTests {
         }
         for k in 0..<3 {
             var moved = site
-            moved.fractional[k] = moved.fractional[k].nextUp
+            moved.fractional[k] += 1e-6
             variants.append(("coordinate \(k)", structure(cell, moved)))
         }
         var changed = site

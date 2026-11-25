@@ -1994,7 +1994,7 @@
         "c": 6.86,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "7104a7516b899817fc9aee2fc50d0d4b7da53b049876aeacecb57d928c414c3c",
+      "cifSha256": "09396a20b583d7f4b7b2e079e7dafd43a07f5279131e86f5126e70e37144c256",
       "name": "cdi2_P-3m1",
       "sites": [
         {
@@ -2018,8 +2018,8 @@
             0.249
           ],
           "fracAsWritten": [
-            0.3333333,
-            0.6666667,
+            0.3333333333333333,
+            0.6666666666666666,
             0.249
           ],
           "occupancy": 1.0,
@@ -2027,13 +2027,13 @@
         },
         {
           "frac": [
-            0.6666666666666666,
+            0.6666666666666667,
             0.3333333333333333,
             0.751
           ],
           "fracAsWritten": [
-            0.6666667,
-            0.3333333,
+            0.6666666666666667,
+            0.3333333333333333,
             0.751
           ],
           "occupancy": 1.0,
@@ -2041,7 +2041,7 @@
         }
       ],
       "warnings": [
-        "Issues encountered while parsing CIF: 4 fractional coordinates rounded to ideal values to avoid issues with finite precision."
+        "Issues encountered while parsing CIF: 2 fractional coordinates rounded to ideal values to avoid issues with finite precision."
       ]
     },
     {
@@ -2053,7 +2053,7 @@
         "c": 6.86,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "cff2ebfe22298b96397cd8f21a27dab8a0a9bca74359266fba812644a6337a7e",
+      "cifSha256": "1d15401ea9c79028454f3b118d16928d179157e26e7c0e4db85635cec79fdfa5",
       "name": "cdi2_P-3m1_a4.3",
       "sites": [
         {
@@ -2077,8 +2077,8 @@
             0.249
           ],
           "fracAsWritten": [
-            0.3333333,
-            0.6666667,
+            0.3333333333333333,
+            0.6666666666666666,
             0.249
           ],
           "occupancy": 1.0,
@@ -2086,13 +2086,13 @@
         },
         {
           "frac": [
-            0.6666666666666666,
+            0.6666666666666667,
             0.3333333333333333,
             0.751
           ],
           "fracAsWritten": [
-            0.6666667,
-            0.3333333,
+            0.6666666666666667,
+            0.3333333333333333,
             0.751
           ],
           "occupancy": 1.0,
@@ -2100,7 +2100,7 @@
         }
       ],
       "warnings": [
-        "Issues encountered while parsing CIF: 4 fractional coordinates rounded to ideal values to avoid issues with finite precision."
+        "Issues encountered while parsing CIF: 2 fractional coordinates rounded to ideal values to avoid issues with finite precision."
       ]
     },
     {
@@ -2859,7 +2859,7 @@
         "c": 5.24092825365889,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "2b6b49d7b894f411e3d226b4de6b905971e201493c8f80bcdd71d94b3591f067",
+      "cifSha256": "21364e2d98745d3932252e544aae964b14d16b7f7fb457839a25ce831fdf0b8b",
       "name": "ideal_hcp_P1",
       "sites": [
         {
@@ -2883,17 +2883,15 @@
             0.5
           ],
           "fracAsWritten": [
-            0.666666666666667,
-            0.333333333333333,
+            0.6666666666666666,
+            0.3333333333333333,
             0.5
           ],
           "occupancy": 1.0,
           "z": 12
         }
       ],
-      "warnings": [
-        "Issues encountered while parsing CIF: 2 fractional coordinates rounded to ideal values to avoid issues with finite precision."
-      ]
+      "warnings": []
     },
     {
       "cell": {
@@ -2975,7 +2973,7 @@
         "c": 5.211,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "632b0195611c984c2687191f4734d52c83cfa26b4525f2054969cf6d496799f5",
+      "cifSha256": "672d1c9ea74285325f2d9a47bcb1ca750476c476d5e98ea73e304b62d1393352",
       "name": "input-magnesiumJSON.json",
       "sites": [
         {
@@ -2999,17 +2997,15 @@
             0.5
           ],
           "fracAsWritten": [
-            0.6666666667,
-            0.3333333333,
+            0.6666666666666666,
+            0.3333333333333333,
             0.5
           ],
           "occupancy": 1.0,
           "z": 12
         }
       ],
-      "warnings": [
-        "Issues encountered while parsing CIF: 2 fractional coordinates rounded to ideal values to avoid issues with finite precision."
-      ]
+      "warnings": []
     },
     {
       "cell": {
@@ -3147,7 +3143,7 @@
         "c": 5.2108,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "643d36df509d539594b1a3306bb785998a24020818681b9e86c0128680da71da",
+      "cifSha256": "d5dd5c3f64adf68a8c80351287a4bee1f8df6dfc96be3c9e6c81f15c1de05c73",
       "name": "magnesium_P63mmc",
       "sites": [
         {
@@ -3157,8 +3153,8 @@
             0.25
           ],
           "fracAsWritten": [
-            0.3333333,
-            0.6666667,
+            0.3333333333333333,
+            0.6666666666666666,
             0.25
           ],
           "occupancy": 1.0,
@@ -3166,13 +3162,13 @@
         },
         {
           "frac": [
-            0.6666666666666666,
+            0.6666666666666667,
             0.3333333333333333,
             0.75
           ],
           "fracAsWritten": [
-            0.6666667,
-            0.3333333,
+            0.6666666666666667,
+            0.3333333333333333,
             0.75
           ],
           "occupancy": 1.0,
@@ -3180,7 +3176,7 @@
         }
       ],
       "warnings": [
-        "Issues encountered while parsing CIF: 4 fractional coordinates rounded to ideal values to avoid issues with finite precision."
+        "Issues encountered while parsing CIF: 2 fractional coordinates rounded to ideal values to avoid issues with finite precision."
       ]
     },
     {
@@ -3237,7 +3233,7 @@
         "c": 5.3,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "984a45f7106f1a3936061bf8ac7e8989636fde0f2f3fd5c04e1ff4a30a8e99ee",
+      "cifSha256": "db3b9112ebd56aeec94c382d97329599dd958b09ed1bf3d6754af58360396ddb",
       "name": "magnesium_P63mmc_c5.3",
       "sites": [
         {
@@ -3247,8 +3243,8 @@
             0.25
           ],
           "fracAsWritten": [
-            0.3333333,
-            0.6666667,
+            0.3333333333333333,
+            0.6666666666666666,
             0.25
           ],
           "occupancy": 1.0,
@@ -3256,13 +3252,13 @@
         },
         {
           "frac": [
-            0.6666666666666666,
+            0.6666666666666667,
             0.3333333333333333,
             0.75
           ],
           "fracAsWritten": [
-            0.6666667,
-            0.3333333,
+            0.6666666666666667,
+            0.3333333333333333,
             0.75
           ],
           "occupancy": 1.0,
@@ -3270,7 +3266,7 @@
         }
       ],
       "warnings": [
-        "Issues encountered while parsing CIF: 4 fractional coordinates rounded to ideal values to avoid issues with finite precision."
+        "Issues encountered while parsing CIF: 2 fractional coordinates rounded to ideal values to avoid issues with finite precision."
       ]
     },
     {
@@ -4228,7 +4224,7 @@
         "c": 12.323,
         "gamma": 119.99999999999999
       },
-      "cifSha256": "b5b792c65c317b6573491ec306e5426fff20f2556590628fae70434330c1b2c3",
+      "cifSha256": "a12b0b97427882443488747e9339b0aff8f97246d4c2d87d099c6ff168f35bbc",
       "name": "ws2_2H",
       "sites": [
         {
@@ -4238,8 +4234,8 @@
             0.25
           ],
           "fracAsWritten": [
-            0.333333,
-            0.666667,
+            0.3333333333333333,
+            0.6666666666666666,
             0.25
           ],
           "occupancy": 1.0,
@@ -4247,13 +4243,13 @@
         },
         {
           "frac": [
-            0.6666666666666666,
+            0.6666666666666667,
             0.3333333333333333,
             0.75
           ],
           "fracAsWritten": [
-            0.666667,
-            0.333333,
+            0.6666666666666667,
+            0.3333333333333333,
             0.75
           ],
           "occupancy": 1.0,
@@ -4266,8 +4262,8 @@
             0.6225
           ],
           "fracAsWritten": [
-            0.333333,
-            0.666667,
+            0.3333333333333333,
+            0.6666666666666666,
             0.6225
           ],
           "occupancy": 1.0,
@@ -4275,49 +4271,49 @@
         },
         {
           "frac": [
+            0.6666666666666667,
             0.3333333333333333,
-            0.6666666666666666,
-            0.8775
+            0.37749999999999995
           ],
           "fracAsWritten": [
-            0.333333,
-            0.666667,
-            0.8775
+            0.6666666666666667,
+            0.3333333333333333,
+            0.37749999999999995
           ],
           "occupancy": 1.0,
           "z": 16
         },
         {
           "frac": [
-            0.6666666666666666,
+            0.6666666666666667,
             0.3333333333333333,
-            0.3775
+            0.12250000000000005
           ],
           "fracAsWritten": [
-            0.666667,
-            0.333333,
-            0.3775
+            0.6666666666666667,
+            0.3333333333333333,
+            0.12250000000000005
           ],
           "occupancy": 1.0,
           "z": 16
         },
         {
           "frac": [
-            0.6666666666666666,
             0.3333333333333333,
-            0.1225
+            0.6666666666666667,
+            0.8775
           ],
           "fracAsWritten": [
-            0.666667,
-            0.333333,
-            0.1225
+            0.3333333333333333,
+            0.6666666666666667,
+            0.8775
           ],
           "occupancy": 1.0,
           "z": 16
         }
       ],
       "warnings": [
-        "Issues encountered while parsing CIF: 12 fractional coordinates rounded to ideal values to avoid issues with finite precision."
+        "Issues encountered while parsing CIF: 4 fractional coordinates rounded to ideal values to avoid issues with finite precision."
       ]
     }
   ]

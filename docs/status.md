@@ -20,7 +20,7 @@ Live:
   `StructureFactors.compute` and the symmetry's metric test instead of computing on an identity inverse or NaN (#147).
 - A structure as stored data: `CrystalStructure.Snapshot` (Codable, with a schema version) rebuilds the same
   structure, and `CrystalStructure.fingerprint` changes with any cell parameter, any
-  site's element, position, occupancy or displacement, or the symmetry operations (#148).
+  site's element, occupancy or displacement, a position by 1e-6, or the symmetry operations (#148, #220).
 - A Materials Project structure with no key: `MaterialsProjectOptimade` searches the keyless OPTIMADE service by
   elements or formula (most stable first; an empty service is told apart from no results) and reads an entry to its
   conventional cell, checked against pymatgen on 14 recorded entries, one per Bravais lattice (#150).
@@ -36,7 +36,9 @@ Live:
   (#149).
 - A CIF of several structures: `CIFImport.blocks(in:)` lists its `data_` blocks and `read(_:block:)` reads one by name (#157).
 - A structure written as CIF (`CIFExport.text(of:options:)`): its operation loop and one site per orbit, numbers to the bit,
-  read back before it returns and written in P1 with every site, saying why, when the read-back differs (#168).
+  read back before it returns and written in P1 with every site, saying why, when the read-back differs (#168). A
+  hexagonal structure with sites at 1/3 and 2/3 keeps its symmetry within pymatgen's reading tolerance (1e-4), the thirds
+  written as pymatgen reads them, and reads back with the same content fingerprint (#220).
 - Kinematic structure factors (py4DSTEM's scattering-factor table, bit for bit).
 - Powder X-ray patterns (`PowderPattern.xray`): pymatgen's `XRDCalculator` peaks, 2θ, intensities and hkl labels for any
   structure, Cu Kα and pymatgen's other lines or any wavelength, a 2θ range and Debye-Waller factors; its X-ray scattering
