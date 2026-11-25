@@ -11,15 +11,17 @@ import Testing
 /// pattern's centre).
 ///
 /// The planted pattern is py4DSTEM's fitted profile of that ring, rounded: I0 -1.2, sigma0 13, I1 0.057, sigma1 = sigma2 1.8, background
-/// 0.083, centre (127.84, 127.38), a 43, b 41.5, theta 1 rad. The pinned numbers are py4DSTEM f050d207's `fit_ellipse_amorphous_ring` on
-/// this pattern from the start centre (128, 128); the same model held at I0 >= 0 gives R 42.161 px. Tolerance: py4DSTEM ships no test
-/// of this function, so `assert_allclose`'s default for float64, rtol 1e-7 (docs/parity.md).
+/// 0.083, centre (127.84, 127.38), a 43, b 41.5, theta 1 rad, with a flat central beam of 60 inside 20 px (as the real pattern has one; it
+/// lies outside the annulus and only sets the intensity bound). The pinned numbers are py4DSTEM f050d207's `fit_ellipse_amorphous_ring`
+/// on this pattern from the start centre (128, 128); the kit held at I0 >= 0 gives R 42.178 px (a NumPy transcription of the fit).
+/// Tolerance: py4DSTEM ships no test of this function, so `assert_allclose`'s default for float64, rtol 1e-7 (docs/parity.md); the
+/// transcription of the kit's fit lands 1e-10 px from py4DSTEM's R.
 struct RingFitCentralGaussianSignTests {
     static let planted = (i0: -1.2, i1: 0.057, sigma0: 13.0, sigma1: 1.8, sigma2: 1.8, background: 0.083,
                           row: 127.84, column: 127.38, a: 43.0, b: 41.5, theta: 1.0)
     // py4DSTEM f050d207, fit_ellipse_amorphous_ring(pattern, (128, 128), (37, 46)): x0, y0, a, b, (a + b) / 2.
-    static let reference = (row: 127.8399999963596, column: 127.37999999485223, a: 42.999999969959646,
-                            b: 41.499999978138774, radius: 42.24999997404921)
+    static let reference = (row: 127.8399999963596, column: 127.37999999485223, a: 42.99999996995962,
+                            b: 41.49999997813876, radius: 42.24999997404919)
 
     /// py4DSTEM's `double_sided_gaussian` in (a, b, theta), as `fitAmorphousRing` evaluates it; x is the row, y the column.
     static func pattern(n: Int = 256) -> DiffractionPattern {
@@ -33,6 +35,7 @@ struct RingFitCentralGaussianSignTests {
             let e2 = max(0, A * dx * dx + B * dx * dy + C * dy * dy)
             let delta = e2.squareRoot() - radius
             let sigma = delta < 0 ? p.sigma1 : p.sigma2
+            if hypot(dx, dy) < 20 { pixels[row * n + column] = 60; continue }
             let value = p.i0 * exp(-e2 / (2 * p.sigma0 * p.sigma0)) + p.i1 * exp(-delta * delta / (2 * sigma * sigma)) + p.background
             pixels[row * n + column] = Float(value)
         } }
