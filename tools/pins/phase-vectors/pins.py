@@ -31,6 +31,7 @@ import hashlib
 import json
 import math
 import os
+import pathlib
 import subprocess
 import sys
 import warnings
@@ -346,11 +347,17 @@ def euler_block(rng, orientation_matrices):
     phis = [("0", 0.0), ("pi", math.pi), ("1e-9", 1e-9), ("1e-10", 1e-10), ("pi-1e-9", math.pi - 1e-9), ("pi-1e-10", math.pi - 1e-10),
             ("5e-9", 5e-9), ("2e-8", 2e-8), ("5e-8", 5e-8), ("9e-8", 9e-8), ("1e-7", 1e-7), ("1e-6", 1e-6), ("1e-5", 1e-5), ("1e-3", 1e-3),
             ("pi-5e-9", math.pi - 5e-9), ("pi-1e-5", math.pi - 1e-5)]
+    # The input matrices are fixed (gimbal-inputs.json, #141): near the lock the angles move with the last bit of M, and
+    # from_euler's M differs in that bit between macOS's and glibc's sin and cos.
+    fixed = json.loads((pathlib.Path(__file__).resolve().parent / "gimbal-inputs.json").read_text())["M"]
     gim = []
     for name, Phi in phis:
         for (p1, p2) in pairs:
+            label = f"gimbal-Phi={name}-phi1={p1}-phi2={p2}"
             R = Rotation.from_euler("zxz", [p1, Phi, p2]).as_matrix()
-            c = euler_case(f"gimbal-Phi={name}-phi1={p1}-phi2={p2}", R.T)
+            M = np.array(fixed[label], dtype=np.float64).reshape(3, 3)
+            assert np.max(np.abs(M - R.T)) <= 1e-15, label
+            c = euler_case(label, M)
             c["input_angles"] = [p1, Phi, p2]
             c["Phi_label"] = name
             c["abs_sin_Phi"] = abs(math.sin(Phi))
