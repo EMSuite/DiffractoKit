@@ -643,6 +643,9 @@ public enum EllipseCalibration {
         }
     }
 
+    /// The normalised residual at or below which a profile fit is at the float32 floor and gets no free-sign continuation.
+    static let continuationResidualFloor = 1e-6
+
     /// Why `fitBestAvailable` kept the conic over a profile fit whose shape departs from it (its `profileFallbackReason`).
     struct ProfileDepartsFromConic: LocalizedError {
         let profileRatio: Double, conicRatio: Double
@@ -766,11 +769,13 @@ public enum EllipseCalibration {
 
         // The ring sigmas' floor: 0.25 px, the reference implementations' bound; lowered to 0.01 px only for the one-sided refit below.
         var ringSigmaFloor = policy.ringWidthFloor
+        // I0's floor: 0, lowered to -intensityLimit only for the free-sign continuation in `refine` (DiffractoKit#242).
+        var centralFloor = 0.0
         // The ring-sigma bound at which `refine` calls a sigma "at the floor".
         let doubleFloorBound = policy.ringWidthFloor + policy.ringWidthFloorTolerance
         func bounded(_ input: [Double]) -> [Double] {
             var p = input
-            p[0] = min(intensityLimit, max(0, p[0]))
+            p[0] = min(intensityLimit, max(centralFloor, p[0]))
             p[1] = min(intensityLimit, max(0, p[1]))
             p[2] = min(sigmaLimit, max(0.25, p[2]))
             for index in 3...4 { p[index] = min(sigmaLimit, max(ringSigmaFloor, p[index])) }
@@ -812,6 +817,13 @@ public enum EllipseCalibration {
                 let ringSigma = delta < 0 ? twoSigma1 : twoSigma2
                 return p[0] * exp(-ellipticalRadius2 / twoSigma0)
                     + p[1] * exp(-(delta * delta) / ringSigma) + p[5]
+            }
+        }
+
+        func cost(_ p: [Double], indices: [Int]) -> Double {
+            zip(predictions(p, indices: indices), indices).reduce(0.0) { partial, pair in
+                let error = pair.0 - samples[pair.1].value
+                return partial + error * error
             }
         }
 
@@ -915,6 +927,29 @@ public enum EllipseCalibration {
         func refine(_ start: [Double], progress: ProgressSpan) throws -> EllipseCalibrationFit {
             try checkCancellation(isCancelled)
             var parameters = try optimize(start, indices: allIndices, progress: progress.sub(0, 0.5))
+            defer { centralFloor = 0 }
+
+            // FREE-SIGN CONTINUATION (DiffractoKit#242). py4DSTEM's `leastsq` leaves I0 free; a central Gaussian below zero is a
+            // background rising outward across the annulus (pyxem's Au cross-grating {111} ring: I0 -1.18, R 42.25 px; held at
+            // I0 >= 0 the kit read 42.17, 0.17 % small). A fit that ends with I0 on its 0 bound is refined once more from there
+            // with I0 free and kept when its cost is lower. DEVIATION: not free from the start, because from the kit's start a
+            // free I0 wanders along the I0-sigma0 valley into other minima (a single ring at R 17 px 8e-4 px off, the noisy
+            // tail ring 2.3 % high, the 1/r^3 plant refused, measured on a NumPy transcription and in CI), where py4DSTEM holds
+            // them. A fit already at the float32 floor (normalised residual 1e-6 or less) is the data and is not refined again.
+            if parameters[0] <= 0 {
+                let boundCost = cost(parameters, indices: allIndices)
+                if (boundCost / Double(samples.count)).squareRoot() / dynamicRange > Self.continuationResidualFloor {
+                    centralFloor = -intensityLimit
+                    do {
+                        let free = try optimize(parameters, indices: allIndices, progress: progress.sub(0.5, 0.5))
+                        if cost(free, indices: allIndices) < boundCost { parameters = free } else { centralFloor = 0 }
+                    } catch is CancellationError {
+                        throw CancellationError()
+                    } catch {
+                        centralFloor = 0
+                    }
+                }
+            }
 
             // One robust refit mirrors py4DSTEM's optional outlier refinement while
             // keeping the final acceptance residual defined over every selected pixel.
