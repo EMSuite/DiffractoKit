@@ -47,7 +47,8 @@ matches by hkl).
   1.2 for Al, Au, Mg, beta''.
 - `euler`: 1000 seeded random rotations (SciPy `Rotation.random`, `default_rng(20261015)`), the gimbal and near-gimbal cases
   (Phi = 0, pi, 1e-9, 1e-10, 5e-9, 2e-8, 5e-8, 9e-8, 1e-7, 1e-6, 1e-5, 1e-3, pi - 1e-5, pi - 1e-9, pi - 1e-10, pi - 5e-9, each with three
-  (phi1, phi2)) and the 37 py4DSTEM `parse_orientation` matrices (the [001] ones are Phi = 0 exactly). `M` is the py4DSTEM orientation
+  (phi1, phi2); their input matrices are fixed in `gimbal-inputs.json`, since near the lock the angles move with the last bit of M
+  and `from_euler`'s M differs in that bit between macOS and glibc) and the 37 py4DSTEM `parse_orientation` matrices (the [001] ones are Phi = 0 exactly). `M` is the py4DSTEM orientation
   matrix, row-major; `R = M^T`; `angles_raw` are SciPy's `as_euler("zxz")`, `angles` wrapped to (-pi, pi]; `crystal_to_lab` is
   `from_euler("zxz", angles).as_matrix()`; `scipy_gimbal_warning` is whether SciPy locked.
 - `frame_matrix_cases`: 20 `B R_z(a)` products (10 bases are the columns (e1, e2, n) of frames above, 10 seeded random
