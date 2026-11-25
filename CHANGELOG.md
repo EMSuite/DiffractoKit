@@ -4,6 +4,18 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.23.0](https://github.com/EMSuite/DiffractoKit/compare/0.22.0...0.23.0) (2026-11-24)
+
+
+### Features
+
+* import a Materials Project entry whose stated group the cell conversion cannot reach ([#234](https://github.com/EMSuite/DiffractoKit/issues/234)) ([f537269](https://github.com/EMSuite/DiffractoKit/commit/f537269571aa1f2c9a5eda876308d7e6913752b0))
+
+
+### Fixtures and tests
+
+* record the keyed Materials Project answers ([#217](https://github.com/EMSuite/DiffractoKit/issues/217)) ([fb08596](https://github.com/EMSuite/DiffractoKit/commit/fb085966aa927a9c6c411344ff80618f7f5b55eb))
+
 ## [0.22.0](https://github.com/EMSuite/DiffractoKit/compare/0.21.0...0.22.0) (2026-11-24)
 
 
