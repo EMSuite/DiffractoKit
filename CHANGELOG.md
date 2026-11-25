@@ -4,6 +4,26 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.24.0](https://github.com/EMSuite/DiffractoKit/compare/0.23.0...0.24.0) (2026-11-25)
+
+
+### Features
+
+* double-tilt holder β sense, fitted in the calibration, ambiguous pairs refused ([#236](https://github.com/EMSuite/DiffractoKit/issues/236)) ([1ab06f5](https://github.com/EMSuite/DiffractoKit/commit/1ab06f51a0475304721db376146143e25a12d54c))
+* electron rings carry their profile intensity, Σ|F|² · d² ([#239](https://github.com/EMSuite/DiffractoKit/issues/239)) ([8ffe0a6](https://github.com/EMSuite/DiffractoKit/commit/8ffe0a6f74ab4b0320958ddeb6791a5c86458e89))
+
+
+### Bug Fixes
+
+* hexagonal structures keep their symmetry when written as CIF ([#237](https://github.com/EMSuite/DiffractoKit/issues/237)) ([389036e](https://github.com/EMSuite/DiffractoKit/commit/389036e39828ac8a5728369cd13d3e8eb998d304))
+* the ring fit leaves the central Gaussian free in sign, as py4DSTEM does ([#243](https://github.com/EMSuite/DiffractoKit/issues/243)) ([dadfecf](https://github.com/EMSuite/DiffractoKit/commit/dadfecf22da1a772872b0a7bdcc1e280b28aef70))
+
+
+### Fixtures and tests
+
+* check the million-atom read time only in the benchmark run ([#245](https://github.com/EMSuite/DiffractoKit/issues/245)) ([d544e91](https://github.com/EMSuite/DiffractoKit/commit/d544e9198313e9fbd344947507093ce5a84ea92a))
+* the five Python references reproduce on Linux ([#240](https://github.com/EMSuite/DiffractoKit/issues/240)) ([ec6e7d7](https://github.com/EMSuite/DiffractoKit/commit/ec6e7d7fb1a7f43b0949d82c03692a842ab29497))
+
 ## [0.23.0](https://github.com/EMSuite/DiffractoKit/compare/0.22.0...0.23.0) (2026-11-24)
 
 
