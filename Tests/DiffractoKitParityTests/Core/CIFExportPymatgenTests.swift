@@ -4,8 +4,10 @@
 //  lattice, three Materials Project imports) is the text committed under Fixtures/cif-export/written/, byte for byte, and
 //  pymatgen-core 2026.10.16 `CifParser` reads that text (tools/pins/cif-export/pins.py -> pymatgen-read-pins.json) to the
 //  structure's cell, relative 1e-7, and its expanded sites as a multiset: element and occupancy equal, coordinates 1e-7
-//  modulo 1 against pymatgen's reading with `frac_tolerance=0`, and within 1e-4 (that tolerance's default) of its default
-//  reading, which rounds 0.333333 to 1/3 (suite design "Files, figures and exports", pin C1). A text not committed, or committed differently, is printed
+//  modulo 1 between pymatgen's reading with `frac_tolerance=0` and the kit's own reading of the text (`CIFImport`), and
+//  the structure's within 1e-4 (that tolerance's default) of pymatgen's default reading, which rounds 0.333333 to 1/3
+//  (suite design "Files, figures and exports", pin C1). The kit's reading is the structure to the bit except in a text
+//  that keeps its symmetry within pymatgen's tolerance (#220). A text not committed, or committed differently, is printed
 //  between `CIFExport C1 begin <name>` and `CIFExport C1 end` lines, so a recording can be taken from the CI log.
 //  Red before: `CIFExport` did not exist.
 //
@@ -58,12 +60,24 @@ struct CIFExportPymatgenTests {
                 #expect(abs(mine - theirs) <= 1e-7 * abs(theirs), "\(name) \(what): \(mine) against pymatgen's \(theirs)")
             }
             #expect(structure.sites.count == pin.sites.count, "\(name) site count")
+            // pymatgen's reading as written against the kit's reading of the same text, at 1e-7.
+            let read = try CIFImport.read(text).structure
+            var unread = Array(read.sites.indices)
+            for site in pin.sites {
+                let found = unread.firstIndex { i in
+                    let kit = read.sites[i]
+                    return kit.z == site.z && kit.occupancy == site.occupancy
+                        && (0..<3).allSatisfy { fractionalAxisDelta(kit.fractional[$0], site.fracAsWritten[$0]) <= 1e-7 }
+                }
+                if let found { unread.remove(at: found) } else { Issue.record("\(name): pymatgen's Z\(site.z) \(site.fracAsWritten) is not a site the kit reads") }
+            }
+            #expect(unread.isEmpty, "\(name): sites pymatgen did not read \(unread)")
+            // pymatgen's default reading against the structure, within pymatgen's 1e-4.
             var unmatched = Array(structure.sites.indices)
             for site in pin.sites {
                 let found = unmatched.firstIndex { i in
                     let mine = structure.sites[i]
                     return mine.z == site.z && mine.occupancy == site.occupancy
-                        && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.fracAsWritten[$0]) <= 1e-7 }
                         && (0..<3).allSatisfy { fractionalAxisDelta(mine.fractional[$0], site.frac[$0]) <= 1e-4 }
                 }
                 if let found { unmatched.remove(at: found) } else { Issue.record("\(name): pymatgen's Z\(site.z) \(site.frac) is not a site") }

@@ -16,7 +16,9 @@ extension CrystalStructure {
     /// a structure from `detectingSymmetry` (a CIF, a preset, a Materials Project cell) runs the same detection with the
     /// same settings, so the rebuilt structure equals the original as long as the detection of this kit version reads
     /// the same; `structure().fingerprint == fingerprint` says that it does. A structure with given operations, and the
-    /// conventional-setting structure of `ConventionalSetting`, are rebuilt from their stored operations.
+    /// conventional-setting structure of `ConventionalSetting`, are rebuilt from their stored operations. A snapshot made
+    /// by DiffractoKit 0.23.0 or earlier stores a version-1 fingerprint (positions hashed by their bits), which no
+    /// structure of this version has: compare it only with fingerprints stored beside it.
     ///
     /// Every number is stored as it is in the structure, except that a negative zero is stored as zero (JSON has no
     /// negative zero that survives every reader). JSON cannot hold NaN or infinity: `JSONEncoder` refuses a snapshot
@@ -256,23 +258,25 @@ extension CrystalStructure {
     }
 
     /// SHA-256 (hex) of the structure's content: the six cell parameters, every site's atomic number, fractional
-    /// position, occupancy and displacement, the setting, and the symmetry reading (the operations, translations mod 1
-    /// on a 1e-6 grid, so that a last-bit difference in a refined translation almost never reads as a different reading). Equal for
-    /// equal content whatever the order of the sites or of the operations; any change of a cell parameter or of a site's
-    /// element, position, occupancy or displacement changes it. Not in it: the name, the site labels, the stated IT number, the file's own operation loop and the settings
-    /// the detection was given (two reads that find the same operations have the same fingerprint). A negative zero
-    /// counts as zero.
+    /// position (mod 1 on a 1e-6 grid, as the translations), occupancy and displacement, the setting, and the symmetry
+    /// reading (the operations, translations mod 1 on the 1e-6 grid). The grid is there so that a last-bit difference
+    /// almost never reads as other content: a refined translation, or a site that a CIF's operations put one ulp off the
+    /// stored one (1 − 1/3 against 2/3: a hexagonal structure written as CIF and read back, #220). Equal for equal content
+    /// whatever the order of the sites or of the operations; any change of a cell parameter, of a site's element,
+    /// occupancy or displacement, or of a position by a grid step (1e-6) changes it. Not in it: the name, the site labels,
+    /// the stated IT number, the file's own operation loop and the settings the detection was given (two reads that find
+    /// the same operations have the same fingerprint). A negative zero counts as zero. Version 2 of the hash (#220): version
+    /// 1 hashed the positions' bits, so a fingerprint stored by DiffractoKit 0.23.0 or earlier is not this one.
     public var fingerprint: String {
-        var bytes = Data("DiffractoKit structure fingerprint 1".utf8)
+        var bytes = Data("DiffractoKit structure fingerprint 2".utf8)
         bytes.append(0)
         for value in [cell.a, cell.b, cell.c, cell.alphaDeg, cell.betaDeg, cell.gammaDeg] { appendDouble(value, to: &bytes) }
 
         let siteRecords: [Data] = sites.map { site in
             var record = Data()
             appendInt(site.z, to: &record)
-            for value in [site.fractional.x, site.fractional.y, site.fractional.z, site.occupancy] {
-                appendDouble(value, to: &record)
-            }
+            for value in [site.fractional.x, site.fractional.y, site.fractional.z] { appendInt(gridTranslation(value), to: &record) }
+            appendDouble(site.occupancy, to: &record)
             if let u = site.isotropicDisplacement {
                 record.append(1)
                 appendDouble(u, to: &record)
@@ -364,7 +368,7 @@ private func appendInt(_ value: Int, to data: inout Data) {
     withUnsafeBytes(of: Int64(value).littleEndian) { data.append(contentsOf: $0) }
 }
 
-/// A translation mod 1 on the 1e-6 grid, 0 ..< 1_000_000; a non-finite translation as -1.
+/// A translation or a fractional position mod 1 on the 1e-6 grid, 0 ..< 1_000_000; a non-finite value as -1.
 private func gridTranslation(_ t: Double) -> Int {
     guard t.isFinite else { return -1 }
     let wrapped = t - t.rounded(.down)
