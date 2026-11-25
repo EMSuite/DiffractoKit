@@ -17,13 +17,11 @@
    "pixelHash": "2c1797f16d5b4f86",
    "sampleCount": 8040,
    "occupiedBins": 36,
-   "optimumCenterQX": 53.908661816422295,
-   "optimumCenterQY": 54.10978584919148,
-   "optimumA": 32.48665713596307,
-   "optimumB": 32.48665713122009,
-   "optimumTheta": 0.9005063878049322,
-   "scipySpreadABC": 1.0518375659660018e-15,
-   "scipySpreadCentre": 1.7882229030874441e-09
+   "optimumCenterQX": 53.90866181617596,
+   "optimumCenterQY": 54.109785848970986,
+   "optimumA": 32.48665713596451,
+   "optimumB": 32.486657131222934,
+   "optimumTheta": 0.0
   },
   {
    "name": "sweep 1 n112 R32 e0.0 t0.0 g60",
@@ -40,13 +38,11 @@
    "pixelHash": "e4fde415bca14291",
    "sampleCount": 8048,
    "occupiedBins": 31,
-   "optimumCenterQX": 55.27833134226346,
-   "optimumCenterQY": 54.25567598967022,
-   "optimumA": 32.55469027225295,
-   "optimumB": 32.46995609604889,
-   "optimumTheta": 1.6897933871786541,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 55.27833134199276,
+   "optimumCenterQY": 54.25567598838944,
+   "optimumA": 32.55469027136256,
+   "optimumB": 32.46995609626745,
+   "optimumTheta": 0.0
   },
   {
    "name": "sweep 2 n112 R32 e0.01 t67.5 g0",
@@ -63,13 +59,11 @@
    "pixelHash": "40c1f945805b7f23",
    "sampleCount": 8109,
    "occupiedBins": 36,
-   "optimumCenterQX": 58.25332091430636,
-   "optimumCenterQY": 57.99350410107786,
-   "optimumA": 32.64828229175673,
-   "optimumB": 32.325031969844794,
-   "optimumTheta": 1.1780972522657696,
-   "scipySpreadABC": 3.915490665476394e-14,
-   "scipySpreadCentre": 2.717754910008807e-10
+   "optimumCenterQX": 58.25332091796774,
+   "optimumCenterQY": 57.99350409695731,
+   "optimumA": 32.648282291756956,
+   "optimumB": 32.32503196984819,
+   "optimumTheta": 1.1780972522651818
   },
   {
    "name": "sweep 3 n112 R32 e0.01 t90.0 g60",
@@ -86,13 +80,11 @@
    "pixelHash": "10ae2898920b432f",
    "sampleCount": 8105,
    "occupiedBins": 32,
-   "optimumCenterQX": 58.36798764217071,
-   "optimumCenterQY": 55.44581386296453,
-   "optimumA": 32.63617756306297,
-   "optimumB": 32.386141929417775,
-   "optimumTheta": 1.5072855651521202,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 58.367987641953285,
+   "optimumCenterQY": 55.44581386312254,
+   "optimumA": 32.63617756303902,
+   "optimumB": 32.38614192953956,
+   "optimumTheta": 1.5072855650451644
   },
   {
    "name": "sweep 4 n112 R32 e0.03 t112.5 g0",
@@ -113,9 +105,7 @@
    "optimumCenterQY": 53.26802587717936,
    "optimumA": 32.96675550936064,
    "optimumB": 32.006558758627634,
-   "optimumTheta": 1.9634954097522124,
-   "scipySpreadABC": 3.2321873026597016e-16,
-   "scipySpreadCentre": 7.633929044459364e-10
+   "optimumTheta": 1.9634954097522124
   },
   {
    "name": "sweep 5 n112 R32 e0.03 t135.0 g60",
@@ -132,13 +122,11 @@
    "pixelHash": "0814716b3d0e8a6e",
    "sampleCount": 8232,
    "occupiedBins": 31,
-   "optimumCenterQX": 53.89836724172192,
-   "optimumCenterQY": 57.12802502433781,
-   "optimumA": 33.01467766202385,
-   "optimumB": 32.00768195748326,
-   "optimumTheta": 2.3224161975403055,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 53.89836724253702,
+   "optimumCenterQY": 57.12802502371261,
+   "optimumA": 33.0146776624884,
+   "optimumB": 32.00768195746736,
+   "optimumTheta": 2.3224161972614517
   },
   {
    "name": "sweep 6 n128 R40 e0.0 t0.0 g0",
@@ -155,13 +143,11 @@
    "pixelHash": "20ddbbf76eca276e",
    "sampleCount": 10042,
    "occupiedBins": 36,
-   "optimumCenterQX": 63.7998693554469,
-   "optimumCenterQY": 64.85970902146325,
-   "optimumA": 40.39089870473706,
-   "optimumB": 40.390898699835674,
-   "optimumTheta": 2.7909210790931076,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 63.79986935596701,
+   "optimumCenterQY": 64.85970902043485,
+   "optimumA": 40.390898704737374,
+   "optimumB": 40.39089869983621,
+   "optimumTheta": 0.0
   },
   {
    "name": "sweep 7 n128 R40 e0.0 t0.0 g60",
@@ -178,13 +164,11 @@
    "pixelHash": "9fd2d35b94247b50",
    "sampleCount": 10054,
    "occupiedBins": 30,
-   "optimumCenterQX": 66.63638383243772,
-   "optimumCenterQY": 61.16764398235713,
-   "optimumA": 40.44878746963458,
-   "optimumB": 40.3768392734499,
-   "optimumTheta": 0.34759934330742626,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 66.63638383652795,
+   "optimumCenterQY": 61.16764398361203,
+   "optimumA": 40.44878747296925,
+   "optimumB": 40.37683927261487,
+   "optimumTheta": 0.0
   },
   {
    "name": "sweep 8 n128 R40 e0.01 t45.0 g0",
@@ -201,13 +185,11 @@
    "pixelHash": "f9b11041fb330b9f",
    "sampleCount": 10156,
    "occupiedBins": 36,
-   "optimumCenterQX": 66.11333189720789,
-   "optimumCenterQY": 63.903376456118906,
-   "optimumA": 40.59184844084896,
-   "optimumB": 40.189948958537286,
-   "optimumTheta": 0.7853981588629178,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 66.1133319413399,
+   "optimumCenterQY": 63.90337643649696,
+   "optimumA": 40.59184844084862,
+   "optimumB": 40.18994895853613,
+   "optimumTheta": 0.7853981588618599
   },
   {
    "name": "sweep 9 n128 R40 e0.01 t67.5 g60",
@@ -224,13 +206,11 @@
    "pixelHash": "31d22b4ba58309a7",
    "sampleCount": 10158,
    "occupiedBins": 31,
-   "optimumCenterQX": 63.083279570425546,
-   "optimumCenterQY": 65.89595116682253,
-   "optimumA": 40.60677277133157,
-   "optimumB": 40.205911334142,
-   "optimumTheta": 1.2445828714961107,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 63.08327956873686,
+   "optimumCenterQY": 65.895951172212,
+   "optimumA": 40.60677277315254,
+   "optimumB": 40.20591133531726,
+   "optimumTheta": 1.2445828776560108
   },
   {
    "name": "sweep 10 n128 R40 e0.03 t90.0 g0",
@@ -247,13 +227,11 @@
    "pixelHash": "bb4be1ccf6cd3d85",
    "sampleCount": 10349,
    "occupiedBins": 36,
-   "optimumCenterQX": 61.95244767291979,
-   "optimumCenterQY": 61.82454968170949,
-   "optimumA": 40.98780853668194,
-   "optimumB": 39.793988867079,
-   "optimumTheta": 1.5707963283795288,
-   "scipySpreadABC": 4.997447120982555e-16,
-   "scipySpreadCentre": 9.763567732079537e-11
+   "optimumCenterQX": 61.95244767251239,
+   "optimumCenterQY": 61.82454968197254,
+   "optimumA": 40.98780853667995,
+   "optimumB": 39.79398886708078,
+   "optimumTheta": 1.5707963283789017
   },
   {
    "name": "sweep 11 n128 R40 e0.03 t112.5 g60",
@@ -270,13 +248,11 @@
    "pixelHash": "c74b0c57624a682e",
    "sampleCount": 10351,
    "occupiedBins": 31,
-   "optimumCenterQX": 64.27092000447728,
-   "optimumCenterQY": 62.45292681688646,
-   "optimumA": 40.97439482649669,
-   "optimumB": 39.8477527901199,
-   "optimumTheta": 1.9599976028971284,
-   "scipySpreadABC": 1.6764802512009087e-15,
-   "scipySpreadCentre": 9.592326932761353e-12
+   "optimumCenterQX": 64.27092004745153,
+   "optimumCenterQY": 62.4529267593606,
+   "optimumA": 40.97439482930355,
+   "optimumB": 39.84775278098576,
+   "optimumTheta": 1.959997600127685
   },
   {
    "name": "sweep 12 n144 R52 e0.0 t0.0 g0",
@@ -293,13 +269,11 @@
    "pixelHash": "f0742a6c1c231bc7",
    "sampleCount": 12871,
    "occupiedBins": 36,
-   "optimumCenterQX": 74.76981492175123,
-   "optimumCenterQY": 74.06945195603426,
-   "optimumA": 52.30158018857075,
-   "optimumB": 52.3015801806696,
-   "optimumTheta": 1.7165960024127254,
-   "scipySpreadABC": 1.3631330659357797e-15,
-   "scipySpreadCentre": 2.461320036672987e-11
+   "optimumCenterQX": 74.76981492901996,
+   "optimumCenterQY": 74.06945195111369,
+   "optimumA": 52.30158018857083,
+   "optimumB": 52.30158018066974,
+   "optimumTheta": 0.0
   },
   {
    "name": "sweep 13 n144 R52 e0.0 t0.0 g60",
@@ -316,13 +290,11 @@
    "pixelHash": "9d72cfcea0d1e7b1",
    "sampleCount": 12950,
    "occupiedBins": 30,
-   "optimumCenterQX": 73.71670079696031,
-   "optimumCenterQY": 71.04279568669843,
-   "optimumA": 52.34193860908669,
-   "optimumB": 52.29148816506388,
-   "optimumTheta": 2.1304851487155556,
-   "scipySpreadABC": 4.917980454460612e-18,
-   "scipySpreadCentre": 6.494360604847316e-12
+   "optimumCenterQX": 73.71670079652169,
+   "optimumCenterQY": 71.04279568747293,
+   "optimumA": 52.34193860845598,
+   "optimumB": 52.29148816522135,
+   "optimumTheta": 0.0
   },
   {
    "name": "sweep 14 n144 R52 e0.01 t20.0 g0",
@@ -339,13 +311,11 @@
    "pixelHash": "69d6c6ff2b2f235f",
    "sampleCount": 13131,
    "occupiedBins": 36,
-   "optimumCenterQX": 70.67480350923123,
-   "optimumCenterQY": 69.43311744747257,
-   "optimumA": 52.56178705133198,
-   "optimumB": 52.041373315043735,
-   "optimumTheta": 0.3490658436371614,
-   "scipySpreadABC": 1.3973375511190158e-15,
-   "scipySpreadCentre": 3.6862957131234e-11
+   "optimumCenterQX": 70.67480350911879,
+   "optimumCenterQY": 69.4331174469749,
+   "optimumA": 52.561787051332125,
+   "optimumB": 52.041373315043664,
+   "optimumTheta": 0.3490658436366809
   },
   {
    "name": "sweep 15 n144 R52 e0.01 t45.0 g60",
@@ -362,13 +332,11 @@
    "pixelHash": "2c8f1a9b0f4c7ccd",
    "sampleCount": 13213,
    "occupiedBins": 31,
-   "optimumCenterQX": 70.20095582463816,
-   "optimumCenterQY": 73.52085432169817,
-   "optimumA": 52.61223888028379,
-   "optimumB": 52.03141710471263,
-   "optimumTheta": 0.7635892887100724,
-   "scipySpreadABC": 2.29458896014738e-13,
-   "scipySpreadCentre": 5.091749244456878e-11
+   "optimumCenterQX": 70.20095582503411,
+   "optimumCenterQY": 73.52085432183846,
+   "optimumA": 52.61223888067055,
+   "optimumB": 52.03141710462594,
+   "optimumTheta": 0.7635892885696154
   },
   {
    "name": "sweep 16 n144 R52 e0.03 t67.5 g0",
@@ -385,13 +353,11 @@
    "pixelHash": "7819bce4a0925e5b",
    "sampleCount": 13452,
    "occupiedBins": 36,
-   "optimumCenterQX": 72.87537470019102,
-   "optimumCenterQY": 72.52259697247833,
-   "optimumA": 53.07450993765286,
-   "optimumB": 51.52865043394981,
-   "optimumTheta": 1.1780972448263076,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 72.87537470783141,
+   "optimumCenterQY": 72.52259697364916,
+   "optimumA": 53.074509937653986,
+   "optimumB": 51.52865043394968,
+   "optimumTheta": 1.1780972448268763
   },
   {
    "name": "sweep 17 n144 R52 e0.03 t90.0 g60",
@@ -408,13 +374,11 @@
    "pixelHash": "29043e4ce6a6b107",
    "sampleCount": 13234,
    "occupiedBins": 32,
-   "optimumCenterQX": 74.83087136244012,
-   "optimumCenterQY": 69.13400252734696,
-   "optimumA": 53.09044081997864,
-   "optimumB": 51.53837491196337,
-   "optimumTheta": 1.5848026843517946,
-   "scipySpreadABC": 1.784542123297129e-15,
-   "scipySpreadCentre": 5.100275757285999e-11
+   "optimumCenterQX": 74.83087136061155,
+   "optimumCenterQY": 69.13400253262061,
+   "optimumA": 53.09044082042212,
+   "optimumB": 51.53837491215416,
+   "optimumTheta": 1.584802684642327
   },
   {
    "name": "sweep 18 n128 R44 e0.03 t112.5 g0",
@@ -431,13 +395,11 @@
    "pixelHash": "9f7bbb4b04afb5fd",
    "sampleCount": 11310,
    "occupiedBins": 36,
-   "optimumCenterQX": 65.19909669866313,
-   "optimumCenterQY": 64.27157438236449,
-   "optimumA": 45.011312239151636,
-   "optimumB": 43.70030315388652,
-   "optimumTheta": 1.9634954099192454,
-   "scipySpreadABC": 0.0,
-   "scipySpreadCentre": 0.0
+   "optimumCenterQX": 65.19909671797335,
+   "optimumCenterQY": 64.27157432534693,
+   "optimumA": 45.01131223915041,
+   "optimumB": 43.700303153885876,
+   "optimumTheta": 1.9634954099188797
   },
   {
    "name": "sweep 19 n128 R44 e0.03 t135.0 g0",
@@ -454,13 +416,11 @@
    "pixelHash": "e5c6496561041dce",
    "sampleCount": 11367,
    "occupiedBins": 36,
-   "optimumCenterQX": 62.31921480487833,
-   "optimumCenterQY": 65.64578741290455,
-   "optimumA": 45.01131224246235,
-   "optimumB": 43.700303147774974,
-   "optimumTheta": 2.356194490144288,
-   "scipySpreadABC": 4.518081429192257e-16,
-   "scipySpreadCentre": 1.6560619542360655e-10
+   "optimumCenterQX": 62.319214805659946,
+   "optimumCenterQY": 65.64578741197978,
+   "optimumA": 45.01131224246203,
+   "optimumB": 43.70030314777573,
+   "optimumTheta": 2.356194490144144
   }
  ]
 }
