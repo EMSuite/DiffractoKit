@@ -74,6 +74,26 @@ class CompareTests(unittest.TestCase):
         self.write("Tests/Fixtures/table.swift", None, raw=b"let x = 0.1\nlet n = 4\n")
         self.assertEqual(self.run_compare().returncode, 1)
 
+    def test_loose_keys(self):
+        """A key tools/pins/loose-keys.txt names for a file is held at its own rtol there (the sweep's optimumTheta, 1e-7);
+        every other key of the file, and the same key in another file, at the float-noise bounds."""
+        def ring(theta, a=40.1):
+            return {"rings": [{"optimumTheta": theta, "optimumA": a}]}
+        self.write("Tests/Fixtures/scipy-ellipse-sweep-pins.json", ring(1.2445828714961107))
+        self.write("Tests/Fixtures/other.json", ring(1.2445828714961107))
+        subprocess.run(["git", "add", "."], cwd=self.root, check=True)
+        subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "y"], cwd=self.root, check=True)
+        self.write("Tests/Fixtures/scipy-ellipse-sweep-pins.json", ring(1.2445828776560108))  # 4.9e-9 relative
+        result = self.run_compare()
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.write("Tests/Fixtures/scipy-ellipse-sweep-pins.json", ring(1.2445838))  # 7.4e-7 relative
+        self.assertEqual(self.run_compare().returncode, 1)
+        self.write("Tests/Fixtures/scipy-ellipse-sweep-pins.json", ring(1.2445828714961107, a=40.1000002))
+        self.assertEqual(self.run_compare().returncode, 1)
+        self.write("Tests/Fixtures/scipy-ellipse-sweep-pins.json", ring(1.2445828714961107))
+        self.write("Tests/Fixtures/other.json", ring(1.2445828776560108))
+        self.assertEqual(self.run_compare().returncode, 1)
+
     def test_binary_arrays(self):
         try:
             import numpy  # noqa: F401

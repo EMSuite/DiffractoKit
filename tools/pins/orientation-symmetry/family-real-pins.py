@@ -10,6 +10,9 @@ For each Laue class, representative space groups (centrosymmetric, a generic ato
 plan sector from the detected point group, and the pinned function runs on seeded random matrices. Records: the plan's
 `symmetry_operators` (after duplicate removal and the -3 fibre doubling), the fractional rotation matrices pymatgen listed (the
 order), the plan sector, and per matrix the families, the number of qualifying operators per column and boundary columns.
+A column within 1e-12 of a sector wall (`boundary`) is a tie: `hits` counts every operator that puts it in the sector to 1e-12,
+and its `family` column is the canonical one of the tied directions (largest after rounding to 1e-9), not py4DSTEM's pick,
+which the last bit of a BLAS sum decides and which moved between a Mac and Linux (#141); the test skips boundary columns.
 Needs pymatgen in the py4DSTEM venv (2025.1.9 there) and the spglib it brings. Writes
 Tests/DiffractoOrientationTests/Fixtures/py4dstem-family-real-pins.json and Sources/DiffractoOrientation/PymatgenOperatorTable.swift
 (the order pymatgen lists the point-group operations in, per class, from the first space group of each class above: P-1, P2/m, Pmmm,
@@ -41,6 +44,7 @@ assert subprocess.check_output(['git', '-C', str(clone), 'rev-parse', 'HEAD'], t
 assert py4DSTEM.__version__ == '0.14.19'
 FIX = KIT / 'Tests/DiffractoOrientationTests/Fixtures'
 SEED = 20261021
+WALL = 1e-12   # a direction within this of a sector wall is on it (`boundary`)
 # class -> space groups. The first of each class is the one whose order the kit ships ("primary"); the others show which orders
 # differ (the origin-choice-2 and some centred groups list the operations in another order).
 GROUPS = {'-1': [2], '2/m': [10, 11, 12, 13, 14, 15], 'mmm': [47, 51, 62, 63, 65, 69, 71, 74, 70],
@@ -84,12 +88,24 @@ def main():
             for M in mats:
                 o = Orientation(1); o.matrix[0] = M
                 o = cr.symmetry_reduce_directions(o)
+                family = o.family[0].copy()
                 hits, boundary = [], []
                 for a in range(3):
                     coords = np.sum(cr.symmetry_reduction * M[:, a][None, :, None], axis=1)
-                    hits.append(int(np.count_nonzero(np.all(coords >= 0, axis=1))))
-                    boundary.append(bool(np.any((coords.min(axis=1) >= -1e-12) & (coords.min(axis=1) <= 1e-12))))
-                cases.append({'matrix': M.tolist(), 'family': o.family[0].tolist(), 'hits': hits, 'boundary': boundary})
+                    lowest = coords.min(axis=1)
+                    # Every operator that puts the direction in the sector to 1e-12 qualifies: a tie on a sector wall is
+                    # counted whole, never decided by the last bit (#141).
+                    qualifying = np.flatnonzero(lowest >= -WALL)
+                    hits.append(int(qualifying.size))
+                    on_wall = bool(np.any((lowest >= -WALL) & (lowest <= WALL)))
+                    boundary.append(on_wall)
+                    if on_wall and qualifying.size:
+                        # py4DSTEM's pick is the first operator whose coordinates are >= 0, which the last bit decides on a
+                        # wall; the pin writes the canonical one of the tied directions instead (largest after rounding to
+                        # 1e-9), so the file reproduces. The test does not compare a boundary column.
+                        tied = [cr.symmetry_operators[i] @ M[:, a] for i in qualifying]
+                        family[:, a] = max(tied, key=lambda v: tuple(np.round(v, 9).tolist()))
+                cases.append({'matrix': M.tolist(), 'family': family.tolist(), 'hits': hits, 'boundary': boundary})
             lat = cr.lat_real
             out['cases'].append({'class': key, 'spaceGroup': sg, 'symbol': sga.get_space_group_symbol(), 'primary': sg == numbers[0],
                 'lattice': {'a': cell[0], 'b': cell[1], 'c': cell[2], 'alpha': cell[3], 'beta': cell[4], 'gamma': cell[5]},

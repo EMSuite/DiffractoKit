@@ -204,7 +204,7 @@ No fixture is copied from the test data of pymatgen, orix or py4DSTEM.
 | `DiffractoOrientationTests/Fixtures/orix-variant-pins.json` | 15.6 KB | `tools/pins/orix/variant-pins.py` |  |
 | `DiffractoOrientationTests/Fixtures/orix-orientation-api-pins.json` | 54.7 KB | `tools/pins/orix/orientation-api-pins.py` |  |
 | `DiffractoOrientationTests/Fixtures/py4dstem-family-pins.json` | 1005.7 KB | `tools/pins/orientation-symmetry/family-pins.py` |  |
-| `DiffractoOrientationTests/Fixtures/py4dstem-family-real-pins.json` | 3.7 MB | `tools/pins/orientation-symmetry/family-real-pins.py` |  |
+| `DiffractoOrientationTests/Fixtures/py4dstem-family-real-pins.json` | 3.9 MB | `tools/pins/orientation-symmetry/family-real-pins.py` |  |
 | `DiffractoOrientationTests/Fixtures/py4dstem-phase-vector-pins.json` | 1.8 MB | `tools/pins/phase-vectors/pins.py` |  |
 | `DiffractoOrientationTests/Fixtures/symmetry-pins.json` | 397.2 KB | `tools/pins/cif-symmetry/pins.py`, `tools/pins/orix/ipf-pins.py`, `tools/pins/orientation-symmetry/color-table.py` +2 |  |
 | `DiffractoOrientationTests/Fixtures/trigonal-pins.json` | 14.0 KB | `tools/pins/orix/ipf-pins.py`, `tools/pins/orientation-symmetry/trigonal-pins.py` |  |
