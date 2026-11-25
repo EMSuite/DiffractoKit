@@ -53,6 +53,47 @@ import DiffractoScattering
         }
     }
 
+    /// A ring's `intensity` is its Σ|F|² (multiplicity × |F|²) and its `profileIntensity` is Σ|F|² · d², each with the strongest
+    /// ring at 100 (#223). Au at 200 kV is fcc: every allowed member has F = 4 f_e(|g|²) / V, so the closed form of a ring
+    /// with h² + k² + l² = N is m · 16 f_e² / V² · a² / N, from the Lobato factors alone. 111 : 200 : 220 : 311 is
+    /// 100 : 46.26 : 25.66 : 26.93 in the profile and 100 : 61.67 : 68.42 : 98.75 in Σ|F|². Mutation: d in place of d² moves
+    /// every ratio; marks that floor by `intensity` keep Au 222 (29.94 in Σ|F|², 7.49 in the profile) above a floor of 20.
+    @Test func profileIntensitiesAreSumFSquaredTimesDSquared() throws {
+        let a = 4.0782, volume = a * a * a
+        let au = try PowderPattern.electron(structure: CrystalPresets.gold, wavelengthAngstroms: Self.lambda200kV, kMax: 2)
+        func closedForm(_ n: Int, _ m: Int) throws -> (sum: Double, profile: Double) {
+            let f = try #require(ElectronScatteringFactors.f(z: 79, gSquared: Double(n) / (a * a)))
+            let sum = Double(m) * 16 * f * f / (volume * volume)
+            return (sum, sum * a * a / Double(n))
+        }
+        let rings: [(n: Int, m: Int)] = [(3, 8), (4, 6), (8, 12), (11, 24)]
+        let truth = try rings.map { try closedForm($0.n, $0.m) }
+        let strongestProfile = try #require(au.peaks.compactMap(\.profileIntensity).max())
+        #expect(strongestProfile == 100 && au.peaks[0].profileIntensity == 100, "111 is the strongest ring in the profile")
+        for (i, ring) in rings.enumerated() {
+            let p = au.peaks[i]
+            #expect(p.multiplicity == ring.m)
+            #expect(abs(p.d - a / Double(ring.n).squareRoot()) <= 1e-12 * p.d)
+            #expect(abs(p.absoluteIntensity - truth[i].sum) <= 1e-9 * truth[i].sum, "Σ|F|² of ring \(i)")
+            let profile = try #require(p.profileIntensity)
+            let expected = truth[i].profile / truth[0].profile * 100
+            #expect(abs(profile - expected) <= 1e-9 * expected, "profile of ring \(i): \(profile) against \(expected)")
+            #expect(abs(p.intensity - truth[i].sum / truth[0].sum * 100) <= 1e-9 * p.intensity)
+        }
+        // The numbers of the issue, to four figures.
+        let shown = au.peaks.prefix(4).map { (($0.profileIntensity ?? 0) * 100).rounded() / 100 }
+        #expect(shown == [100, 46.26, 25.66, 26.93], "\(shown)")
+        #expect(au.peaks.allSatisfy { ($0.profileIntensity ?? -1) >= 0 && ($0.profileIntensity ?? 101) <= 100 })
+        // X-ray peaks carry their Lorentz-polarisation factor already: no profile intensity.
+        #expect(try PowderPattern.xray(structure: CrystalPresets.aluminum).peaks.allSatisfy { $0.profileIntensity == nil })
+        // The marks floor electron rings by the profile: against Al, Au 311 (26.93) stays above a floor of 20 and Au 222 (7.49)
+        // falls under it, where Σ|F|² kept 222 (29.94).
+        let al = try PowderPattern.electron(structure: CrystalPresets.aluminum, wavelengthAngstroms: Self.lambda200kV, kMax: 1.2)
+        let marks = PowderPattern.marks([al, au], resolution: .fraction(0.01), floor: 20)
+        #expect(marks[0][3].isOverlapped, "Al 311 against Au 311 at 26.93")
+        #expect(!marks[0][4].isOverlapped, "Al 222 against Au 222 at 7.49: under the floor in the profile")
+    }
+
     /// The profile is Σ I exp(−(x − p)² / 2σ²) / (σ√2π) with σ = FWHM / (2√(2 ln 2)), at 1e-12 relative; a lone peak falls to
     /// half at ± FWHM / 2 and its area is its intensity.
     @Test func profileIsTheClosedForm() throws {
