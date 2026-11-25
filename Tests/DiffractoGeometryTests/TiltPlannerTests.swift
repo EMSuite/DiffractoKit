@@ -102,14 +102,16 @@ struct TiltPlannerTests {
         #expect(abs((first.braggAngleDeg ?? 0) - asin(lambda / (2 * first.d)) * 180 / .pi) <= 1e-12)
     }
 
-    /// 20 000 planted cases: random crystal, axis angle, current tilts within ±30° and target direction; after moving to the
-    /// computed tilts the direction is on the beam within 1e-5°, and moving back restores the orientation.
-    /// RED UNDER: α and β swapped; φ ignored; the move composed on the wrong side.
+    /// 20 000 planted cases: random crystal, axis angle, current tilts within ±30° and target direction, every other case
+    /// with the β sense reversed; after moving to the computed tilts the direction is on the beam within 1e-5°, and moving
+    /// back restores the orientation.
+    /// RED UNDER: α and β swapped; φ ignored; the move composed on the wrong side; σ left out of the target's β.
     @Test func roundTrips() throws {
         var rng = SeededGenerator(state: 20_261_124)
         var worstBeam = 0.0, worstBack = 0.0
-        for _ in 0..<20_000 {
-            let holder = DoubleTiltHolder(axisAngleDeg: Double.random(in: 0..<360, using: &rng))
+        for i in 0..<20_000 {
+            let holder = DoubleTiltHolder(axisAngleDeg: Double.random(in: 0..<360, using: &rng),
+                                          betaSense: i.isMultiple(of: 2) ? .positive : .negative)
             let o = try CrystalOrientation(matrix: randomRotation(&rng))
             let current = DoubleTiltHolder.Tilts(alpha: Double.random(in: -30...30, using: &rng),
                                                  beta: Double.random(in: -30...30, using: &rng))
@@ -162,6 +164,110 @@ struct TiltPlannerTests {
         #expect(throws: DoubleTiltHolder.CalibrationError.notFinite) {
             try DoubleTiltHolder.calibrateAxis(a, at: ta, b, at: DoubleTiltHolder.Tilts(alpha: .nan, beta: 0))
         }
+    }
+
+    /// #222: a holder whose β reads the other way (σ = −1), true axis 37°, a target at α = 4°, β = −9°. A pair that changes
+    /// both tilts finds the axis and the sense, and the tilts to the target are the true ones (the kit before #222 fitted
+    /// only φ: (0, 0) to (10, 10) refused as a poor fit at 1.74°). A pair that changes one tilt, or the issue's (−5, 3) to
+    /// (8, 12) that the other sense fits at 0.47°, is refused as ambiguous; with the sense set by hand it calibrates.
+    /// RED UNDER: one sense fitted; the other sense's misfit not checked against the limit; σ left out of the model.
+    @Test func reversedBetaSense() throws {
+        typealias T = DoubleTiltHolder.Tilts
+        var rng = SeededGenerator(state: 222)
+        let truth = DoubleTiltHolder(axisAngleDeg: 37, betaSense: .negative)
+        let crystal = try CrystalOrientation(matrix: randomRotation(&rng))
+        let target = T(alpha: 4, beta: -9)
+        let onBeam = try #require(truth.orientation(crystal, at: .zero, movedTo: target))
+        let direction = onBeam.matrix.columns.2      // the crystal direction along the beam at the target tilts
+        func pattern(_ t: T) throws -> CrystalOrientation { try #require(truth.orientation(crystal, at: .zero, movedTo: t)) }
+        func refusal(_ ta: T, _ tb: T, sense: DoubleTiltHolder.BetaSense? = nil) throws -> DoubleTiltHolder.CalibrationError? {
+            let a = try pattern(ta), b = try pattern(tb)
+            do throws(DoubleTiltHolder.CalibrationError) {
+                _ = try DoubleTiltHolder.calibrateAxis(a, at: ta, b, at: tb, betaSense: sense)
+                return nil
+            } catch {
+                return error
+            }
+        }
+        func isAmbiguous(_ e: DoubleTiltHolder.CalibrationError?) -> Bool {
+            if case .ambiguousSense? = e { return true }
+            return false
+        }
+
+        for (ta, tb) in [(T(alpha: 0, beta: 0), T(alpha: 10, beta: 10)), (T(alpha: 2, beta: -8), T(alpha: 15, beta: 10))] {
+            let a = try pattern(ta), b = try pattern(tb)
+            let cal = try DoubleTiltHolder.calibrateAxis(a, at: ta, b, at: tb)
+            #expect(cal.betaSense == .negative && !cal.secondNeedsHalfTurn, "\(ta) to \(tb)")
+            #expect(abs(cal.axisAngleDeg - 37) <= 1e-6 && cal.misfitDeg <= 1e-6, "\(ta) to \(tb): \(cal.axisAngleDeg)°")
+            #expect((cal.otherSenseMisfitDeg ?? 0) > DoubleTiltHolder.maximumMisfitDeg)
+            let plan = try #require(cal.holder().tilts(toBring: direction, orientation: a, at: ta))
+            #expect(abs(plan.tilts.alpha - 4) <= 1e-6 && abs(plan.tilts.beta + 9) <= 1e-6, "\(ta) to \(tb): \(plan.tilts)")
+            // The planner's move lands the direction on the beam.
+            let moved = try #require(cal.holder().orientation(a, at: ta, movedTo: plan.tilts))
+            #expect(angleFromBeamDeg(moved.labCoordinates(of: direction)) <= 1e-6)
+        }
+
+        let oneTilt = [(T(alpha: 0, beta: 0), T(alpha: 10, beta: 0)), (T(alpha: 0, beta: 0), T(alpha: 0, beta: 15))]
+        for (ta, tb) in oneTilt + [(T(alpha: -5, beta: 3), T(alpha: 8, beta: 12))] {
+            let e = try refusal(ta, tb)
+            #expect(isAmbiguous(e), "\(ta) to \(tb): \(String(describing: e))")
+        }
+        #expect(try refusal(T(alpha: 0, beta: 0), T(alpha: 0, beta: 15)).map(\.description)?.contains("β") == true)
+
+        // The sense set by hand: the one-tilt pairs calibrate and give the true tilts.
+        for (ta, tb) in oneTilt {
+            let a = try pattern(ta), b = try pattern(tb)
+            let cal = try DoubleTiltHolder.calibrateAxis(a, at: ta, b, at: tb, betaSense: .negative)
+            #expect(cal.betaSense == .negative && cal.otherSenseMisfitDeg == nil)
+            #expect(abs(cal.axisAngleDeg - 37) <= 1e-6, "\(ta) to \(tb): \(cal.axisAngleDeg)°")
+            let plan = try #require(cal.holder().tilts(toBring: direction, orientation: a, at: ta))
+            #expect(abs(plan.tilts.alpha - 4) <= 1e-6 && abs(plan.tilts.beta + 9) <= 1e-6, "\(ta) to \(tb): \(plan.tilts)")
+        }
+    }
+
+    /// A poor fit names its cause where it can: a second tilt read as (20, 20) for a pattern taken at (10, 10) turns the stage
+    /// by 28.2° while the patterns turn by 14.1° (no axis can fix that: `rotationMismatch`); a second pattern turned by the
+    /// stage's angle but about the beam turns right but about the wrong axis (`poorFit`, 19.3° in NumPy).
+    /// RED UNDER: the turn angles not compared; the comparison made on one candidate of the half turns only.
+    @Test func poorFitCauses() throws {
+        typealias T = DoubleTiltHolder.Tilts
+        var rng = SeededGenerator(state: 2222)
+        let truth = DoubleTiltHolder(axisAngleDeg: 37, betaSense: .negative)
+        let a = try CrystalOrientation(matrix: randomRotation(&rng))
+        let tb = T(alpha: 10, beta: 10)
+        let b = try #require(truth.orientation(a, at: .zero, movedTo: tb))
+        func refusal(_ b: CrystalOrientation, at tb: T) -> DoubleTiltHolder.CalibrationError? {
+            do throws(DoubleTiltHolder.CalibrationError) {
+                _ = try DoubleTiltHolder.calibrateAxis(a, at: .zero, b, at: tb)
+                return nil
+            } catch {
+                return error
+            }
+        }
+        let misread = refusal(b, at: T(alpha: 20, beta: 20))
+        guard case .rotationMismatch(let measured, let stage)? = misread else {
+            Issue.record("expected rotationMismatch, got \(String(describing: misread))")
+            return
+        }
+        #expect(abs(measured - 14.133) <= 0.01 && abs(stage - 28.21) <= 0.01, "\(measured)° and \(stage)°")
+
+        let change = try DoubleTiltHolder.calibrateAxis(a, at: .zero, b, at: tb).tiltChangeDeg
+        let aboutBeam = refusal(a.rotatedInPlane(by: change * .pi / 180), at: tb)
+        guard case .poorFit(let misfit)? = aboutBeam else {
+            Issue.record("expected poorFit, got \(String(describing: aboutBeam))")
+            return
+        }
+        #expect(abs(misfit - 19.33) <= 0.05, "\(misfit)°")
+    }
+
+    /// A holder saved before #222 (no β sense) decodes with the sense it was saved under, +1; the sense round-trips.
+    @Test func betaSenseCoding() throws {
+        let old = #"{"alphaLimitDeg":30,"betaLimitDeg":25,"axisAngleDeg":12}"#
+        let decoded = try JSONDecoder().decode(DoubleTiltHolder.self, from: Data(old.utf8))
+        #expect(decoded == DoubleTiltHolder(alphaLimitDeg: 30, betaLimitDeg: 25, axisAngleDeg: 12, betaSense: .positive))
+        let reversed = DoubleTiltHolder(alphaLimitDeg: 20, betaLimitDeg: 30, axisAngleDeg: nil, betaSense: .negative)
+        #expect(try JSONDecoder().decode(DoubleTiltHolder.self, from: JSONEncoder().encode(reversed)) == reversed)
+        #expect(DoubleTiltHolder.BetaSense(rawValue: -1) == .negative && DoubleTiltHolder.BetaSense.negative.sign == -1)
     }
 
     /// The proper rotations of a cubic crystal are its 24 rotations, orthogonal in the Cartesian frame.
