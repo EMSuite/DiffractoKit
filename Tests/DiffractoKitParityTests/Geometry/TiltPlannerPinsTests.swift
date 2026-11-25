@@ -116,7 +116,8 @@ struct TiltPlannerPinsTests {
     }
 
     /// The planted calibrations: per band of tilt change, the axis within 1.5° at the 95th percentile, the half turn of the
-    /// second pattern named right in every trial, and no trial refused.
+    /// second pattern and the β sense (+1, planted) named right in every accepted trial, and no trial refused but as
+    /// ambiguous in sense (the other sense also within 1°; NumPy: 60 and 47 of 300, held at 75).
     /// RED UNDER: the half turn not tried; Q composed in the wrong order; the refinement skipped (the scan's 0.5° steps alone
     /// still pass p95, so the median is held too: below 0.6°).
     @Test func plantedCalibrations() throws {
@@ -125,7 +126,7 @@ struct TiltPlannerPinsTests {
         for band in [10.0, 20.0] {
             let cases = pins.calibration.filter { $0.bandDeg[0] == band }
             var errors: [Double] = []
-            var wrongHalf = 0, refused = 0
+            var wrongHalf = 0, wrongSense = 0, ambiguous = 0, refused = 0
             for c in cases {
                 let a = try CrystalOrientation(matrix: TiltPins.matrix(c.Ma))
                 let b = try CrystalOrientation(matrix: TiltPins.matrix(c.Mb))
@@ -138,7 +139,10 @@ struct TiltPlannerPinsTests {
                     if e < -180 { e += 360 }
                     errors.append(abs(e))
                     if cal.secondNeedsHalfTurn != c.bHalfTurned { wrongHalf += 1 }
+                    if cal.betaSense != .positive { wrongSense += 1 }
                     #expect(abs(cal.tiltChangeDeg - c.tiltChangeDeg) <= 1e-6)
+                } catch DoubleTiltHolder.CalibrationError.ambiguousSense {
+                    ambiguous += 1
                 } catch {
                     refused += 1
                 }
@@ -146,7 +150,8 @@ struct TiltPlannerPinsTests {
             errors.sort()
             let p95 = errors.isEmpty ? .infinity : errors[min(errors.count - 1, Int(0.95 * Double(errors.count)))]
             let median = errors.isEmpty ? .infinity : errors[errors.count / 2]
-            #expect(cases.count == 300 && refused == 0 && wrongHalf == 0, "band \(band): refused \(refused), wrong half turn \(wrongHalf)")
+            #expect(cases.count == 300 && refused == 0 && wrongHalf == 0 && wrongSense == 0 && ambiguous <= 75,
+                    "band \(band): refused \(refused), ambiguous \(ambiguous), wrong half turn \(wrongHalf), wrong β sense \(wrongSense)")
             #expect(p95 <= 1.5 && median <= 0.6, "band \(band): median \(median)°, p95 \(p95)°")
         }
     }

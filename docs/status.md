@@ -59,7 +59,9 @@ Live:
 - The tilt planner's kit half: the stereographic projection (orix's), the zone-axis map of an orientation (`ZoneAxisMap`:
   poles to index 3 and the traces of the lowest plane families with their Bragg angles) and a double-tilt holder
   (`DoubleTiltHolder`): the α and β that bring a zone axis onto the beam, whether the holder reaches them, and the tilt
-  axis calibrated from two indexed patterns at two tilts, which also settles the half turn of one spot pattern.
+  axis and the sense of the β readout calibrated from two indexed patterns at two tilts, which also settles the half turn
+  of one spot pattern; a pair that cannot tell the two β senses apart (one that changes only one tilt) is refused as
+  ambiguous, and the sense can be set by hand.
 - The spots double diffraction adds to one crystal's pattern or between crystals (a precipitate in its matrix), each with
   its routes (`DoubleDiffraction`).
 - Double diffraction between a precipitate and its matrix on the two drawn patterns, each position with its routes,
