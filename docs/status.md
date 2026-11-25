@@ -1,6 +1,6 @@
-# Status: DiffractoKit 0.23.0 <!-- x-release-please-version -->
+# Status: DiffractoKit 0.24.0 <!-- x-release-please-version -->
 
-DiffractoKit 0.23.0. <!-- x-release-please-version -->
+DiffractoKit 0.24.0. <!-- x-release-please-version -->
 It builds on ImagoKit `"0.2.0"..<"1.0.0"`.
 
 Live:
