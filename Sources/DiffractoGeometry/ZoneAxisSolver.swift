@@ -11,7 +11,7 @@
 //    1. Seeds: the shortest measured vectors, one per direction (a Friedel mate or a higher order of a row adds nothing).
 //       Fewer than two directions is one row of spots, which fixes no zone axis: refused.
 //    2. Every ordered pair of seeds (q_i, q_k) at more than 14.5° to each other picks reflection pairs (g_a, g_b) whose
-//       lengths match within the scale window plus the tolerance and whose 3-D angle and length ratio match the measured
+//       lengths match within the scale window plus the tolerance (or the floor over |q|, the larger) and whose 3-D angle and length ratio match the measured
 //       ones; g_a is one member of its symmetry orbit. Readings of the measured pair in 3-D: both spots in the zero layer
 //       (z = 0), both on the Ewald sphere (z = λg²/2), or q_i in the zero layer and q_k above or below it (its z from the
 //       angle between g_a and g_b). When the best of these explains less than 95 % of the pattern, a second pass reads
@@ -374,11 +374,14 @@ public struct ZoneAxisSolver: Sendable {
         let ni = simd_length(qi), nk = simd_length(qk)
         let sine = (qi.x * qk.y - qi.y * qk.x) / (ni * nk)
         guard abs(sine) >= 0.25 else { return [] }
-        let window = s.scaleWindow + s.tolerance
-        let ia = g.indices.filter { canonical[$0] && abs(gLength[$0] / ni - 1) <= window }
-        let ib = g.indices.filter { abs(gLength[$0] / nk - 1) <= window }
+        // Each length is known to its tolerance or to the floor, whichever is larger (`Settings.floor`), as a spot is explained:
+        // on a small detector frame the floor (a fraction of a pixel) is the larger, and a seed pair held to 1 % alone is lost.
+        let relI = max(s.tolerance, s.floor / ni), relK = max(s.tolerance, s.floor / nk)
+        let ia = g.indices.filter { canonical[$0] && abs(gLength[$0] / ni - 1) <= s.scaleWindow + relI }
+        let ib = g.indices.filter { abs(gLength[$0] / nk - 1) <= s.scaleWindow + relK }
         guard !ia.isEmpty, !ib.isEmpty else { return [] }
-        let angleTolerance = 2 * max(s.tolerance, s.floor / min(ni, nk))
+        let window = s.scaleWindow + max(relI, relK)
+        let angleTolerance = 2 * max(relI, relK)
         let dot2 = simd_dot(qi, qk)
         let t = dot2 / ni
         var out: [(orientation: simd_double3x3, scale: Double)] = []
@@ -427,7 +430,7 @@ public struct ZoneAxisSolver: Sendable {
                     let li = (ni * ni + zi * zi).squareRoot(), lk = (nk * nk + zk * zk).squareRoot()
                     let measuredAngle = acos(min(1, max(-1, (dot2 + zi * zk) / (li * lk))))
                     let ratio = (gLength[a] / gLength[b]) / (li / lk)
-                    guard abs(gAngle - measuredAngle) <= angleTolerance, abs(ratio - 1) <= 2 * s.tolerance else { continue }
+                    guard abs(gAngle - measuredAngle) <= angleTolerance, abs(ratio - 1) <= 2 * max(relI, relK) else { continue }
                     var wc = simd_cross(g[a], g[b])
                     let nw = simd_length(wc)
                     guard nw >= 1e-9 else { continue }
