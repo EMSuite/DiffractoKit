@@ -4,6 +4,13 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.24.2](https://github.com/EMSuite/DiffractoKit/compare/0.24.1...0.24.2) (2026-11-26)
+
+
+### Bug Fixes
+
+* the zone-axis solver's seed pairs honour the floor, so a small frame's spots are solved ([#250](https://github.com/EMSuite/DiffractoKit/issues/250)) ([20e5cce](https://github.com/EMSuite/DiffractoKit/commit/20e5cce9aff4431bc4e4780f7f12986d49170dac))
+
 ## [0.24.1](https://github.com/EMSuite/DiffractoKit/compare/0.24.0...0.24.1) (2026-11-25)
 
 
