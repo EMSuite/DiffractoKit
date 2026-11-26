@@ -4,6 +4,13 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.24.1](https://github.com/EMSuite/DiffractoKit/compare/0.24.0...0.24.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* the package manifest names ImagoKit at the EMSuite org ([#247](https://github.com/EMSuite/DiffractoKit/issues/247)) ([fe4c427](https://github.com/EMSuite/DiffractoKit/commit/fe4c4276aad420bae76d4f166ea960e31c3ae08f))
+
 ## [0.24.0](https://github.com/EMSuite/DiffractoKit/compare/0.23.0...0.24.0) (2026-11-25)
 
 
