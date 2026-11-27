@@ -39,7 +39,8 @@ jobs:
         id: changed
         if: github.event_name == 'pull_request'
         run: |
-          files=$(gh pr diff "$PR" --repo "$GITHUB_REPOSITORY" --name-only)
+          # the files API, paginated: `gh pr diff` refuses a pull request of more than 300 files (DiffractoKit#264)
+          files=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --jq '.[].filename')
           if grep -qE '^(\.github/workflows/app-build\.yml|tools/app-build/)' <<<"$files"; then echo changed=true >> "$GITHUB_OUTPUT"; fi
         env:
           PR: ${{ github.event.pull_request.number }}

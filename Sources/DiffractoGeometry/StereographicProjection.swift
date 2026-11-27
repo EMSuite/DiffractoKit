@@ -11,8 +11,10 @@
 import Foundation
 import simd
 
-/// The stereographic projection of the upper hemisphere (orix's default projection).
-public enum StereographicProjection {
+/// The stereographic projection of the upper hemisphere (orix's default projection): the static members. A value is orix's
+/// `StereographicProjection(pole)` with either pole (the members after `init(pole:)`, from Electron Microscopy Studio's
+/// orix port, DiffractoKit#179).
+public struct StereographicProjection: Sendable, Equatable {
 
     /// orix's region cut: a vector is in the upper hemisphere when its z, as given, is above this.
     public static let hemisphereTolerance = -1e-9
@@ -75,5 +77,58 @@ public enum StereographicProjection {
             }
         }
         return runs
+    }
+
+    // MARK: - orix's `StereographicProjection(pole)` and `InverseStereographicProjection`
+
+    /// −1 projects the upper hemisphere from the south pole, +1 the lower one from the north pole.
+    public var pole: Int
+
+    public init(pole: Int = -1) {
+        precondition(pole == -1 || pole == 1, "the stereographic pole is -1 (upper hemisphere) or 1 (lower hemisphere)")
+        self.pole = pole
+    }
+
+    /// The hemisphere this projection draws, orix's `SphericalRegion([0, 0, -pole])`: a vector is in it when its dot product
+    /// with the region's normal is above −1e-9 (`v <= region`).
+    public func isInHemisphere(_ v: SIMD3<Double>) -> Bool {
+        Self.dot(SIMD3(0, 0, Double(-pole)), v) > -1e-9
+    }
+
+    /// `vector2xy`: the vectors of this hemisphere (the others are dropped, as orix drops them), each made unit, to
+    /// (x, y) = −pole · (vx, vy) / (vz − pole); a zero denominator gives (0, 0).
+    public func vectorToXY(_ vectors: [SIMD3<Double>]) -> [SIMD2<Double>] {
+        vectors.filter(isInHemisphere).map { StereographicProjection.project($0, pole: pole) }
+    }
+
+    /// `_vector2xy` of one vector, whatever its hemisphere.
+    public static func project(_ v: SIMD3<Double>, pole: Int) -> SIMD2<Double> {
+        let u = unit(v)
+        let p = Double(pole)
+        let denom = u.z - p
+        guard denom != 0 else { return SIMD2(0, 0) }
+        return SIMD2(-p * u.x / denom, -p * u.y / denom)
+    }
+
+    /// `vector2xy_split`: the upper hemisphere's vectors projected with pole −1 and the lower one's with pole 1 (a vector on
+    /// the equator is in both).
+    public static func vectorToXYSplit(_ vectors: [SIMD3<Double>]) -> (upper: [SIMD2<Double>], lower: [SIMD2<Double>]) {
+        (StereographicProjection(pole: -1).vectorToXY(vectors), StereographicProjection(pole: 1).vectorToXY(vectors))
+    }
+
+    /// `InverseStereographicProjection.xy2vector`: the unit vector of (x, y) in this projection's hemisphere.
+    public func xyToVector(_ xy: SIMD2<Double>) -> SIMD3<Double> {
+        let x = xy.x, y = xy.y
+        let denom = 1 + x * x + y * y
+        return SIMD3(2 * x / denom, 2 * y / denom, -Double(pole) * (1 - x * x - y * y) / denom)
+    }
+
+    /// orix's dot product, written out (the port's `Vector3.dot`).
+    private static func dot(_ u: SIMD3<Double>, _ v: SIMD3<Double>) -> Double { u.x * v.x + u.y * v.y + u.z * v.z }
+
+    /// `Vector3d.unit` (a zero vector stays zero), the port's `Vector3.unit`.
+    private static func unit(_ v: SIMD3<Double>) -> SIMD3<Double> {
+        let n = (v.x * v.x + v.y * v.y + v.z * v.z).squareRoot()
+        return n == 0 ? SIMD3(0, 0, 0) : v / n
     }
 }

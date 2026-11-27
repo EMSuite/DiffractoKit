@@ -82,6 +82,12 @@ Live:
 - The best phase per position across several structures, with ASTAR's phase reliability (`BestPhaseMatching`).
 - One orientation value, `CrystalOrientation` (DiffractoCore): py4DSTEM's matrix from a zone axis and an in-plane angle,
   tilts and turns in the lab frame, the nearest zone axis and the angle to it, orix quaternions in and out.
+- orix 0.15.0's orientation maths, moved from Electron Microscopy Studio (#179): `Rotation` and `RotationConversions`
+  (every representation of Rowenhorst et al. 2015, cubochoric of Roşca et al. 2014), the 38 `PointGroup`s, `OrientationRegion`,
+  `Orientations` and `Misorientations` (reduce, disorientation, distance matrix), `FundamentalSector`, `Miller` and
+  `CrystalLattice`, `OrientationSampling` (cubochoric), the TSL and Euler colour keys (`DirectionColorKeyTSL`,
+  `IPFColorKeyTSL`, `IPFKeyImage`, `EulerColorKey`); `StereographicProjection` takes orix's two poles. `Rotation` and
+  `CrystalOrientation` convert into each other, and the port's point groups and TSL key equal the kit's own.
 - Orientation symmetry and IPF keys, misorientation between two groups, `Orientation` from Euler angles with `dot`,
   `dotOuter` and `distanceMatrix`, orientation-relationship variants (beta'' in Al: 12), orientation-map planes.
 - Variant orientations of a relationship stated as two pairs (`OrientationRelationship.variantOrientations`): each
