@@ -87,7 +87,7 @@ Live:
 - orix 0.15.0's orientation maths, moved from Electron Microscopy Studio (#179): `Rotation` and `RotationConversions`
   (every representation of Rowenhorst et al. 2015, cubochoric of Roşca et al. 2014), the 38 `PointGroup`s, `OrientationRegion`,
   `Orientations` and `Misorientations` (reduce, disorientation, distance matrix), `FundamentalSector`, `Miller` and
-  `CrystalLattice`, `OrientationSampling` (cubochoric), the TSL and Euler colour keys (`DirectionColorKeyTSL`,
+  `CrystalLattice` (with diffpy's `standardBase` and its `inverse`, #267), `OrientationSampling` (cubochoric), the TSL and Euler colour keys (`DirectionColorKeyTSL`,
   `IPFColorKeyTSL`, `IPFKeyImage`, `EulerColorKey`); `StereographicProjection` takes orix's two poles. `Rotation` and
   `CrystalOrientation` convert into each other, and the port's point groups and TSL key equal the kit's own.
 - Orientation symmetry and IPF keys, misorientation between two groups, `Orientation` from Euler angles with `dot`,
