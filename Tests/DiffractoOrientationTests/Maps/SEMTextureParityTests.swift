@@ -225,5 +225,6 @@ nonisolated final class SEMTextureParityTests: XCTestCase {
         XCTAssertTrue(PoleDensityFunction.smoothingFits(sigma: 512, symmetry: PointGroup.oh), "512° fits the inverse pole figure's 0.5° bins")
         XCTAssertFalse(PoleDensityFunction.smoothingFits(sigma: 513, symmetry: PointGroup.oh))
         XCTAssertTrue(PoleDensityFunction.smoothingFits(sigma: 1024), "and 1024° a pole figure's 1° bins")
+        XCTAssertFalse(PoleDensityFunction.smoothingFits(sigma: .infinity), "an infinite width never fits")
     }
 }

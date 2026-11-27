@@ -8,8 +8,8 @@
 //  keeps the whole map and hides points, so a slice keeps its place in the original grid (`row`, `col`, `mapData`). The
 //  `not_indexed` phase (id −1) is added when any point carries −1. GPL-3.0 (orix is GPL-3.0-or-later), see NOTICE.
 //
-//  Parity: `tools/parity/sem` bundles `m3/crystal-map-sdss` (shape, steps, phases, slicing, map data against orix, exact) and
-//  `m3/ti-neighbour-misorientations` / `m3/ti-neighbour-misorientations-full` (figure F7), docs/parity.md.
+//  Parity: `tools/parity/sem` bundles `m3/crystal-map-sdss` (in the app; shape, steps, phases, slicing, map data against orix, exact) and
+//  `m3/ti-neighbour-misorientations` / `m3/ti-neighbour-misorientations-full` (figure F7, in the app), docs/parity.md.
 //
 
 import Foundation

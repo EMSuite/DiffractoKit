@@ -3,7 +3,7 @@
 //  Moved from Electron Microscopy Studio's EMStudioTests with the map code (DiffractoKit#180). The two-phase steel
 //  (`m5/grains-sdss`, read with the app's `.ang` reader) and figures F11 and F12 (the whole Ti map through its `.ctf` reader) stay
 //  in the app.
-//  TEMCore's grain analysis (Sources/TEMSEM/Grains: `GrainMap`, `DefDAPQuat`, `DefDAPCrystalStructure`, `GrainBoundaries`,
+//  The grain analysis (Sources/DiffractoOrientation/Maps/Grains: `GrainMap`, `DefDAPQuat`, `DefDAPCrystalStructure`, `GrainBoundaries`,
 //  `GrainSegmentation`, `KernelAverageMisorientation`, `GrainOrientationStatistics`) against DefDAP 1.3.1 through the
 //  bundles `m5/grains-ti` (a committed 90 x 120 corner of orix-data's Ti map), `m5/grains-sdss` (the two-phase steel,
 //  committed as Fixtures/ebsd-sdss-ferrite-austenite.ang) and `m5/grains-ti-full` (figures F11 and F12: the whole
