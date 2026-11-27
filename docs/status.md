@@ -150,4 +150,4 @@ Open beside it: the tolerances in Å⁻¹ should follow the disk size and the ca
 fast unit tests; `DiffractoKitTestSupport` holds the helpers both use.
 
 What is checked against what: `docs/parity.md`. Timings against Python: `docs/benchmarks.md`. What is open: the GitHub
-issues; known limits: `docs/parity.md`. Where it is going: `ROADMAP.md`.
+issues; known limits: `docs/parity.md`. Where it is going: the issues and their milestones.

@@ -19,7 +19,6 @@
 
 import Foundation
 import simd
-import DiffractoCore
 
 /// An orientation relationship found from a scan, with its variants.
 public struct LearnedOrientationRelationship: Sendable {

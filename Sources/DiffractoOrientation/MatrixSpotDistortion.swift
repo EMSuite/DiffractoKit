@@ -15,7 +15,6 @@
 
 import Foundation
 import simd
-import DiffractoCore
 
 /// The detector's distortion as fitted on the matrix's spots: measured vector = `affine` · predicted vector, in Å⁻¹, in the
 /// detector's axes (x to the right, y down, as the peaks are given).
