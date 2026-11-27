@@ -90,6 +90,14 @@ Live:
   `CrystalLattice` (with diffpy's `standardBase` and its `inverse`, #267), `OrientationSampling` (cubochoric), the TSL and Euler colour keys (`DirectionColorKeyTSL`,
   `IPFColorKeyTSL`, `IPFKeyImage`, `EulerColorKey`); `StereographicProjection` takes orix's two poles. `Rotation` and
   `CrystalOrientation` convert into each other, and the port's point groups and TSL key equal the kit's own.
+- Crystal maps, grains, texture and slip, moved from Electron Microscopy Studio (#180): orix's `CrystalMap` (with a
+  plain-array initialiser, so a reader's Euler angles or quaternions, phase ids, x, y, properties and phase headers become a
+  map), `PhaseList` and `CrystalPhase` (`crystalLattice`), `NeighbourMisorientation`, `OrientationMaps` (IPF and phase
+  colours), `MapAnalysis` (grain table, slip); DefDAP 1.3.1's `GrainMap`, `GrainBoundaries`, `GrainSegmentation`,
+  `KernelAverageMisorientation`, `GrainOrientationStatistics` (GOS, GROD), `GrainAnalysis`; orix's `EqualAreaGrid`,
+  `PoleDensityFunction` and `PoleFigures`, and the ODF (`OrientationDensity`, MTEX's kernel density, Accelerate); DefDAP's
+  `SlipSystemSet`, `SlipPhase`, `SlipSystemFile`, `SlipTraceAnalysis` (on `Rotation`), `NyeTensor` (GND density) and
+  `DefDAPCrystalStructure`.
 - Orientation symmetry and IPF keys, misorientation between two groups, `Orientation` from Euler angles with `dot`,
   `dotOuter` and `distanceMatrix`, orientation-relationship variants (beta'' in Al: 12), orientation-map planes.
 - Variant orientations of a relationship stated as two pairs (`OrientationRelationship.variantOrientations`): each
