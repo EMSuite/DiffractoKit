@@ -1,0 +1,218 @@
+{
+ "date": "2026-11-27",
+ "files": [
+  {
+   "bytes": 45832,
+   "file": "info-structures.json",
+   "note": "every property the service lists for a structure",
+   "sha256": "4be6ceabf46525ca2aa48a9d64cd116f89c6d7412dd00ebf66829f22e5f8819d",
+   "url": "https://optimade.materialsproject.org/v1/info/structures"
+  },
+  {
+   "bytes": 54891,
+   "file": "search-GaAs-all.json",
+   "note": "the GaAs search asking for every listed property",
+   "sha256": "809d8e24467e72dced4271d428cb493a53aface0610cb89c80e6a8f0f5350592",
+   "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22AsGa%22&response_fields=_mp_chemical_system%2C_mp_stability%2Cassemblies%2Ccartesian_site_positions%2Cchemical_formula_anonymous%2Cchemical_formula_descriptive%2Cchemical_formula_hill%2Cchemical_formula_reduced%2Cdimension_types%2Celements%2Celements_ratios%2Cid%2Cimmutable_id%2Clast_modified%2Clattice_vectors%2Cnelements%2Cnperiodic_dimensions%2Cnsites%2Cspace_group_it_number%2Cspace_group_symbol_hall%2Cspace_group_symbol_hermann_mauguin%2Cspace_group_symbol_hermann_mauguin_extended%2Cspace_group_symmetry_operations_xyz%2Cspecies%2Cspecies_at_sites%2Cstructure_features%2Ctype&page_limit=500"
+  },
+  {
+   "bytes": 46967,
+   "file": "search-GaAs-sites.json",
+   "note": "the GaAs search with the row fields and the structure fields",
+   "sha256": "1717b41e31861740b10136eba6ccb5ca4e3a606e7643ad7651e7958a706f11ca",
+   "url": "https://optimade.materialsproject.org/v1/structures?filter=chemical_formula_reduced%3D%22AsGa%22&response_fields=chemical_formula_reduced%2Cnsites%2C_mp_stability%2Clattice_vectors%2Ccartesian_site_positions%2Cspecies_at_sites%2Cspecies&page_limit=500"
+  }
+ ],
+ "recorder": "tools/materials-project/record-search-symmetry.py",
+ "recording": 1,
+ "spglib": "2.8.0",
+ "spglib_space_groups": {
+  "mp-10048": [
+   {
+    "number": 123,
+    "symbol": "P4/mmm"
+   },
+   {
+    "number": 123,
+    "symbol": "P4/mmm"
+   },
+   {
+    "number": 123,
+    "symbol": "P4/mmm"
+   }
+  ],
+  "mp-1059094": [
+   {
+    "number": 25,
+    "symbol": "Pmm2"
+   },
+   {
+    "number": 25,
+    "symbol": "Pmm2"
+   },
+   {
+    "number": 25,
+    "symbol": "Pmm2"
+   }
+  ],
+  "mp-1232355": [
+   {
+    "number": 8,
+    "symbol": "Cm"
+   },
+   {
+    "number": 8,
+    "symbol": "Cm"
+   },
+   {
+    "number": 8,
+    "symbol": "Cm"
+   }
+  ],
+  "mp-1244899": [
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   }
+  ],
+  "mp-1244999": [
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   }
+  ],
+  "mp-1245074": [
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   }
+  ],
+  "mp-1245274": [
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   }
+  ],
+  "mp-1245314": [
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   },
+   {
+    "number": 1,
+    "symbol": "P1"
+   }
+  ],
+  "mp-15619": [
+   {
+    "number": 205,
+    "symbol": "Pa-3"
+   },
+   {
+    "number": 205,
+    "symbol": "Pa-3"
+   },
+   {
+    "number": 205,
+    "symbol": "Pa-3"
+   }
+  ],
+  "mp-2362466": [
+   {
+    "number": 44,
+    "symbol": "Imm2"
+   },
+   {
+    "number": 44,
+    "symbol": "Imm2"
+   },
+   {
+    "number": 44,
+    "symbol": "Imm2"
+   }
+  ],
+  "mp-2534": [
+   {
+    "number": 216,
+    "symbol": "F-43m"
+   },
+   {
+    "number": 216,
+    "symbol": "F-43m"
+   },
+   {
+    "number": 216,
+    "symbol": "F-43m"
+   }
+  ],
+  "mp-603640": [
+   {
+    "number": 44,
+    "symbol": "Imm2"
+   },
+   {
+    "number": 44,
+    "symbol": "Imm2"
+   },
+   {
+    "number": 44,
+    "symbol": "Imm2"
+   }
+  ],
+  "mp-8883": [
+   {
+    "number": 186,
+    "symbol": "P6_3mc"
+   },
+   {
+    "number": 186,
+    "symbol": "P6_3mc"
+   },
+   {
+    "number": 186,
+    "symbol": "P6_3mc"
+   }
+  ]
+ },
+ "symprecs": [
+  0.0001,
+  0.001,
+  0.01
+ ]
+}

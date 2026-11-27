@@ -24,6 +24,8 @@ Live:
 - A Materials Project structure with no key: `MaterialsProjectOptimade` searches the keyless OPTIMADE service by
   elements or formula (most stable first; an empty service is told apart from no results) and reads an entry to its
   conventional cell, checked against pymatgen on 14 recorded entries, one per Bravais lattice (#150).
+  Each search row names its space group (IT number and short symbol, or its crystal system), read from its atoms as
+  the preview reads the entry, since the service states none (#263).
 - A Materials Project search with the user's own key: `MaterialsProjectImport.searchRequest` asks the main API by
   elements, chemical system or formula, most stable first, deprecated and GNoME entries left out; `decodeSearch` reads
   the rows (stability, calculated-only and deprecated flags, the stated space group) and `databaseVersion(from:)` the

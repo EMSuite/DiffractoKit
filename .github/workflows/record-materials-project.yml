@@ -10,6 +10,7 @@ on:
   pull_request:
     paths:
       - tools/materials-project/record.py
+      - tools/materials-project/record-search-symmetry.py
       - .github/workflows/record-materials-project.yml
 
 permissions:
@@ -36,9 +37,11 @@ jobs:
         run: python -m pip install --quiet numpy==2.5.4 spglib==2.8.0
       - name: Record
         run: python -I -B tools/materials-project/record.py
+      - name: Record the search's symmetry (DiffractoKit #263)
+        run: python -I -B tools/materials-project/record-search-symmetry.py
       - name: Commit the recordings
         run: |
-          git add --all Tests/DiffractoCoreTests/Fixtures/mp-optimade
+          git add --all Tests/DiffractoCoreTests/Fixtures/mp-optimade Tests/DiffractoCoreTests/Fixtures/mp-optimade-search
           if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
