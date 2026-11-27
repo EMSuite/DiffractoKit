@@ -4,6 +4,19 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.25.0](https://github.com/EMSuite/DiffractoKit/compare/0.24.2...0.25.0) (2026-11-27)
+
+
+### Features
+
+* orix rotations, point groups, fundamental sectors and colour keys on the kit's orientation types ([#264](https://github.com/EMSuite/DiffractoKit/issues/264)) ([a956542](https://github.com/EMSuite/DiffractoKit/commit/a95654227de3dd3831b59bc322abf43fb60d81fe))
+
+
+### Fixtures and tests
+
+* Index on recorded data, a twinned GaAs nanowire against py4DSTEM ([#261](https://github.com/EMSuite/DiffractoKit/issues/261)) ([5b16c2e](https://github.com/EMSuite/DiffractoKit/commit/5b16c2e86e70540d9ce221b3959e912d67b8f9d6))
+* the Index matrix checks PatternOrientation on eight crystals of five systems against py4DSTEM ([#254](https://github.com/EMSuite/DiffractoKit/issues/254)) ([23956fc](https://github.com/EMSuite/DiffractoKit/commit/23956fcd3dc449d3e3b094590e80c3b5f5b7a9cb))
+
 ## [0.24.2](https://github.com/EMSuite/DiffractoKit/compare/0.24.1...0.24.2) (2026-11-26)
 
 
