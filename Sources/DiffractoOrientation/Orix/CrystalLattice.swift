@@ -124,8 +124,10 @@ public nonisolated struct CrystalLattice: Sendable, Equatable {
     /// diffpy's `sind`, cosd(90 − x).
     static func sind(_ x: Double) -> Double { cosd(90 - x) }
 
-    /// diffpy's `stdbase`: rows (1/a*, −cos γ* / sin γ* / a*, a cos β), (0, b sin α, b cos α), (0, 0, c).
-    static func standardBase(a: Double, b: Double, c: Double, alpha: Double, beta: Double, gamma: Double) -> [SIMD3<Double>] {
+    /// diffpy's `stdbase`: rows (1/a*, −cos γ* / sin γ* / a*, a cos β), (0, b sin α, b cos α), (0, 0, c); the edges in
+    /// their own length unit, the angles in degrees. The three rows are the cell's edge vectors a, b and c in diffpy's
+    /// Cartesian frame. Public for the app's Kikuchi structure factors (DiffractoKit #267).
+    public static func standardBase(a: Double, b: Double, c: Double, alpha: Double, beta: Double, gamma: Double) -> [SIMD3<Double>] {
         let ca = cosd(alpha), cb = cosd(beta), cg = cosd(gamma)
         let sa = sind(alpha), sb = sind(beta)
         let unitVolume = (1 + 2 * ca * cb * cg - ca * ca - cb * cb - cg * cg).squareRoot()
@@ -141,8 +143,9 @@ public nonisolated struct CrystalLattice: Sendable, Equatable {
         return (x * scale).rounded(.toNearestOrEven) / scale
     }
 
-    /// The inverse of a 3 × 3 matrix given by rows (the adjugate over the determinant).
-    static func inverse(_ m: [SIMD3<Double>]) -> [SIMD3<Double>] {
+    /// The inverse of a 3 × 3 matrix given by rows (the adjugate over the determinant); a singular matrix gives
+    /// non-finite rows. Public with `standardBase` (DiffractoKit #267).
+    public static func inverse(_ m: [SIMD3<Double>]) -> [SIMD3<Double>] {
         let r0 = m[0], r1 = m[1], r2 = m[2]
         let c0 = Vector3.cross(r1, r2), c1 = Vector3.cross(r2, r0), c2 = Vector3.cross(r0, r1)
         let det = Vector3.dot(r0, c0)
