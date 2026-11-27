@@ -256,3 +256,10 @@ No fixture is taken from the test data of pymatgen, orix or py4DSTEM.
 
 Materials Project records (mp-import/input-*.json) and recorded answers
 (mp-optimade/, mp-keyed/): CC BY 4.0, credited in the section above.
+
+Recorded data (index-real-nanowire.json): spot lists that py4DSTEM found in
+patterns of "twinned_nanowire.hdf5", pyxem's demo dataset, Carter Francis,
+Zenodo (2024), doi 10.5281/zenodo.14113591, licensed CC BY 4.0
+(https://creativecommons.org/licenses/by/4.0/). The spots are derived from
+the recorded patterns (disks found, distortion corrected, calibrated by
+tools/pins/index-real/nanowire.py); no pattern of the dataset is copied.
