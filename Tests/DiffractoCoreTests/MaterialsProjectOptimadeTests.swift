@@ -31,7 +31,7 @@ struct MaterialsProjectOptimadeTests {
         #expect(request.value(forHTTPHeaderField: "X-API-KEY") == nil)
         let items = Self.query(of: request)
         #expect(items["filter"] == "elements HAS ALL \"Mg\",\"Si\" AND nelements=2")
-        #expect(items["response_fields"] == "chemical_formula_reduced,nsites,_mp_stability")
+        #expect(items["response_fields"] == "chemical_formula_reduced,nsites,_mp_stability,lattice_vectors,cartesian_site_positions,species_at_sites,species")
         #expect(items["page_limit"] == "500")
         // Every reserved character of the filter is percent-encoded, "=" included.
         let raw = try #require(request.url?.absoluteString)

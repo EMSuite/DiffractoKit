@@ -17,8 +17,11 @@ public enum MaterialsProjectOptimade {
     public static let baseURL = URL(string: "https://optimade.materialsproject.org/v1")!
     /// The rows a search asks for at most: more matches than this ask the user to narrow the search.
     public static let maximumRows = 500
-    /// The three small fields of a search row.
-    public static let searchFields = "chemical_formula_reduced,nsites,_mp_stability"
+    /// The fields of a search row: the three small ones, and the structure, from which the row's space group is read
+    /// (the service states none: its `space_group_*` fields are null, recorded in Fixtures/mp-optimade-search,
+    /// DiffractoKit #263).
+    public static let searchFields =
+        "chemical_formula_reduced,nsites,_mp_stability,lattice_vectors,cartesian_site_positions,species_at_sites,species"
     /// The relative metric tolerance of the conversion. The server rounds every lattice vector component to 1e-6 Å, so
     /// an entry of the metric G = L Lᵀ moves by up to about 2 × 0.5e-6 × |a| Å² against its scale |a|², a relative
     /// 1e-6 / |a|; with |a| ≥ 1 Å that is at most 1e-6. The tolerance is ten times that. It is still far below any
@@ -134,6 +137,19 @@ public enum MaterialsProjectOptimade {
         public let siteCount: Int?
         /// Energy above the hull (eV/atom) by functional ("r2scan", "gga_gga+u", "gga_gga+u_r2scan"; the keys vary by entry).
         public let energyAboveHull: [String: Double]
+        /// The row's symmetry, read from its atoms as the entry's preview reads it (`structure(from:)`, then
+        /// `CrystalStructure.spaceGroupType`): the IT number and spglib's short symbol, or only the crystal system
+        /// (capitalised, as the keyed route's rows give it) when no group shows; nil when the answer held no structure.
+        public let symmetry: MaterialsProjectSymmetry?
+
+        public init(materialID: String, formula: String?, siteCount: Int?, energyAboveHull: [String: Double],
+                    symmetry: MaterialsProjectSymmetry? = nil) {
+            self.materialID = materialID
+            self.formula = formula
+            self.siteCount = siteCount
+            self.energyAboveHull = energyAboveHull
+            self.symmetry = symmetry
+        }
 
         /// The lowest energy above the hull over the functionals given; nil when none is.
         public var lowestEnergyAboveHull: Double? { energyAboveHull.values.filter(\.isFinite).min() }
@@ -168,11 +184,14 @@ public enum MaterialsProjectOptimade {
     }
 
     /// Decodes a search answer. Rows are sorted by stability here, since the server cannot sort on `_mp_stability`.
+    /// Each row's symmetry is read from its atoms (`Row.symmetry`): a detection per row, so call this off the main actor.
     public static func decodeSearch(_ data: Data) throws(AnswerError) -> SearchAnswer {
         let envelope: SearchEnvelope = try decodeEnvelope(data)
         let rows = (envelope.data ?? []).map { item in
-            Row(materialID: MaterialsProjectImport.displayMaterialID(item.id) ?? item.id, formula: item.attributes?.chemicalFormulaReduced, siteCount: item.attributes?.nsites,
-                energyAboveHull: (item.attributes?.mpStability ?? [:]).compactMapValues { $0?.energyAboveHull })
+            let id = MaterialsProjectImport.displayMaterialID(item.id) ?? item.id
+            return Row(materialID: id, formula: item.attributes?.chemicalFormulaReduced, siteCount: item.attributes?.nsites,
+                       energyAboveHull: (item.attributes?.mpStability ?? [:]).compactMapValues { $0?.energyAboveHull },
+                       symmetry: item.attributes.flatMap { symmetry(of: $0, id: id) })
         }
         if rows.isEmpty {
             return envelope.meta?.dataAvailable == 0 ? .serviceEmpty : .noResults
@@ -186,6 +205,25 @@ public enum MaterialsProjectOptimade {
             return ln != rn ? ln < rn : lhs.materialID < rhs.materialID
         }
         return .rows(sorted, more: envelope.meta?.moreDataAvailable ?? false)
+    }
+
+    /// The symmetry of a search row that carries its structure; nil when it carries none or the structure cannot be read.
+    private static func symmetry(of a: Attributes, id: String) -> MaterialsProjectSymmetry? {
+        guard let lattice = a.latticeVectors, let positions = a.cartesianSitePositions, let species = a.species,
+              lattice.count == 3, (lattice + positions).allSatisfy({ $0.count == 3 }) else { return nil }
+        let entry = Entry(materialID: id, formula: a.chemicalFormulaReduced, lastModified: a.lastModified,
+                          latticeVectors: lattice.map { SIMD3($0[0], $0[1], $0[2]) },
+                          cartesianPositions: positions.map { SIMD3($0[0], $0[1], $0[2]) },
+                          speciesAtSites: a.speciesAtSites ?? [],
+                          species: species.map {
+                              Species(name: $0.name, chemicalSymbols: $0.chemicalSymbols ?? [], concentration: $0.concentration ?? [])
+                          })
+        guard let read = try? structure(from: entry).structure else { return nil }
+        if let type = read.spaceGroupType {
+            return MaterialsProjectSymmetry(crystalSystem: read.crystalSystem?.rawValue.capitalized,
+                                            symbol: type.internationalSymbol, number: type.number)
+        }
+        return read.crystalSystem.map { MaterialsProjectSymmetry(crystalSystem: $0.rawValue.capitalized) }
     }
 
     /// One entry: the lattice vectors and Cartesian positions as served (Å, rounded to 1e-6), the species.

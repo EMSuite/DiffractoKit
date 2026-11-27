@@ -217,6 +217,12 @@ info.json, search-*.json and entry-*.json, recorded byte for byte on
 SHA-256 in manifest.json. They are Materials Project data, licensed CC BY 4.0
 (https://creativecommons.org/licenses/by/4.0/). Changes: none.
 
+Tests/DiffractoCoreTests/Fixtures/mp-optimade-search/ holds three more answers of
+that service (info-structures.json, search-GaAs-all.json, search-GaAs-sites.json),
+recorded byte for byte on 2026-11-27 by
+tools/materials-project/record-search-symmetry.py, which lists each URL and
+SHA-256 in manifest.json. Materials Project data, CC BY 4.0. Changes: none.
+
 Tests/DiffractoCoreTests/Fixtures/mp-keyed/ holds answers of the Materials
 Project's main API (https://api.materialsproject.org, database 2026.09.28):
 heartbeat.json, search-*.json and summary-*.json, recorded byte for byte on
@@ -269,7 +275,7 @@ code or test data of those packages is copied into them:
 No fixture is taken from the test data of pymatgen, orix or py4DSTEM.
 
 Materials Project records (mp-import/input-*.json) and recorded answers
-(mp-optimade/, mp-keyed/): CC BY 4.0, credited in the section above.
+(mp-optimade/, mp-optimade-search/, mp-keyed/): CC BY 4.0, credited in the section above.
 
 Recorded data (index-real-nanowire.json): spot lists that py4DSTEM found in
 patterns of "twinned_nanowire.hdf5", pyxem's demo dataset, Carter Francis,
