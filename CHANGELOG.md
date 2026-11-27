@@ -4,6 +4,13 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.27.0](https://github.com/EMSuite/DiffractoKit/compare/0.26.0...0.27.0) (2026-11-27)
+
+
+### Features
+
+* crystal map, grains, texture and deformation maps of an orientation map ([#270](https://github.com/EMSuite/DiffractoKit/issues/270)) ([c707a2e](https://github.com/EMSuite/DiffractoKit/commit/c707a2e0774180744de0d1d8f599f87f925adbb4))
+
 ## [0.26.0](https://github.com/EMSuite/DiffractoKit/compare/0.25.0...0.26.0) (2026-11-27)
 
 
