@@ -4,6 +4,19 @@ All notable changes to DiffractoKit. Versions are semantic (0.x: a minor release
 reproduces, and against what, are in `docs/parity.md`. From 0.11.0 on, release-please writes each entry from the
 conventional-commit titles of the merged pull requests. The entries up to 0.10.0 use Keep a Changelog's sections (Added, Changed, Fixed, Removed, Migration).
 
+## [0.26.0](https://github.com/EMSuite/DiffractoKit/compare/0.25.0...0.26.0) (2026-11-27)
+
+
+### Features
+
+* CrystalLattice.standardBase and CrystalLattice.inverse are public ([#267](https://github.com/EMSuite/DiffractoKit/issues/267)) ([4531e8b](https://github.com/EMSuite/DiffractoKit/commit/4531e8be74f606a7ac6c94e165c7a4d3495d1eb1))
+* CrystalLattice.standardBase and CrystalLattice.inverse are public ([#269](https://github.com/EMSuite/DiffractoKit/issues/269)) ([4531e8b](https://github.com/EMSuite/DiffractoKit/commit/4531e8be74f606a7ac6c94e165c7a4d3495d1eb1))
+
+
+### Bug Fixes
+
+* keyless Materials Project search rows name their space group ([#266](https://github.com/EMSuite/DiffractoKit/issues/266)) ([21491bb](https://github.com/EMSuite/DiffractoKit/commit/21491bbb78c0f6b92dc743a8b4f610010531d656))
+
 ## [0.25.0](https://github.com/EMSuite/DiffractoKit/compare/0.24.2...0.25.0) (2026-11-27)
 
 
