@@ -15,7 +15,6 @@
 
 import Foundation
 import simd
-import DiffractoCore
 
 extension PhaseVectorMatcher {
 

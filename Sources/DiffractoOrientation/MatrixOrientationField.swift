@@ -17,7 +17,6 @@
 
 import Foundation
 import simd
-import DiffractoCore
 
 /// The matrix orientation of every scan position, row-major.
 public struct MatrixOrientationField: Sendable, Equatable {

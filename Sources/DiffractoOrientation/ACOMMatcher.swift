@@ -14,7 +14,6 @@
 
 import Foundation
 import simd
-import DiffractoCore
 import ImagoFFT
 
 /// Matches measured peaks against an ``ACOMTemplateLibrary``. A value: it holds the library and an immutable FFT plan, and

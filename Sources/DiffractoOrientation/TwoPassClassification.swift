@@ -29,7 +29,6 @@
 
 import Foundation
 import simd
-import DiffractoCore
 
 extension MatrixOrientationField {
     /// The orientations with the removal's in-plane correction applied (``MatrixResidualScan/inPlaneCorrectionsRad``): where the
