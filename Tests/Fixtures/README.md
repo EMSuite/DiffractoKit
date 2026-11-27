@@ -197,6 +197,7 @@ No fixture is copied from the test data of pymatgen, orix or py4DSTEM.
 | `DiffractoGeometryTests/Fixtures/ring-overlay-pins.json` | 4.5 KB | `tools/pins/ring-display/ring-overlay-pins.py` |  |
 | `DiffractoGeometryTests/Fixtures/scipy-ellipse-sweep-pins.json` | 8.2 KB | `tools/pins/ellipse/sweep.py` |  |
 | `DiffractoOrientationTests/Fixtures/acom-matcher-pins.json` | 526.1 KB | `tools/pins/acom-matcher/pins.py` |  |
+| `DiffractoOrientationTests/Fixtures/index-matrix-planted.json` | 956.6 KB | `tools/pins/index-matrix/planted.py` |  |
 | `DiffractoOrientationTests/Fixtures/orix-direction-pins.json` | 1.5 MB | `tools/pins/orix/direction-pins.py` |  |
 | `DiffractoOrientationTests/Fixtures/orix-disorientation-pins.json` | 1.5 MB | `tools/pins/orix/disorientation-pins.py` |  |
 | `DiffractoOrientationTests/Fixtures/orix-ipf-pins.json` | 484.0 KB | `tools/pins/orix/ipf-pins.py` |  |
